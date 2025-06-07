@@ -1,0 +1,3 @@
+[submodule "Assets/Scripts/PlazmaGames"]
+	path = Assets/Scripts/PlazmaGames
+	url = https://github.com/PlazmaGames/UnityCore
