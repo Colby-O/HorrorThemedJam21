@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -93,3 +94,4 @@ namespace HTJ21
         }
     }
 }
+#endif
