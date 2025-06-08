@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HTJ21
@@ -27,46 +30,104 @@ namespace HTJ21
         [SerializeField] float _throttleDuty;
         [SerializeField] EngineSoundWave[] _waves;
 
+        [System.Serializable]
+        class JsSettings
+        {
+            public float sampleRate;
+            public float freqScale;
+            public float baseDuty;
+            public float throttleDuty;
+            public EngineSoundWave[] waves;
+        }
+
         public bool engineOn = true;
         
         private float _rpm = 0;
         private float _throttle;
         private float[] _phases;
+        [SerializeField] private float _rpmLerpSpeed = 10;
+        
+        private readonly ConcurrentQueue<float> audioBuffer = new();
+        private AudioSource _audioSource;
 
-        public void SetRpm(float rpm) => _rpm = rpm;
-        public void SetThrottle(float throttle) => _throttle = throttle;
-
-        void Start()
+        void Awake()
         {
+            _audioSource = GetComponent<AudioSource>();
             _sampleRate = AudioSettings.outputSampleRate; // ✅ this runs on main thread
             _phases = new float[_waves.Length];
             for (int i = 0; i < _phases.Length; i++) _phases[i] = 0;
+            
+            
+#if PLATFORM_WEBGL && !UNITY_EDITOR
+            JsSettings jss = new JsSettings()
+            {
+                sampleRate = _sampleRate,
+                freqScale = _freqScale,
+                baseDuty = _baseDuty,
+                throttleDuty = _throttleDuty,
+                waves = _waves,
+            };
+            JsEngineSoundInit(JsonUtility.ToJson(jss), _sampleRate);
+#endif
         }
+        
+        public void SetRpmAndThrottle(float rpm, float throttle)
+        {
+            _rpm = Mathf.Lerp(_rpm, rpm, _rpmLerpSpeed * Time.deltaTime);
+            _throttle = throttle;
+#if PLATFORM_WEBGL && !UNITY_EDITOR
+            JsEngineSoundSetRpmAndThrottle(_rpm, _throttle);
+#endif
+        }
+        
 
+#if PLATFORM_WEBGL && !UNITY_EDITOR
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern IntPtr JsEngineSoundInit(string settings, float sampleRate);
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern IntPtr JsEngineSoundSetRpmAndThrottle(float rpm, float throttle);
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern IntPtr JsEngineSoundSetVolume(float volume);
+
+        private void FixedUpdate()
+        {
+            JsEngineSoundSetVolume(_audioSource.volume);
+        }
+        
+#else
         void OnAudioFilterRead(float[] data, int channels)
         {
             if (!engineOn) return;
             
             for (int i = 0; i < data.Length; i++)
             {
-                float baseFreq = _rpm * _freqScale;
-                float sub = 0;
-                float totalVolume = 0;
-                for (int j = 0; j < _waves.Length; j++) {
-                    EngineSoundWave wave = _waves[j];
-                    _phases[j] += baseFreq * wave.overtone / _sampleRate; 
-                    if (_phases[j] >= 100.0) _phases[j] -= 100.0f;
-                    totalVolume += wave.volume;
-                    sub += wave.volume * Mathf.Pow(
-                        Mathf.Sin(_phases[j] + wave.offset),
-                        Mathf.Floor(
-                            wave.baseDuty + _baseDuty * wave.dutyScale +
-                            (_throttle > 0.1 ? 1 : 0) * _throttleDuty * wave.throttleDutyScale
-                        )
-                    );
-                }
-                for (int j = 0; j < channels; j++) data[i] = sub / totalVolume;
+                float v = Process();
+                for (int j = 0; j < channels; j++) data[i] = v;
             }
         }
+
+        float Process()
+        {
+            float baseFreq = _rpm * _freqScale;
+            float sub = 0;
+            float totalVolume = 0;
+            for (int j = 0; j < _waves.Length; j++) {
+                EngineSoundWave wave = _waves[j];
+                _phases[j] += baseFreq * wave.overtone / _sampleRate; 
+                if (_phases[j] >= 100.0) _phases[j] -= 100.0f;
+                totalVolume += wave.volume;
+                sub += wave.volume * Mathf.Pow(
+                    Mathf.Sin(_phases[j] + wave.offset),
+                    Mathf.Floor(
+                        wave.baseDuty + _baseDuty * wave.dutyScale +
+                        (_throttle > 0.1 ? 1 : 0) * _throttleDuty * wave.throttleDutyScale
+                    )
+                );
+            }
+
+            return sub / totalVolume;
+        }
+#endif
+
     }
 }

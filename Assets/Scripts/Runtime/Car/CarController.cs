@@ -15,6 +15,9 @@ namespace HTJ21
     {
         public float airResistance;
         public float engineDynamicFriction;
+
+        public float automaticUpShiftPoint;
+        public float automaticDownShiftPoint;
         
         public float suspensionLength;
         public float suspensionStrength;
@@ -32,7 +35,7 @@ namespace HTJ21
         public float finalDriveRatio;
 
         public float weightDistribution;
-
+        
         public TorqueCurvePoint[] torqueCurve;
         public float peakTorque;
         
@@ -92,14 +95,19 @@ namespace HTJ21
 
         private Rigidbody _rig;
 
+        private Transform _steeringWheel;
         private Transform[] _wheels = new Transform[4];
         [SerializeField] private float _wheelTurnSpeed = 4;
         [SerializeField] private float _rpmScale = 10;
+        [SerializeField] private float _steeringWheelAngleScale = 1.0f;
+        [SerializeField] private bool _automatic = true;
+
 
         private void Awake()
         {
             info.NormalizeTorqueCurve();
             _rig = GetComponent<Rigidbody>();
+            _steeringWheel = transform.Find("Model").Find("SteeringWheel");
             Transform wheels = transform.Find("Wheels");
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);
             _engineSound = GetComponent<EngineSound>();
@@ -109,12 +117,28 @@ namespace HTJ21
         {
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
-                _gear += 1;
+                if (_automatic)
+                {
+                    if (_gear == -1) _gear = 1;
+                    else _gear += 1;
+                }
+                else
+                {
+                    _gear += 1;
+                }
             }
 
             if (Keyboard.current.downArrowKey.wasPressedThisFrame)
             {
-                _gear -= 1;
+                if (_automatic)
+                {
+                    if (_gear == 1) _gear = -1;
+                    else _gear -= 1;
+                }
+                else
+                {
+                    _gear -= 1;
+                }
             }
             _gear = Mathf.Clamp(_gear, -1, 6);
         }
@@ -141,14 +165,26 @@ namespace HTJ21
                 _steeringAngle = Mathf.Lerp(_steeringAngle, 0, Time.deltaTime * _wheelTurnSpeed);
             }
 
-            _wheels[0].localRotation = Quaternion.Euler(0, 90.0f + _steeringAngle, 90);
-            _wheels[1].localRotation = Quaternion.Euler(0, 90.0f + _steeringAngle, 90);
+            _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
+            _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
+            Vector3 swRot = _steeringWheel.localRotation.eulerAngles;
+            swRot.z = 90 + _steeringAngle * _steeringWheelAngleScale;
+            _steeringWheel.localRotation = Quaternion.Euler(swRot);
 
             
-            _engineSound.SetRpm(_rpm);
-            _engineSound.SetThrottle(_throttle);
+            _engineSound.SetRpmAndThrottle(_rpm, _throttle);
 
-            
+            Simulate();
+        }
+
+        private void Simulate()
+        {
+            if (_automatic)
+            {
+                if (_rpm >= info.automaticUpShiftPoint && _gear >= 1) _gear = Mathf.Min(6, _gear + 1);
+                if (_rpm <= info.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
+                _rpm = Rpm();
+            }
             _rig.AddForce(-transform.forward * (info.airResistance * MathExt.Square(Vector3.Dot(transform.forward, _rig.linearVelocity))));
             for (int wheel = 0; wheel < 4; wheel++)
             {
@@ -200,7 +236,7 @@ namespace HTJ21
                     {
                         force += wheelForward * (_throttle * info.SampleTorqueCurve(_rpm) * info.GearRatio(_gear));
                         force += -wheelForward * (MathExt.Sign(Vector3.Dot(wheelForward, wheelVelocity)) * _brake * info.brakeForce);
-                        force += -wheelForward * (info.engineDynamicFriction * _rpm * (1.0f - _throttle));
+                        force += -wheelForward * (info.engineDynamicFriction * _rpm * (1.0f - _throttle) * info.GearRatio(_gear));
                     }
 
                     _rig.AddForceAtPosition(force, wheelPosition);

@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -451,3 +453,5 @@ namespace HTJ21
         }
     }
 }
+
+#endif

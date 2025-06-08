@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using PlazmaGames.Attribute;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -164,3 +166,5 @@ namespace HTJ21
 #endif
     }
 }
+
+#endif
