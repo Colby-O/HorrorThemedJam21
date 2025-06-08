@@ -1,11 +1,12 @@
-#if UNITY_EDITOR
-
 using System;
 using System.Collections.Generic;
-using UnityEditor.Splines;
 using UnityEngine;
 using UnityEngine.Splines;
 using PlazmaGames.Attribute;
+
+#if UNITY_EDITOR
+using UnityEditor.Splines;
+#endif
 
 namespace HTJ21
 {
@@ -15,14 +16,11 @@ namespace HTJ21
         public int splineIndex;
         public int knotIndex;
         public SplineContainer splineContainer;
-        public SelectableKnot knot;
-
-        public JunctionInfo(int splineIndex, int knotIndex, SplineContainer splineContainer, SelectableKnot knot) 
+        public JunctionInfo(int splineIndex, int knotIndex, SplineContainer splineContainer) 
         { 
             this.splineIndex = splineIndex;
             this.knotIndex = knotIndex;
             this.splineContainer = splineContainer;
-            this.knot = knot;
         }
 
         public override bool Equals(object other)
@@ -42,11 +40,11 @@ namespace HTJ21
         [SerializeField, ReadOnly] private List<JunctionInfo> _junctions;
         [SerializeField] public List<float> curveWeights;
 
-        public void AddJunction(int splineIndex, int knotIndex, SplineContainer splineContainer, SelectableKnot knot, List<float> curveWeights)
+        public void AddJunction(int splineIndex, int knotIndex, SplineContainer splineContainer, List<float> curveWeights)
         {
             this.curveWeights = curveWeights;
             _junctions ??= new List<JunctionInfo>();
-            _junctions.Add(new JunctionInfo(splineIndex, knotIndex, splineContainer, knot));
+            _junctions.Add(new JunctionInfo(splineIndex, knotIndex, splineContainer));
         }
 
         public List<JunctionInfo> GetJunctions()
@@ -68,15 +66,16 @@ namespace HTJ21
             return false;
         }
 
+#if UNITY_EDITOR
         public bool HasJunction(SelectableKnot knot)
         {
             return HasJunction(new JunctionInfo(
                     knot.SplineInfo.Index,
                     knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer,
-                    knot
+                    knot.SplineInfo.Container as SplineContainer
             ));
         }
+#endif
 
         public bool HasJunction(JunctionInfo junction)
         {
@@ -87,7 +86,7 @@ namespace HTJ21
             }
             return false;
         }
-
+#if UNITY_EDITOR
         public bool HasJunctions(List<SelectableKnot> knots, bool checkIfSame)
         {
             if (knots == null || knots.Count == 0) return false;
@@ -99,14 +98,13 @@ namespace HTJ21
                 junctions.Add(new JunctionInfo(
                     knot.SplineInfo.Index,
                     knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer,
-                    knot
+                    knot.SplineInfo.Container as SplineContainer
                 ));
             }
 
             return HasJunctions(junctions, checkIfSame);
         }
-
+#endif
         public bool HasJunctions(List<JunctionInfo> junctions, bool checkIfSame)
         {
             if (junctions == null || junctions.Count == 0) return false;
@@ -121,7 +119,7 @@ namespace HTJ21
 
             return isSame;
         }
-
+#if UNITY_EDITOR
         public bool HasAtLeastOneJunction(List<SelectableKnot> knots)
         {
             if (knots == null || knots.Count == 0) return false;
@@ -133,14 +131,13 @@ namespace HTJ21
                 junctions.Add(new JunctionInfo(
                     knot.SplineInfo.Index,
                     knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer,
-                    knot
+                    knot.SplineInfo.Container as SplineContainer
                 ));
             }
 
             return HasAtLeastOneJunction(junctions);
         }
-
+#endif
         public bool HasAtLeastOneJunction(List<JunctionInfo> junctions)
         {
             if (junctions == null || junctions.Count == 0) return false;
@@ -162,5 +159,3 @@ namespace HTJ21
         }
     }
 }
-
-#endif

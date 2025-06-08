@@ -140,6 +140,7 @@ MonoBehaviour:
   _animSystem: {fileID: 8189270598657297784}
   _audioSystem: {fileID: 4025860194834655880}
   _weatherSystem: {fileID: 781789779740155502}
+  _gpsSystem: {fileID: 2576004030955408257}
 --- !u!1 &6741302488116188014
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,8 +303,54 @@ Transform:
   - {fileID: 6857071086076311519}
   - {fileID: 9156698794789524022}
   - {fileID: 524316519336820611}
+  - {fileID: 6280547138340684560}
   m_Father: {fileID: 3105284844787801162}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7242487038177370470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6280547138340684560}
+  - component: {fileID: 2576004030955408257}
+  m_Layer: 0
+  m_Name: GPSMonoSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6280547138340684560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7242487038177370470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1288586656463618629}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2576004030955408257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7242487038177370470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92beeb19f1c4c8a4a990420b7099826b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isOn: 0
 --- !u!1 &7294373588400986925
 GameObject:
   m_ObjectHideFlags: 0
