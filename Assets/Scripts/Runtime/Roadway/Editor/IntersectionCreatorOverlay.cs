@@ -182,11 +182,11 @@ namespace HTJ21
                         knot.SplineInfo.Index,
                         knot.KnotIndex,
                         knot.SplineInfo.Container as SplineContainer,
-                        knot,
                         _selectedCurveWeights
                     );
                 }
             }
+
 
             if (RoadwayCreator.Instance)
             {

@@ -1,12 +1,13 @@
-#if UNITY_EDITOR
-
 using PlazmaGames.Attribute;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Callbacks;
-using UnityEditor.Splines;
 using UnityEngine;
 using UnityEngine.Splines;
+
+#if UNITY_EDITOR
+using UnityEditor.Callbacks;
+using UnityEditor.Splines;
+#endif
 
 namespace HTJ21
 {
@@ -34,6 +35,9 @@ namespace HTJ21
 
         private GameObject _roadwayHolder;
 
+        public List<Roadway> GetRoadways() => _roadways;
+        public List<RoadwayIntersection> GetIntersections() => _intersections;
+
         public Transform GetRoadwayHolder() 
         {
             if (_roadwayHolder == null) _roadwayHolder = GameObject.Find("Roadway");
@@ -41,6 +45,7 @@ namespace HTJ21
             return _roadwayHolder.transform; 
         }
 
+#if UNITY_EDITOR
         public RoadwayIntersection HasIntersectionWithAtLeastOneJunction(List<SelectableKnot> knots)
         {
             foreach (RoadwayIntersection intersection in _intersections)
@@ -77,6 +82,7 @@ namespace HTJ21
             return null;
         }
 
+#endif
         public void AddIntersection(RoadwayIntersection intersection)
         {
             if (_intersections == null) _intersections = new List<RoadwayIntersection>();
@@ -158,12 +164,13 @@ namespace HTJ21
             Spline.Changed -= OnSplineChanged;
         }
 
+#if UNITY_EDITOR
         [DidReloadScripts]
         private static void OnScriptsReloaded()
         {
             if (Instance != null) Instance.GenerateRoadway();
         }
     }
-}
 #endif
+}
 

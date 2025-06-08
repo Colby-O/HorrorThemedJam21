@@ -1,9 +1,9 @@
-#if UNITY_EDITOR
-
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
+#if UNITY_EDITOR
 using UnityEditor.Splines;
+#endif
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -65,6 +65,8 @@ namespace HTJ21
             return roadways;
         }
 
+#if UNITY_EDITOR
+
         public static List<SelectableKnot> GetSelectedRoadwayKnots()
         {
             List<SplineContainer> roadwayContainers = GetRoadwayContainers();
@@ -93,7 +95,7 @@ namespace HTJ21
 
             return selectedKnots;
         }
-    }
-}
 
 #endif
+    }
+}

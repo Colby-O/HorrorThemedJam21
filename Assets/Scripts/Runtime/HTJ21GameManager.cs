@@ -16,7 +16,7 @@ namespace HTJ21
         [SerializeField] private AnimationMonoSystem _animSystem;
         [SerializeField] private AudioMonoSystem _audioSystem;
         [SerializeField] private WeatherMonoSystem _weatherSystem;
-
+        [SerializeField] private GPSMonoSystem _gpsSystem;
         public static GameObject Player { get; set; }
 
         private void AttachMonoSystems()
@@ -25,6 +25,7 @@ namespace HTJ21
             AddMonoSystem<AnimationMonoSystem, IAnimationMonoSystem>(_animSystem);
             AddMonoSystem<AudioMonoSystem, IAudioMonoSystem>(_audioSystem);
             AddMonoSystem<WeatherMonoSystem, IWeatherMonoSystem>(_weatherSystem);
+            AddMonoSystem<GPSMonoSystem, IGPSMonoSystem>(_gpsSystem);
         }
 
         public override string GetApplicationName()
