@@ -36,6 +36,7 @@ namespace HTJ21
 
         public Transform GetRoadwayHolder() 
         {
+            if (_roadwayHolder == null) _roadwayHolder = GameObject.Find("Roadway");
             if (_roadwayHolder == null) _roadwayHolder = new GameObject("Roadway");
             return _roadwayHolder.transform; 
         }
@@ -157,14 +158,12 @@ namespace HTJ21
             Spline.Changed -= OnSplineChanged;
         }
 
-#if UNITY_EDITOR
         [DidReloadScripts]
         private static void OnScriptsReloaded()
         {
             if (Instance != null) Instance.GenerateRoadway();
         }
-#endif
     }
 }
-
 #endif
+

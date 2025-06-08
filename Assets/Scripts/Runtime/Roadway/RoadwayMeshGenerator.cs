@@ -11,6 +11,7 @@ using UnityEditor;
 using PlazmaGames.Core;
 using UnityEditor.ShaderGraph.Internal;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace HTJ21
 {
@@ -299,6 +300,8 @@ namespace HTJ21
             mr.material = mat;
             mf.mesh = mesh;
 
+            roadwayGameObject.AddComponent<MeshCollider>();
+
             if (meshes == null) meshes = new List<GameObject>();
             meshes.Add(roadwayGameObject);
         }
@@ -448,10 +451,12 @@ namespace HTJ21
             mr.material = mat;
             mf.mesh = mesh;
 
+            roadwayGameObject.AddComponent<MeshCollider>();
+
             if (meshes == null) meshes = new List<GameObject>();
             meshes.Add(roadwayGameObject);
         }
     }
 }
-
 #endif
+

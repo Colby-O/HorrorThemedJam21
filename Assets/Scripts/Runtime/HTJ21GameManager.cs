@@ -15,12 +15,16 @@ namespace HTJ21
         [SerializeField] private UIMonoSystem _uiSystem;
         [SerializeField] private AnimationMonoSystem _animSystem;
         [SerializeField] private AudioMonoSystem _audioSystem;
+        [SerializeField] private WeatherMonoSystem _weatherSystem;
+
+        public static GameObject Player { get; set; }
 
         private void AttachMonoSystems()
         {
             AddMonoSystem<UIMonoSystem, IUIMonoSystem>(_uiSystem);
             AddMonoSystem<AnimationMonoSystem, IAnimationMonoSystem>(_animSystem);
             AddMonoSystem<AudioMonoSystem, IAudioMonoSystem>(_audioSystem);
+            AddMonoSystem<WeatherMonoSystem, IWeatherMonoSystem>(_weatherSystem);
         }
 
         public override string GetApplicationName()
@@ -42,6 +46,8 @@ namespace HTJ21
 
         private void Start()
         {
+            Player = GameObject.FindWithTag("Player");
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
