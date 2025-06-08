@@ -53,7 +53,7 @@ namespace HTJ21
         void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
-            _sampleRate = AudioSettings.outputSampleRate; // ✅ this runs on main thread
+            _sampleRate = AudioSettings.outputSampleRate;
             _phases = new float[_waves.Length];
             for (int i = 0; i < _phases.Length; i++) _phases[i] = 0;
             

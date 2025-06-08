@@ -15,10 +15,9 @@ namespace HTJ21
     {
         public float airResistance;
         public float engineDynamicFriction;
-
-        public float automaticUpShiftPoint;
-        public float automaticDownShiftPoint;
         
+        public float maxRpm;
+
         public float suspensionLength;
         public float suspensionStrength;
         public float suspensionDamping;
@@ -38,7 +37,7 @@ namespace HTJ21
         
         public TorqueCurvePoint[] torqueCurve;
         public float peakTorque;
-        
+
         public float SampleTorqueCurve(float rpm)
         {
             for (int i = 1; i < torqueCurve.Length; i++)
@@ -78,6 +77,21 @@ namespace HTJ21
         }
     }
 
+    [System.Serializable]
+    public class DrivingProfile
+    {
+        public float wheelTurnSpeed = 4;
+        public float steeringWheelAngleScale = 1.0f;
+        public float maxTurnAngle = 35;
+        public float maxSpeedTurnAngle = 10;
+        public float maxSpeedTurnAngleSpeed = 100;
+        public float maxThrottle = 1;
+        public float maxSpeed = 0;
+        public bool automatic = true;
+        public float automaticUpShiftPoint;
+        public float automaticDownShiftPoint;
+    }
+
     public class CarController : MonoBehaviour
     {
         private EngineSound _engineSound;
@@ -90,6 +104,7 @@ namespace HTJ21
         [SerializeField] private int _gear = 1;
         
         [SerializeField] private float _rpm = 0;
+        [SerializeField] private float _speed= 0;
 
         [SerializeField] private bool[] _wheelsSliding = new bool[4];
 
@@ -97,10 +112,8 @@ namespace HTJ21
 
         private Transform _steeringWheel;
         private Transform[] _wheels = new Transform[4];
-        [SerializeField] private float _wheelTurnSpeed = 4;
         [SerializeField] private float _rpmScale = 10;
-        [SerializeField] private float _steeringWheelAngleScale = 1.0f;
-        [SerializeField] private bool _automatic = true;
+        [SerializeField] private DrivingProfile _drivingProfile;
 
 
         private void Awake()
@@ -117,7 +130,7 @@ namespace HTJ21
         {
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
-                if (_automatic)
+                if (_drivingProfile.automatic)
                 {
                     if (_gear == -1) _gear = 1;
                     else _gear += 1;
@@ -130,7 +143,7 @@ namespace HTJ21
 
             if (Keyboard.current.downArrowKey.wasPressedThisFrame)
             {
-                if (_automatic)
+                if (_drivingProfile.automatic)
                 {
                     if (_gear == 1) _gear = -1;
                     else _gear -= 1;
@@ -146,29 +159,30 @@ namespace HTJ21
         private void FixedUpdate()
         {
             _rpm = Rpm();
+            _speed = Speed() * 3.6f;
             
-            if (Keyboard.current.wKey.IsPressed()) _throttle = 1f;
+            if (Keyboard.current.wKey.IsPressed()) _throttle = _drivingProfile.maxThrottle;
             if (!Keyboard.current.wKey.IsPressed()) _throttle = 0;
             if (Keyboard.current.sKey.IsPressed()) _brake = 1f;
             if (!Keyboard.current.sKey.IsPressed()) _brake = 0;
 
             if (Keyboard.current.aKey.IsPressed())
             {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, -35, Time.deltaTime * _wheelTurnSpeed);
+                _steeringAngle = Mathf.Lerp(_steeringAngle, -MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
             }
             else if (Keyboard.current.dKey.IsPressed())
             {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, 35, Time.deltaTime * _wheelTurnSpeed);
+                _steeringAngle = Mathf.Lerp(_steeringAngle, MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
             }
             else
             {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, 0, Time.deltaTime * _wheelTurnSpeed);
+                _steeringAngle = Mathf.Lerp(_steeringAngle, 0, Time.deltaTime * _drivingProfile.wheelTurnSpeed);
             }
 
             _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
             _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
             Vector3 swRot = _steeringWheel.localRotation.eulerAngles;
-            swRot.z = 90 + _steeringAngle * _steeringWheelAngleScale;
+            swRot.z = 90 + _steeringAngle * _drivingProfile.steeringWheelAngleScale;
             _steeringWheel.localRotation = Quaternion.Euler(swRot);
 
             
@@ -177,12 +191,18 @@ namespace HTJ21
             Simulate();
         }
 
+        private float MaxTurnAngle()
+        {
+            return Mathf.Lerp(_drivingProfile.maxTurnAngle, _drivingProfile.maxSpeedTurnAngle, Speed() / (_drivingProfile.maxSpeedTurnAngleSpeed / 3.6f));
+        }
+
         private void Simulate()
         {
-            if (_automatic)
+            if (_drivingProfile.maxSpeed > 0 && Speed() * 3.6 > _drivingProfile.maxSpeed) _throttle = 0;
+            if (_drivingProfile.automatic)
             {
-                if (_rpm >= info.automaticUpShiftPoint && _gear >= 1) _gear = Mathf.Min(6, _gear + 1);
-                if (_rpm <= info.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
+                if (_rpm >= _drivingProfile.automaticUpShiftPoint && _gear >= 1) _gear = Mathf.Min(6, _gear + 1);
+                if (_rpm <= _drivingProfile.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
                 _rpm = Rpm();
             }
             _rig.AddForce(-transform.forward * (info.airResistance * MathExt.Square(Vector3.Dot(transform.forward, _rig.linearVelocity))));
@@ -244,9 +264,17 @@ namespace HTJ21
             }
         }
 
+        private float Speed()
+        {
+            return Vector3.Dot(transform.forward, _rig.linearVelocity);
+        }
+        
         private float Rpm()
         {
-            return Mathf.Max(0, Vector3.Dot(transform.forward, _rig.linearVelocity) / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _rpmScale);
+            return Mathf.Clamp(
+                Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _rpmScale,
+                0,
+                info.maxRpm);
         }
     }
 }

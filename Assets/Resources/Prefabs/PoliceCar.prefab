@@ -88,8 +88,7 @@ MonoBehaviour:
   info:
     airResistance: 13
     engineDynamicFriction: 0.01
-    automaticUpShiftPoint: 6200
-    automaticDownShiftPoint: 3500
+    maxRpm: 7000
     suspensionLength: 0.4
     suspensionStrength: 12000
     suspensionDamping: 4000
@@ -135,11 +134,20 @@ MonoBehaviour:
   _brake: 0
   _gear: 3
   _rpm: 671.34814
+  _speed: 0
   _wheelsSliding: 00000000
-  _wheelTurnSpeed: 1
   _rpmScale: 4
-  _steeringWheelAngleScale: 4
-  _automatic: 1
+  _drivingProfile:
+    wheelTurnSpeed: 2
+    steeringWheelAngleScale: 1
+    maxTurnAngle: 35
+    maxSpeedTurnAngle: 5
+    maxSpeedTurnAngleSpeed: 30
+    maxThrottle: 1
+    maxSpeed: 0
+    automatic: 1
+    automaticUpShiftPoint: 3300
+    automaticDownShiftPoint: 2000
 --- !u!114 &4370499305851558824
 MonoBehaviour:
   m_ObjectHideFlags: 0
