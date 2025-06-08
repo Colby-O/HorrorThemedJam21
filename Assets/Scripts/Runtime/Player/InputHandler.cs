@@ -17,7 +17,6 @@ namespace HTJ21
 
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
-            Debug.Log("Here!");
             RawMovement = e.ReadValue<Vector2>();
         }
 
