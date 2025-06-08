@@ -1,3 +1,6 @@
 [submodule "Assets/Scripts/PlazmaGames"]
 	path = Assets/Scripts/PlazmaGames
 	url = https://github.com/PlazmaGames/UnityCore
+[submodule "Assets/External/URP-PSX"]
+	path = Assets/External/URP-PSX
+	url = https://github.com/Kodrin/URP-PSX.git
