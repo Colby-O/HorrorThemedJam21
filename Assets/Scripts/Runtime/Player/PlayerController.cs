@@ -25,6 +25,12 @@ namespace HTJ21
 
         public bool LockMovement { get; set; }
 
+        public void EnterAt(Vector3 doorLocationPosition)
+        {
+            transform.position = doorLocationPosition;
+            _head.gameObject.SetActive(true);
+        }
+
         private void ProcessMovement()
         {
             float verticalSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;

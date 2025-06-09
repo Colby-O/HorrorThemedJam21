@@ -12,10 +12,12 @@ namespace HTJ21
         private InputAction _moveAction;
         private InputAction _lookAction;
         private InputAction _reverseAction;
+        private InputAction _interactAction;
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
         public bool ReversePressed => _reverseAction.WasPerformedThisFrame();
+        public bool InteractPressed => _interactAction.WasPerformedThisFrame();
 
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
@@ -34,6 +36,7 @@ namespace HTJ21
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
             _reverseAction = _input.actions["Reverse"];
+            _interactAction = _input.actions["Interact"];
 
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;

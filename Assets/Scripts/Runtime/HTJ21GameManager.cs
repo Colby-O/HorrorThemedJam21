@@ -59,7 +59,7 @@ namespace HTJ21
         {
             // TODO: Remove me testing code.
             base.Update();
-            if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

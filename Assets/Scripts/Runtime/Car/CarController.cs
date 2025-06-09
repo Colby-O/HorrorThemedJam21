@@ -113,6 +113,7 @@ namespace HTJ21
 
         [SerializeField] private DrivingProfile _drivingProfile;
 
+        private PlayerController _player;
         private EngineSound _engineSound;
         private InputHandler _inputHandler;
         private Rigidbody _rig;
@@ -121,10 +122,13 @@ namespace HTJ21
         private Transform _camera;
         private Transform _cameraTarget;
         private Vector3 _cameraVelocity;
+        private Transform _doorLocation;
 
         private void Awake()
         {
-            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsSortMode.None)[0];
+            _player = GameObject.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            _doorLocation = transform.Find("DoorLocation");
             _camera = transform.Find("Camera");
             _cameraTarget = transform.Find("CameraTarget");
             info.NormalizeTorqueCurve();
@@ -134,7 +138,7 @@ namespace HTJ21
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);
             _engineSound = GetComponent<EngineSound>();
         }
-        
+
         private void ProcessLook()
         {
             Vector3 headRotation = _camera.localEulerAngles;
@@ -151,6 +155,17 @@ namespace HTJ21
             _cameraVelocity = cameraVelocity;
         }
 
+        public void EnterCar()
+        {
+            _camera.gameObject.SetActive(true);
+        }
+        
+        private void ExitCar()
+        {
+            _camera.gameObject.SetActive(false);
+            _player.EnterAt(_doorLocation.position);
+        }
+
         private void Update()
         {
             ProcessLook();
@@ -159,6 +174,8 @@ namespace HTJ21
                 if (_gear == -1) _gear = 1;
                 if (_gear == 1) _gear = -1;
             }
+
+            if (_inputHandler.InteractPressed) ExitCar();
         }
 
         private void FixedUpdate()

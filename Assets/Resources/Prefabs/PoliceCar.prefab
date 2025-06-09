@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 6310206512019443813}
   m_Layer: 0
   m_Name: PoliceCar
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,7 @@ Transform:
   - {fileID: 4592355315435221781}
   - {fileID: 5409385670746679180}
   - {fileID: 4036421819804618340}
+  - {fileID: 4649820891865641892}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6522682553521134980
@@ -118,6 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ec4b98d4710a2d7adf0b903588247a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
   info:
     airResistance: 13
     engineDynamicFriction: 0.01
@@ -171,7 +173,6 @@ MonoBehaviour:
   _rpm: 2568.6965
   _speed: 9.800382
   _wheelsSliding: 00000000
-  _rpmScale: 3
   _drivingProfile:
     wheelTurnSpeed: 2
     steeringWheelAngleScale: 1
@@ -183,9 +184,6 @@ MonoBehaviour:
     automatic: 1
     automaticUpShiftPoint: 6300
     automaticDownShiftPoint: 4500
-  _cameraLerpSpeed: 5
-  _cameraBobScale: 0.16
-  _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
 --- !u!114 &4370499305851558824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1362,6 +1360,37 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &6508230240532160503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4649820891865641892}
+  m_Layer: 0
+  m_Name: DoorLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4649820891865641892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508230240532160503}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.146, y: -0.079, z: 0.244}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6175583797295597915}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6898399547868851417
 GameObject:
   m_ObjectHideFlags: 0
