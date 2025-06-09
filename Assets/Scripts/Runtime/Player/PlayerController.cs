@@ -25,10 +25,23 @@ namespace HTJ21
 
         public bool LockMovement { get; set; }
 
-        public void EnterAt(Vector3 doorLocationPosition)
+        private void MoveTo(Vector3 position)
         {
-            transform.position = doorLocationPosition;
+            _controller.enabled = false;
+            transform.position = position;
+            _controller.enabled = true;
+        }
+
+        public void EnterAt(Vector3 position)
+        {
+            MoveTo(position);
             _head.gameObject.SetActive(true);
+        }
+
+        private void EnterCar()
+        {
+            _head.gameObject.SetActive(false);
+            HTJ21GameManager.Car.EnterCar();
         }
 
         private void ProcessMovement()
@@ -77,11 +90,13 @@ namespace HTJ21
         private void Update()
         {
             if (LockMovement) return;
-
+            
             ProcessLook();
             ProcessMovement();
             ProcessGravity();
             _controller.Move(transform.TransformDirection(_movementSpeed));
+            
+            if (_head.gameObject.activeSelf && _inputHandler.ReversePressed) EnterCar();
         }
     }
 }

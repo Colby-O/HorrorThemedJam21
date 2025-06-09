@@ -124,6 +124,8 @@ namespace HTJ21
         private Vector3 _cameraVelocity;
         private Transform _doorLocation;
 
+        public bool InCar() => _camera.gameObject.activeSelf;
+
         private void Awake()
         {
             _player = GameObject.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
@@ -162,12 +164,14 @@ namespace HTJ21
         
         private void ExitCar()
         {
+            Debug.Log("EXIT CAR");
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);
         }
 
         private void Update()
         {
+            if (!InCar()) return;
             ProcessLook();
             if (_inputHandler.ReversePressed)
             {
@@ -182,10 +186,18 @@ namespace HTJ21
         {
             _rpm = Rpm();
             _speed = Speed() * 3.6f;
-            
-            _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
-            _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
-            _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
+
+            if (InCar())
+            {
+                _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
+                _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
+                _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
+            }
+            else
+            {
+                _throttle = 0;
+                _brake = 0;
+            }
 
             _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
             _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);

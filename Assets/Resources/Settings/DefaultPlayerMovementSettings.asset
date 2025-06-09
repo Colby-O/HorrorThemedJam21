@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f93c2b3115e684abf6f7297aa365ce, type: 3}
   m_Name: DefaultPlayerMovementSettings
   m_EditorClassIdentifier: 
-  Speed: 15
+  Speed: 4
   WalkingForwardSpeed: 1
   WalkingBackwardSpeed: 0.75
   WalkingStrideSpeed: 1
