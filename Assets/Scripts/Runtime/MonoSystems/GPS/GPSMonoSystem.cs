@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using PlazmaGames.Attribute;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
 using Utils;
 
@@ -177,7 +178,7 @@ namespace HTJ21
 
         private void UpdateGPS()
         {
-            if (!_isOn) return;
+            if (!_isOn || !HTJ21GameManager.Player) return;
 
             _currentPath = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
             DrawPath(_currentPath);
@@ -207,8 +208,6 @@ namespace HTJ21
             {
                 GPSNode startNode = queue.Dequeue();
                 GPSNode endNode = queue.Peek();
-
-                Debug.Log($"Start: {startNode.splineIndex} {startNode.knotIndex}\tEnd: {endNode.splineIndex} {endNode.knotIndex}");
 
                 if (startNode.splineIndex == endNode.splineIndex && startNode.container == endNode.container) 
                 {
@@ -245,13 +244,13 @@ namespace HTJ21
             _renderer.SetPositions(points.ToArray());
         }
 
-        private void Start()
+        private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
             _roadways = RoadwayHelper.GetRoadways();
-            _target = GameObject.FindWithTag("GPSTarget").transform;
+            _target = GameObject.FindWithTag("GPSTarget")?.transform;
 
             _renderer = GameObject.FindWithTag("GPSPath").GetComponent<LineRenderer>();
-            if (_renderer == null) 
+            if (_renderer == null)
             {
                 GameObject path = new GameObject("GPSPath");
                 _renderer = path.AddComponent<LineRenderer>();
@@ -261,6 +260,21 @@ namespace HTJ21
 
             //TODO: Remove Me
             TurnOn();
+        }
+
+        private void Start()
+        {
+
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoad;
         }
 
         private void Update()

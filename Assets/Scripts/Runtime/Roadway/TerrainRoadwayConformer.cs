@@ -1,0 +1,127 @@
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using PlazmaGames.Attribute;
+using Unity.Mathematics;
+using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEditor.Callbacks;
+using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Splines;
+
+namespace HTJ21
+{
+    [ExecuteInEditMode]
+    public class TerrainRoadwayConformer : MonoBehaviour
+    {
+        [Header("References")]
+        [SerializeField] private Terrain _terrain;
+        [Header("Settings")]
+        [SerializeField, Min(0.01f)] float _resolution = 1f;
+        [SerializeField] float _heightOffset = 1f;
+        [SerializeField] float _shoulderWidth = 0f;
+        [SerializeField] private AnimationCurve _falloff = AnimationCurve.Linear(0, 1, 1, 0);
+        [SerializeField] private int _brushResolution = 3;
+
+        [SerializeField, InspectorButton("ConformTerrainToRoadway")] private bool _conformTerrainToRoadway = false;
+
+        public static TerrainRoadwayConformer Instance { get; private set; }
+
+        public void ResetTerrainHeight(float baseHeight = 0f)
+        {
+            TerrainData tData = _terrain.terrainData;
+
+            int width = tData.heightmapResolution;
+            int height = tData.heightmapResolution;
+
+            float[,] flatHeights = new float[height, width];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    flatHeights[y, x] = baseHeight; 
+                }
+            }
+
+            tData.SetHeights(0, 0, flatHeights);
+        }
+
+        public void ConformTerrainToRoadway()
+        {
+            if (!RoadwayCreator.Instance) return;
+            ResetTerrainHeight();
+            Debug.Log("Here!");
+
+            TerrainData tData = _terrain.terrainData;
+            Vector3 tPos = _terrain.transform.position;
+
+            int tRes = tData.heightmapResolution;
+
+            float[,] heights = tData.GetHeights(0, 0, tRes, tRes);
+
+            float terrainWidth = tData.size.x;
+            float terrainHeight = tData.size.y;
+            float terrainLength = tData.size.z;
+
+            List<Roadway> roadways = RoadwayHelper.GetRoadways();
+            float width = RoadwayCreator.Instance.RoadWidth() + _shoulderWidth;
+
+            foreach (Roadway roadway in roadways)
+            {
+                Spline spline = roadway.container.Splines[roadway.splineIndex];
+                int numSamples = Mathf.CeilToInt(spline.GetLength() / _resolution);
+
+                for (int i = 0; i <= numSamples; i++)
+                {
+                    float t = i / (float)numSamples;
+                    roadway.container.Evaluate(roadway.splineIndex, t, out float3 worldPos, out float3 tangent, out float3 upVector);
+                    float3 normal = Vector3.Normalize(tangent);
+                    float3 up = Vector3.Normalize(upVector);
+                    float3 right = Vector3.Cross(up, normal);
+
+                    worldPos = worldPos - _heightOffset * up;
+
+                    int samplesPerSide = Mathf.CeilToInt(width);
+                    for (int j = -samplesPerSide; j <= samplesPerSide; j++)
+                    {
+                        float offset = (j / (float)samplesPerSide) * width;
+                        float3 samplePos = worldPos + right * offset;
+
+                        int mapX = Mathf.RoundToInt((samplePos.x - tPos.x) / terrainWidth * tRes);
+                        int mapZ = Mathf.RoundToInt((samplePos.z - tPos.z) / terrainLength * tRes);
+
+                        if (mapX < 0 || mapX >= tRes || mapZ < 0 || mapZ >= tRes) continue;
+
+                        float height01 = (samplePos.y - tPos.y) / terrainHeight;
+                        float blend = 1f - Mathf.Abs(offset) / width; 
+                        float newHeight = Mathf.Lerp(heights[mapZ, mapX], height01, blend);
+
+                        heights[mapZ, mapX] = Mathf.Max(heights[mapZ, mapX], newHeight);
+                    }
+                }
+            }
+
+            tData.SetHeights(0, 0, heights);
+        }
+
+        private void Awake()
+        {
+            Instance = this;
+            ConformTerrainToRoadway();
+        }
+        private void OnEnable()
+        {
+            Instance = this;
+        }
+
+        private void OnDisable()
+        {
+            Instance = null;
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
+        }
+    }
+}

@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace HTJ21
 {
@@ -50,15 +52,9 @@ namespace HTJ21
         private readonly ConcurrentQueue<float> audioBuffer = new();
         private AudioSource _audioSource;
 
-        void Awake()
-        {
-            _audioSource = GetComponent<AudioSource>();
-            _sampleRate = AudioSettings.outputSampleRate;
-            _phases = new float[_waves.Length];
-            for (int i = 0; i < _phases.Length; i++) _phases[i] = 0;
-            
-            
 #if PLATFORM_WEBGL && !UNITY_EDITOR
+        private void StartSoundEngine() 
+        {
             JsSettings jss = new JsSettings()
             {
                 sampleRate = _sampleRate,
@@ -68,9 +64,27 @@ namespace HTJ21
                 waves = _waves,
             };
             JsEngineSoundInit(JsonUtility.ToJson(jss), _sampleRate);
+        }
+
+        IEnumerator InitSoundEngineJS()
+        {
+            yield return new WaitUntil(() => Keyboard.current.anyKey.isPressed || Mouse.current.leftButton.isPressed);
+            StartSoundEngine();
+        }
+#endif
+        void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+            _sampleRate = AudioSettings.outputSampleRate;
+            _phases = new float[_waves.Length];
+            for (int i = 0; i < _phases.Length; i++) _phases[i] = 0;
+
+#if PLATFORM_WEBGL && !UNITY_EDITOR
+            StartSoundEngine();
+            StartCoroutine(InitSoundEngineJS());
 #endif
         }
-        
+
         public void SetRpmAndThrottle(float rpm, float throttle)
         {
             _rpm = Mathf.Lerp(_rpm, rpm, _rpmLerpSpeed * Time.deltaTime);
@@ -79,7 +93,7 @@ namespace HTJ21
             JsEngineSoundSetRpmAndThrottle(_rpm, _throttle);
 #endif
         }
-        
+
 
 #if PLATFORM_WEBGL && !UNITY_EDITOR
         [System.Runtime.InteropServices.DllImport("__Internal")]
