@@ -178,9 +178,9 @@ namespace HTJ21
 
         private void UpdateGPS()
         {
-            if (!_isOn || !HTJ21GameManager.Player) return;
+            if (!_isOn || !HTJ21GameManager.Car) return;
 
-            _currentPath = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
+            _currentPath = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Car.transform.position));
             DrawPath(_currentPath);
         }
 
@@ -192,9 +192,9 @@ namespace HTJ21
 
             List<Vector3> points = new List<Vector3>();
 
-            if (HTJ21GameManager.Player != null)
+            if (HTJ21GameManager.Car != null)
             {
-                Vector3 playerPos = HTJ21GameManager.Player.transform.position;
+                Vector3 playerPos = HTJ21GameManager.Car.transform.position;
                 Vector3 start = queue.Peek().position;
 
                 playerPos.y += offsetY;

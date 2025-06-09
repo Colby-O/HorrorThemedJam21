@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace HTJ21
 {
@@ -96,7 +97,7 @@ namespace HTJ21
 
     public class CarController : MonoBehaviour
     {
-        private EngineSound _engineSound;
+        [SerializeField] private PlayerSettings _settings;
         
         [SerializeField] private CarInfo info;
 
@@ -110,24 +111,24 @@ namespace HTJ21
 
         [SerializeField] private bool[] _wheelsSliding = new bool[4];
 
-        private Rigidbody _rig;
-
-        private Transform _steeringWheel;
-        private Transform[] _wheels = new Transform[4];
-        [SerializeField] private float _rpmScale = 10;
         [SerializeField] private DrivingProfile _drivingProfile;
 
-        private Transform _cameraTarget;
-        private Transform _camera;
-        [SerializeField] private float _cameraLerpSpeed = 5;
-        [SerializeField] private float _cameraBobScale = 0.1f;
-        private Vector3 _cameraVelocity;
+        private PlayerController _player;
+        private EngineSound _engineSound;
         private InputHandler _inputHandler;
-        [SerializeField] private PlayerSettings _settings;
+        private Rigidbody _rig;
+        private Transform _steeringWheel;
+        private Transform[] _wheels = new Transform[4];
+        private Transform _camera;
+        private Transform _cameraTarget;
+        private Vector3 _cameraVelocity;
+        private Transform _doorLocation;
 
         private void Awake()
         {
-            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsSortMode.None)[0];
+            _player = GameObject.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            _doorLocation = transform.Find("DoorLocation");
             _camera = transform.Find("Camera");
             _cameraTarget = transform.Find("CameraTarget");
             info.NormalizeTorqueCurve();
@@ -137,51 +138,44 @@ namespace HTJ21
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);
             _engineSound = GetComponent<EngineSound>();
         }
-        
+
         private void ProcessLook()
         {
             Vector3 headRotation = _camera.localEulerAngles;
             headRotation.x -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
-            headRotation.x = Mathf.Clamp(Mathf.Repeat(headRotation.x + 180, 360) - 180, _settings.YLookLimit.x, _settings.YLookLimit.y);
+            headRotation.x = Mathf.Clamp(Mathf.Repeat(headRotation.x + 180, 360) - 180, _settings.CarYLookLimit.x, _settings.CarYLookLimit.y);
             headRotation.y += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
+            headRotation.y = Mathf.Clamp(Mathf.Repeat(headRotation.y + 180, 360) - 180, _settings.CarXLookLimit.x, _settings.CarXLookLimit.y);
 
             _camera.localRotation = Quaternion.Euler(headRotation);
 
             Vector3 cameraVelocity = _rig.GetPointVelocity(_cameraTarget.position);
             Vector3 acceleration = cameraVelocity - _cameraVelocity;
-            _camera.position = Vector3.Lerp(_camera.position, _cameraTarget.position - acceleration * _cameraBobScale, Time.deltaTime * _cameraLerpSpeed);
+            _camera.position = Vector3.Lerp(_camera.position, _cameraTarget.position - acceleration * _settings.HeadBobbleMagnitude, Time.deltaTime * _settings.HeadBobbleSpeed);
             _cameraVelocity = cameraVelocity;
+        }
+
+        public void EnterCar()
+        {
+            _camera.gameObject.SetActive(true);
+        }
+        
+        private void ExitCar()
+        {
+            _camera.gameObject.SetActive(false);
+            _player.EnterAt(_doorLocation.position);
         }
 
         private void Update()
         {
             ProcessLook();
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (_inputHandler.ReversePressed)
             {
-                if (_drivingProfile.automatic)
-                {
-                    if (_gear == -1) _gear = 1;
-                    else _gear += 1;
-                }
-                else
-                {
-                    _gear += 1;
-                }
+                if (_gear == -1) _gear = 1;
+                else if (_gear == 1) _gear = -1;
             }
 
-            if (Keyboard.current.downArrowKey.wasPressedThisFrame)
-            {
-                if (_drivingProfile.automatic)
-                {
-                    if (_gear == 1) _gear = -1;
-                    else _gear -= 1;
-                }
-                else
-                {
-                    _gear -= 1;
-                }
-            }
-            _gear = Mathf.Clamp(_gear, -1, 6);
+            if (_inputHandler.InteractPressed) ExitCar();
         }
 
         private void FixedUpdate()
@@ -189,31 +183,17 @@ namespace HTJ21
             _rpm = Rpm();
             _speed = Speed() * 3.6f;
             
-            if (Keyboard.current.wKey.IsPressed()) _throttle = _drivingProfile.maxThrottle;
-            if (!Keyboard.current.wKey.IsPressed()) _throttle = 0;
-            if (Keyboard.current.sKey.IsPressed()) _brake = 1f;
-            if (!Keyboard.current.sKey.IsPressed()) _brake = 0;
-
-            if (Keyboard.current.aKey.IsPressed())
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, -MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
-            else if (Keyboard.current.dKey.IsPressed())
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
-            else
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, 0, Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
+            _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
+            _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
+            _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
 
             _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
             _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
+
             Vector3 swRot = _steeringWheel.localRotation.eulerAngles;
             swRot.z = 90 + _steeringAngle * _drivingProfile.steeringWheelAngleScale;
             _steeringWheel.localRotation = Quaternion.Euler(swRot);
 
-            
             _engineSound.SetRpmAndThrottle(_rpm, _throttle);
 
             Simulate();
@@ -260,7 +240,6 @@ namespace HTJ21
                 {
                     Vector3 force = Vector3.zero;
                     float suspensionPosition = info.suspensionLength - (hit.distance - give);
-                    Debug.Log(suspensionPosition);
                     Vector3 suspensionForce =
                         wheelUp * (
                             (suspensionPosition / info.suspensionLength * info.suspensionStrength) +
@@ -304,7 +283,7 @@ namespace HTJ21
         private float Rpm()
         {
             return Mathf.Clamp(
-                Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _rpmScale,
+                Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _settings.RpmScale,
                 0,
                 info.maxRpm);
         }
