@@ -47,12 +47,25 @@ namespace HTJ21
             _monoSystemHolder.SetActive(true);
         }
 
-        private void Start()
+        private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
             Player = GameObject.FindWithTag("Player");
+        }
 
+        private void Start()
+        {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoad;
         }
 
         protected override void Update()

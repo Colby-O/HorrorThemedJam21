@@ -119,7 +119,7 @@ namespace HTJ21
                 Roadway roadway = _roadways[i];
                 roadway.segments = new List<float>();
                 float length = roadway.container.Splines[roadway.splineIndex].GetLength();
-                int numberOfSegments = Mathf.Max((int)(length / _resolution), 1);
+                int numberOfSegments = Mathf.CeilToInt(length / _resolution);
                 for (float j = 0.0f; j <= numberOfSegments; j++) roadway.segments.Add(j / numberOfSegments);
                 RoadwayMeshGenerator.GenerateRoadMesh(roadway, _roadWidth, _curveWidth, _curveHeight);
             }
@@ -136,6 +136,7 @@ namespace HTJ21
         private void OnSplineChanged(Spline _, int __, SplineModification ___)
         {
             GenerateRoadway();
+            if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
 
@@ -181,6 +182,7 @@ namespace HTJ21
         private static void OnScriptsReloaded()
         {
             if (Instance != null) Instance.GenerateRoadway();
+            if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
         public float RoadWidth() => _roadWidth;
