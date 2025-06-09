@@ -187,14 +187,22 @@ namespace HTJ21
 
         private void DrawPath(List<GPSNode> nodes)
         {
+            float offsetY = 10f;
+
             Queue<GPSNode> queue = new Queue<GPSNode>(nodes);
 
             List<Vector3> points = new List<Vector3>();
 
             if (HTJ21GameManager.Player != null)
             {
-                points.Add(HTJ21GameManager.Player.transform.position);
-                points.Add(queue.Peek().position);
+                Vector3 playerPos = HTJ21GameManager.Player.transform.position;
+                Vector3 start = queue.Peek().position;
+
+                playerPos.y += offsetY;
+                start.y += offsetY;
+
+                points.Add(playerPos);
+                points.Add(start);
             }
 
             while (queue.Count > 1) 
@@ -218,6 +226,7 @@ namespace HTJ21
                     {
                         float t = Mathf.Lerp(tStart, tEnd, j / (float)_gpsResolution);
                         Vector3 pos = startNode.container.EvaluatePosition(startNode.splineIndex, t);
+                        pos.y += offsetY;
                         points.Add(pos);
                     }
                 }
@@ -225,6 +234,9 @@ namespace HTJ21
                 {
                     Vector3 posStart = startNode.container.transform.TransformPoint(startNode.container[startNode.splineIndex][startNode.knotIndex].Position);
                     Vector3 posEnd = endNode.container.transform.TransformPoint(endNode.container[endNode.splineIndex][endNode.knotIndex].Position);
+
+                    posStart.y += offsetY;
+                    posEnd.y += offsetY;
 
                     points.Add(posStart);
                     points.Add(posEnd);
