@@ -37,6 +37,32 @@ MonoBehaviour:
   _blueShift: 0
   _greenShift: 0
   _isMonochrome: 0
+--- !u!114 &-7213864703060006784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffbcefd41474f6c42bb21978228b247e, type: 3}
+  m_Name: DitheringRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-70723477897083109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb4200125595f347afc722cd225cb71, type: 3}
+  m_Name: PixelationRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +90,10 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
   - {fileID: -7883183830535167423}
-  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e9992
+  - {fileID: -70723477897083109}
+  - {fileID: -7213864703060006784}
+  - {fileID: 2237499131995943675}
+  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e99921b07aa1e5fbd04ff802861f44534e39bfbf2dc139b310d1f
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -90,6 +119,19 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &2237499131995943675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85ef5d5fc2f4584db99209faa3e16d0, type: 3}
+  m_Name: FogRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0
