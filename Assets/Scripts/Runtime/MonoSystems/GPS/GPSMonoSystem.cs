@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Splines;
-using static UnityEditor.PlayerSettings;
+using Utils;
 
 namespace HTJ21
 {
@@ -116,30 +116,48 @@ namespace HTJ21
             return neighbors;
         }
 
+        private float GetDistanceBetween(GPSNode a, GPSNode b)
+        {
+            if (a.splineIndex != b.splineIndex || a.container != b.container) 
+            {
+                return Vector3.Distance(a.position, b.position);
+            }
+
+            var spline = a.container.Splines[a.splineIndex];
+            int start = Mathf.Min(a.knotIndex, b.knotIndex);
+            int end = Mathf.Max(a.knotIndex, b.knotIndex);
+
+            return RoadwayHelper.GetDistanceBetweenKnots(a.container, a.splineIndex, start, end); 
+        }
+
         private List<GPSNode> PathFindToTarget(GPSNode start)
         {
             if (start.Equals(_targetNode)) return new List<GPSNode>() { start };
 
             List<GPSNode> path = new List<GPSNode>();
 
-            HashSet<GPSNode> visted = new HashSet<GPSNode>();
-            Queue<GPSNode> queue = new Queue<GPSNode>();
+            PriorityQueue<GPSNode, float> queue = new PriorityQueue<GPSNode, float>();
             Dictionary<GPSNode, GPSNode> cameFrom = new Dictionary<GPSNode, GPSNode>();
+            Dictionary<GPSNode, float> costSoFar = new Dictionary<GPSNode, float>();
 
-            queue.Enqueue(start);
-            visted.Add(start);
+            queue.Enqueue(start, 0);
+            costSoFar[start] = 0;
+
             while (queue.Count > 0) 
             { 
                 GPSNode current = queue.Dequeue();
                 if (current.Equals(_targetNode)) return ReconstructPath(cameFrom, current);
 
                 foreach (GPSNode neighbor in GetConnectedNodes(current)) 
-                { 
-                    if (!visted.Contains(neighbor))
+                {
+                    float cost = GetDistanceBetween(current, neighbor);
+                    float newCost = costSoFar[current] + cost;
+
+                    if (!costSoFar.ContainsKey(neighbor) || newCost < costSoFar[neighbor])
                     {
-                        visted.Add(neighbor);
+                        costSoFar[neighbor] = newCost;
                         cameFrom[neighbor] = current;
-                        queue.Enqueue(neighbor);
+                        queue.Enqueue(neighbor, newCost);
                     }
                 }
             }
@@ -173,7 +191,11 @@ namespace HTJ21
 
             List<Vector3> points = new List<Vector3>();
 
-            if (HTJ21GameManager.Player != null) points.Add(HTJ21GameManager.Player.transform.position);
+            if (HTJ21GameManager.Player != null)
+            {
+                points.Add(HTJ21GameManager.Player.transform.position);
+                points.Add(queue.Peek().position);
+            }
 
             while (queue.Count > 1) 
             {
@@ -188,15 +210,6 @@ namespace HTJ21
 
                     int start = startNode.knotIndex;
                     int end = endNode.knotIndex;
-
-                    if (end > start)
-                    {
-                        GPSNode temp = startNode;
-                        startNode = endNode;
-                        endNode = temp;
-                        start = startNode.knotIndex;
-                        end = endNode.knotIndex;
-                    }
 
                     float tStart = RoadwayHelper.GetKnotTInSpline(startNode.container, startNode.splineIndex, startNode.knotIndex);
                     float tEnd = RoadwayHelper.GetKnotTInSpline(endNode.container, endNode.splineIndex, endNode.knotIndex);
