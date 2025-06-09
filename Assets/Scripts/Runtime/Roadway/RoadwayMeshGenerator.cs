@@ -1,17 +1,7 @@
-#if UNITY_EDITOR
-
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Mathematics;
 using UnityEngine.Splines;
-using UnityEditor.Splines;
-using PlazmaGames.Attribute;
-using UnityEditor;
-using PlazmaGames.Core;
-using UnityEditor.ShaderGraph.Internal;
 using System.Linq;
-using Unity.VisualScripting;
 
 namespace HTJ21
 {
@@ -480,5 +470,4 @@ namespace HTJ21
         }
     }
 }
-#endif
 
