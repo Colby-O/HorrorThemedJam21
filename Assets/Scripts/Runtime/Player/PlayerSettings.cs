@@ -18,5 +18,9 @@ namespace HTJ21
         public Vector2 YLookLimit;
         public bool InvertLookY = false;
         public bool InvertLookX = false;
+
+        [Header("Car")]
+        public Vector2 CarYLookLimit;
+        public Vector2 CarXLookLimit;
     }
 }
