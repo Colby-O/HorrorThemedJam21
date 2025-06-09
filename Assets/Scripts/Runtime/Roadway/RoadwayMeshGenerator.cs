@@ -31,16 +31,17 @@ namespace HTJ21
 
     public class RoadwayMeshGenerator
     {
-        public static List<GameObject> meshes { get; private set; }
+        public static List<GameObject> Meshes { get; private set; }
 
-        public static Transform parent { get; set; }
-        public static Material mat { get; set; }
+        public static Transform Parent { get; set; }
+        public static Material RoadMat { get; set; }
+        public static Material IntersectionMat { get; set; }
 
         public static void Clear()
         {
-            if (meshes == null) return;
-            if (meshes.Count > 0) foreach (GameObject go in meshes) if (go != null) GameObject.DestroyImmediate(go);
-            meshes.Clear();
+            if (Meshes == null) return;
+            if (Meshes.Count > 0) foreach (GameObject go in Meshes) if (go != null) GameObject.DestroyImmediate(go);
+            Meshes.Clear();
         }
 
         private static Vector3 GetIntersectionInnerEdges(RoadwayIntersection intersection, float roadWidth, ref List<Edge> edges, ref List<Vector3> points)
@@ -155,18 +156,25 @@ namespace HTJ21
         {
             int vOffset = vertices.Count;
 
+            Vector2 centerUV = new Vector2(0.5f, 0.5f);
+
             for (int j = 1; j <= points.Count; j++)
             {
                 vertices.Add(center);
                 vertices.Add(points[j - 1]);
 
+                uvs.Add(centerUV);
+                uvs.Add(new Vector2((points[j - 1].x - center.x) * 0.5f + 0.5f, (points[j - 1].z - center.z) * 0.5f + 0.5f));
+
                 if (j == points.Count)
                 {
                     vertices.Add(points[0]);
+                    uvs.Add(new Vector2((points[0].x - center.x) * 0.5f + 0.5f, (points[0].z - center.z) * 0.5f + 0.5f));
                 }
                 else
                 {
                     vertices.Add(points[j]);
+                    uvs.Add(new Vector2((points[j].x - center.x) * 0.5f + 0.5f, (points[j].z - center.z) * 0.5f + 0.5f));
                 }
 
                 triangles.Add(vOffset + ((j - 1) * 3) + 0);
@@ -211,6 +219,13 @@ namespace HTJ21
                 vertices.Add(p5);
                 vertices.Add(p6);
 
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.zero);
+                uvs.Add(Vector2.zero);
+
                 // Curve Side
                 triangles.Add(vOffset + 0);
                 triangles.Add(vOffset + 1);
@@ -233,11 +248,13 @@ namespace HTJ21
             }
         }
 
-        private static void CleanMesh(ref List<Vector3> vertices, ref List<int> triangles)
+        private static void CleanMesh(ref List<Vector3> vertices, ref List<int> triangles, ref List<Vector2> uvs)
         {
             Dictionary<Vector3, int>  vertexMap = new Dictionary<Vector3, int>();
 
             List <Vector3> uniqueVerts = new List<Vector3>();
+            List<Vector2> uniqueUvs = new List<Vector2>();
+
             int[] remapped = new int[vertices.Count];
 
             for (int i = 0; i < vertices.Count; i++)
@@ -251,6 +268,7 @@ namespace HTJ21
                 {
                     int newIndex = uniqueVerts.Count;
                     uniqueVerts.Add(v);
+                    uniqueUvs.Add(uvs[i]);
                     vertexMap[v] = newIndex;
                     remapped[i] = newIndex;
                 }
@@ -264,12 +282,13 @@ namespace HTJ21
 
             vertices = uniqueVerts;
             triangles = outTriangles.ToList();
+            uvs = uniqueUvs;
         }
 
         public static void GenerateIntersectionMesh(RoadwayIntersection intersection, float roadWidth, float curveWidth, float curveHeight)
         {
             GameObject roadwayGameObject = new GameObject("intersection");
-            roadwayGameObject.transform.parent = parent;
+            roadwayGameObject.transform.parent = Parent;
             MeshRenderer mr = roadwayGameObject.AddComponent<MeshRenderer>();
             MeshFilter mf = roadwayGameObject.AddComponent<MeshFilter>();
 
@@ -290,20 +309,21 @@ namespace HTJ21
             GenerateIntersection(center, pointsInner, ref vertices, ref triangles, ref uvs);
             GenerateIntersectionCurve(intersection, center, pointsInner, pointsOuter, roadWidth, curveHeight, curveWidth, ref vertices, ref triangles, ref uvs);
 
-            CleanMesh(ref vertices, ref triangles);
+            CleanMesh(ref vertices, ref triangles, ref uvs);
 
             mesh.vertices = vertices.ToArray();
             mesh.triangles = triangles.ToArray();
+            mesh.uv = uvs.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            mr.material = mat;
+            mr.material = IntersectionMat;
             mf.mesh = mesh;
 
             roadwayGameObject.AddComponent<MeshCollider>();
 
-            if (meshes == null) meshes = new List<GameObject>();
-            meshes.Add(roadwayGameObject);
+            if (Meshes == null) Meshes = new List<GameObject>();
+            Meshes.Add(roadwayGameObject);
         }
 
         private static void CreateRoad(Roadway roadway, float roadWidth, ref List<Vector3> vertices, ref List<int> triangles, ref List<Vector2> uvs)
@@ -430,7 +450,7 @@ namespace HTJ21
             if (roadway.segments.Count == 0) return;
 
             GameObject roadwayGameObject = new GameObject("Road");
-            roadwayGameObject.transform.parent = parent;
+            roadwayGameObject.transform.parent = Parent;
             MeshRenderer mr = roadwayGameObject.AddComponent<MeshRenderer>();
             MeshFilter mf = roadwayGameObject.AddComponent<MeshFilter>();
 
@@ -448,13 +468,13 @@ namespace HTJ21
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            mr.material = mat;
+            mr.material = RoadMat;
             mf.mesh = mesh;
 
             roadwayGameObject.AddComponent<MeshCollider>();
 
-            if (meshes == null) meshes = new List<GameObject>();
-            meshes.Add(roadwayGameObject);
+            if (Meshes == null) Meshes = new List<GameObject>();
+            Meshes.Add(roadwayGameObject);
         }
     }
 }
