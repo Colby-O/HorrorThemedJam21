@@ -1,7 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Splines;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Splines;
+using UnityEngine.UIElements;
 
 namespace HTJ21
 {
@@ -26,6 +28,7 @@ namespace HTJ21
         public static Transform Parent { get; set; }
         public static Material RoadMat { get; set; }
         public static Material IntersectionMat { get; set; }
+        public static Material CurbMat { get; set; }
 
         public static void Clear()
         {
@@ -178,6 +181,7 @@ namespace HTJ21
             if (curveHeight < 0.001f || curveWidth < 0.001f) return;
 
             int vOffset = vertices.Count;
+            float uvScale = 0.1f;
 
             for (int j = 1; j <= pointsInner.Count; j++)
             {
@@ -215,14 +219,14 @@ namespace HTJ21
                 vertices.Add(p7);
                 vertices.Add(p8);
 
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
-                uvs.Add(Vector2.zero);
+                uvs.Add(new Vector2(p1.x * uvScale, p1.z * uvScale));
+                uvs.Add(new Vector2(p2.x * uvScale, p2.z * uvScale));
+                uvs.Add(new Vector2(p3.x * uvScale, p3.z * uvScale));
+                uvs.Add(new Vector2(p4.x * uvScale, p4.z * uvScale));
+                uvs.Add(new Vector2(p5.x * uvScale, p5.z * uvScale));
+                uvs.Add(new Vector2(p6.x * uvScale, p6.z * uvScale));
+                uvs.Add(new Vector2(p7.x * uvScale, p7.z * uvScale));
+                uvs.Add(new Vector2(p8.x * uvScale, p8.z * uvScale));
 
                 // Curve Side Inner
                 triangles.Add(vOffset + 0);
@@ -303,7 +307,8 @@ namespace HTJ21
             Mesh mesh = new Mesh();
             List<Vector3> vertices = new List<Vector3>();
             List<Vector2> uvs = new List<Vector2>();
-            List<int> triangles = new List<int>();
+            List<int> trianglesRoad = new List<int>();
+            List<int> trianglesCurb = new List<int>();
 
             List<Edge> edgesInner = new List<Edge>();
             List<Vector3> pointsInner = new List<Vector3>();
@@ -314,18 +319,19 @@ namespace HTJ21
             Vector3 center = GetIntersectionInnerEdges(intersection, roadWidth, ref edgesInner, ref pointsInner);
             GetIntersectionOuterEdges(intersection, roadWidth, curveWidth, ref edgesOuter, ref pointsOuter);
 
-            GenerateIntersection(center, pointsInner, ref vertices, ref triangles, ref uvs);
-            GenerateIntersectionCurve(intersection, center, pointsInner, pointsOuter, roadWidth, curveHeight, curveWidth, ref vertices, ref triangles, ref uvs);
-
-            CleanMesh(ref vertices, ref triangles, ref uvs);
+            GenerateIntersectionCurve(intersection, center, pointsInner, pointsOuter, roadWidth, curveHeight, curveWidth, ref vertices, ref trianglesCurb, ref uvs);
+            CleanMesh(ref vertices, ref trianglesCurb, ref uvs);
+            GenerateIntersection(center, pointsInner, ref vertices, ref trianglesRoad, ref uvs);
 
             mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
             mesh.uv = uvs.ToArray();
+            mesh.subMeshCount = 2;
+            mesh.SetTriangles(trianglesRoad, 0);
+            mesh.SetTriangles(trianglesCurb, 1);
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            mr.material = IntersectionMat;
+            mr.materials = new Material[] { IntersectionMat, CurbMat };
             mf.mesh = mesh;
 
             roadwayGameObject.AddComponent<MeshCollider>();
@@ -389,29 +395,30 @@ namespace HTJ21
 
             int vOffset = vertices.Count;
 
+            float uvScale = 0.1f;
+
             for (int i = 0; i < roadway.segments.Count; i++)
             {
                 RoadwayHelper.GetRoadwayWidthAt(roadway.container, roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
                 RoadwayHelper.GetRoadwayWidthAt(roadway.container, roadway.splineIndex, roadway.segments[i], roadWidth + curveWidth, out Vector3 curbRightPT, out Vector3 curbLeftPT);
 
-                vertices.Add(rightPT);
-                vertices.Add(rightPT + Vector3.up * curveHeight);
-                vertices.Add(curbRightPT + Vector3.up * curveHeight);
-                vertices.Add(curbRightPT);
-                vertices.Add(leftPT);
-                vertices.Add(leftPT + Vector3.up * curveHeight);
-                vertices.Add(curbLeftPT + Vector3.up * curveHeight);
-                vertices.Add(curbLeftPT);
+                Vector3[] points = new Vector3[]
+                {
+                    rightPT,
+                    rightPT + Vector3.up * curveHeight,
+                    curbRightPT + Vector3.up * curveHeight,
+                    curbRightPT,
+                    leftPT,
+                    leftPT + Vector3.up * curveHeight,
+                    curbLeftPT + Vector3.up * curveHeight,
+                    curbLeftPT
+                };
 
-                // TODO: Map UVs
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
-                uvs.Add(new Vector2(0, 0));
+                foreach (var pt in points)
+                {
+                    vertices.Add(pt);
+                    uvs.Add(new Vector2(pt.x * uvScale, pt.z * uvScale));
+                }
             }
 
             int idx = 0;
@@ -420,49 +427,58 @@ namespace HTJ21
                 idx = vOffset + i * 8;
 
                 // Right Curb Inner Side
-                triangles.Add(idx + 4);
+                triangles.Add(idx + 8);
                 triangles.Add(idx);
                 triangles.Add(idx + 1);
 
-                triangles.Add(idx + 4);
+                triangles.Add(idx + 8);
                 triangles.Add(idx + 1);
-                triangles.Add(idx + 5);
+                triangles.Add(idx + 9);
 
                 //// Right Curb
-                //triangles.Add(idx + 2);
-                //triangles.Add(idx + 7);
-                //triangles.Add(idx + 1);
+                triangles.Add(idx + 2);
+                triangles.Add(idx + 9);
+                triangles.Add(idx + 1);
 
-                //triangles.Add(idx + 2);
-                //triangles.Add(idx + 8);
-                //triangles.Add(idx + 7);
+                triangles.Add(idx + 9);
+                triangles.Add(idx + 2);
+                triangles.Add(idx + 10);
 
                 //// Right Curb Outer Side
-                //triangles.Add(idx + 6);
-                //triangles.Add(idx);
-                //triangles.Add(idx + 1);
+                triangles.Add(idx + 10);
+                triangles.Add(idx + 2);
+                triangles.Add(idx + 3);
 
-                //triangles.Add(idx + 6);
-                //triangles.Add(idx + 1);
-                //triangles.Add(idx + 7);
+                triangles.Add(idx + 10);
+                triangles.Add(idx + 3);
+                triangles.Add(idx + 11);
 
-                //// Left Curb Side
-                //triangles.Add(idx + 3);
-                //triangles.Add(idx + 9);
-                //triangles.Add(idx + 4);
+                //// Left Curb Inner Side
+                triangles.Add(idx + 4);
+                triangles.Add(idx + 12);
+                triangles.Add(idx + 5);
 
-                //triangles.Add(idx + 4);
-                //triangles.Add(idx + 9);
-                //triangles.Add(idx + 10);
+                triangles.Add(idx + 5);
+                triangles.Add(idx + 12);
+                triangles.Add(idx + 13);
 
                 //// Left Curb
-                //triangles.Add(idx + 10);
-                //triangles.Add(idx + 5);
-                //triangles.Add(idx + 4);
+                triangles.Add(idx + 13);
+                triangles.Add(idx + 6);
+                triangles.Add(idx + 5);
 
-                //triangles.Add(idx + 11);
-                //triangles.Add(idx + 5);
-                //triangles.Add(idx + 10);
+                triangles.Add(idx + 14);
+                triangles.Add(idx + 6);
+                triangles.Add(idx + 13);
+
+                //// Left Curb Outer Side
+                triangles.Add(idx + 6);
+                triangles.Add(idx + 14);
+                triangles.Add(idx + 7);
+
+                triangles.Add(idx + 7);
+                triangles.Add(idx + 14);
+                triangles.Add(idx + 15);
             }
         }
 
@@ -477,20 +493,24 @@ namespace HTJ21
             MeshFilter mf = roadwayGameObject.AddComponent<MeshFilter>();
 
             Mesh mesh = new Mesh();
+
             List<Vector3> vertices = new List<Vector3>();
-            List<int> triangles = new List<int>();
+            List<int> trianglesRoad = new List<int>();
+            List<int> trianglesCurb = new List<int>();
             List<Vector2> uvs = new List<Vector2>();
 
-            CreateRoad(roadway, roadWidth, ref vertices, ref triangles, ref uvs);
-            CreateCurve(roadway, roadWidth, curveHeight, curveWidth, ref vertices, ref triangles, ref uvs);
+            CreateRoad(roadway, roadWidth, ref vertices, ref trianglesRoad, ref uvs);
+            CreateCurve(roadway, roadWidth, curveHeight, curveWidth, ref vertices, ref trianglesCurb, ref uvs);
 
             mesh.vertices = vertices.ToArray();
-            mesh.triangles = triangles.ToArray();
             mesh.uv = uvs.ToArray();
+            mesh.subMeshCount = 2;
+            mesh.SetTriangles(trianglesRoad, 0);
+            mesh.SetTriangles(trianglesCurb, 1);
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            mr.material = RoadMat;
+            mr.materials = new Material[] { RoadMat, CurbMat };
             mf.mesh = mesh;
 
             roadwayGameObject.AddComponent<MeshCollider>();
