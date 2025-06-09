@@ -51,6 +51,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private Transform _target;
         [SerializeField, ReadOnly] private GPSNode _targetNode;
         [SerializeField, ReadOnly] private List<Roadway> _roadways;
+        [SerializeField, ReadOnly] private List<GPSNode> _currentPath;
+
 
         private LineRenderer _renderer;
 
@@ -116,6 +118,8 @@ namespace HTJ21
 
         private List<GPSNode> PathFindToTarget(GPSNode start)
         {
+            if (start.Equals(_targetNode)) return new List<GPSNode>() { start };
+
             List<GPSNode> path = new List<GPSNode>();
 
             HashSet<GPSNode> visted = new HashSet<GPSNode>();
@@ -148,7 +152,7 @@ namespace HTJ21
             List<GPSNode> path = new List<GPSNode>() { current };
             while (cameFrom.ContainsKey(current)) 
             {
-                Debug.DrawLine(current.position, cameFrom[current].position, Color.green, Mathf.Infinity);
+                Debug.DrawLine(current.position, cameFrom[current].position, Color.green, 1f);
                 current = cameFrom[current];
                 path.Insert(0, current);
             }
@@ -159,15 +163,15 @@ namespace HTJ21
         {
             if (!_isOn) return;
 
-            List<GPSNode> nodes = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
-            DrawPath(nodes);
+            _currentPath = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
+            DrawPath(_currentPath);
         }
 
         private void DrawPath(List<GPSNode> nodes)
         {
             Queue<GPSNode> queue = new Queue<GPSNode>(nodes);
 
-            List<Vector3> points  = new List<Vector3>();
+            List<Vector3> points = new List<Vector3>();
 
             if (HTJ21GameManager.Player != null) points.Add(HTJ21GameManager.Player.transform.position);
 
@@ -185,8 +189,17 @@ namespace HTJ21
                     int start = startNode.knotIndex;
                     int end = endNode.knotIndex;
 
-                    float tStart = RoadwayHelper.KnotToT(spline, startNode.knotIndex);
-                    float tEnd = RoadwayHelper.KnotToT(spline, endNode.knotIndex);
+                    if (end > start)
+                    {
+                        GPSNode temp = startNode;
+                        startNode = endNode;
+                        endNode = temp;
+                        start = startNode.knotIndex;
+                        end = endNode.knotIndex;
+                    }
+
+                    float tStart = RoadwayHelper.GetKnotTInSpline(startNode.container, startNode.splineIndex, startNode.knotIndex);
+                    float tEnd = RoadwayHelper.GetKnotTInSpline(endNode.container, endNode.splineIndex, endNode.knotIndex);
 
                     for (int j = 0; j < _gpsResolution; j++)
                     {
