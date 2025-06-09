@@ -20,6 +20,12 @@ namespace HTJ21
     public class RoadwayHelper : MonoBehaviour
     {
 
+        public static float KnotToT(Spline spline, int knotIndex)
+        {
+            int knotCount = spline.Count;
+            return Mathf.Clamp01(knotIndex / (float)(knotCount - 1));
+        }
+
         public static void GetRoadwayWidthAt(SplineContainer roadway, int splineIndex, float t, float width, out Vector3 p1, out Vector3 p2)
         {
             roadway.Evaluate(splineIndex, t, out float3 position, out float3 forward, out float3 up);

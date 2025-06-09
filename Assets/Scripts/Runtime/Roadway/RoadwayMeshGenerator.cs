@@ -53,7 +53,7 @@ namespace HTJ21
 
                 RoadwayHelper.GetRoadwayWidthAt(junction.splineContainer, junction.splineIndex, t, roadWidth, out Vector3 rightPT, out Vector3 leftPT);
 
-                edges.Add(new Edge(leftPT, rightPT));
+                edges.Add(junction.knotIndex == 0 ? new Edge(leftPT, rightPT) : new Edge(rightPT, leftPT));
                 center += rightPT;
                 center += leftPT;
             }
@@ -107,7 +107,7 @@ namespace HTJ21
 
                 RoadwayHelper.GetRoadwayWidthAt(junction.splineContainer, junction.splineIndex, t, roadWidth + curveWidth, out Vector3 rightPT, out Vector3 leftPT);
 
-                edges.Add(new Edge(leftPT, rightPT));
+                edges.Add(junction.knotIndex == 0 ? new Edge(leftPT, rightPT) : new Edge(rightPT, leftPT));
                 center += rightPT;
                 center += leftPT;
             }

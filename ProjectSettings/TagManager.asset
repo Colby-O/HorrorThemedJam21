@@ -6,11 +6,12 @@ TagManager:
   tags:
   - RoadwayPath
   - GPSTarget
+  - GPSPath
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - GPS
   - Water
   - UI
   - 

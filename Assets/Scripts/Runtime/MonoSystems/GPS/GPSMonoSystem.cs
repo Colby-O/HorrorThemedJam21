@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using PlazmaGames.Attribute;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Splines;
+using static UnityEditor.PlayerSettings;
 
 namespace HTJ21
 {
@@ -42,10 +44,19 @@ namespace HTJ21
 
     public class GPSMonoSystem : MonoBehaviour, IGPSMonoSystem
     {
-        [SerializeField, ReadOnly] private bool _isOn;
+        [Header("Settings")]
+        [SerializeField, Min(1)] private int _gpsResolution;
+
+        [SerializeField, ReadOnly] private bool _isOn = true;
         [SerializeField, ReadOnly] private Transform _target;
         [SerializeField, ReadOnly] private GPSNode _targetNode;
         [SerializeField, ReadOnly] private List<Roadway> _roadways;
+
+        private LineRenderer _renderer;
+
+        public void TurnOn() => _isOn = true;
+
+        public void TurnOff() => _isOn = false;
 
         private GPSNode GetClosestNodeToPoint(List<Roadway> roadways, Vector3 target)
         {
@@ -83,7 +94,22 @@ namespace HTJ21
             if (node.knotIndex > 0) neighbors.Add(new GPSNode(node.container, node.splineIndex, node.knotIndex - 1, node.container.transform.TransformPoint(spline[node.knotIndex - 1].Position)));
             if (node.knotIndex < spline.Count - 1) neighbors.Add(new GPSNode(node.container, node.splineIndex, node.knotIndex + 1, node.container.transform.TransformPoint(spline[node.knotIndex + 1].Position)));
 
-            //TODO: Add  Itersection
+            List<RoadwayIntersection> intersections = RoadwayCreator.Instance.GetIntersections();
+
+            foreach (RoadwayIntersection intersection in intersections)
+            {
+                JunctionInfo thisJunction = new JunctionInfo(node.splineIndex, node.knotIndex, node.container);
+                if (intersection.HasJunction(thisJunction))
+                {
+                    foreach (JunctionInfo junction in intersection.GetJunctions())
+                    {
+                        if (!junction.Equals(thisJunction))
+                        {
+                            neighbors.Add(new GPSNode(junction.splineContainer, junction.splineIndex, junction.knotIndex, junction.splineContainer.transform.TransformPoint(junction.splineContainer[junction.splineIndex][junction.knotIndex].Position)));
+                        }
+                    }
+                }
+            }
 
             return neighbors;
         }
@@ -101,7 +127,7 @@ namespace HTJ21
             while (queue.Count > 0) 
             { 
                 GPSNode current = queue.Dequeue();
-                if (current.Equals(_target)) return ReconstructPath(cameFrom, current);
+                if (current.Equals(_targetNode)) return ReconstructPath(cameFrom, current);
 
                 foreach (GPSNode neighbor in GetConnectedNodes(current)) 
                 { 
@@ -114,7 +140,7 @@ namespace HTJ21
                 }
             }
 
-            return null;
+            return new List<GPSNode>();
         }
 
         private List<GPSNode> ReconstructPath(Dictionary<GPSNode, GPSNode> cameFrom, GPSNode current)
@@ -122,7 +148,7 @@ namespace HTJ21
             List<GPSNode> path = new List<GPSNode>() { current };
             while (cameFrom.ContainsKey(current)) 
             {
-                Debug.DrawLine(current.position, cameFrom[current].position, Color.blue, Mathf.Infinity);
+                Debug.DrawLine(current.position, cameFrom[current].position, Color.green, Mathf.Infinity);
                 current = cameFrom[current];
                 path.Insert(0, current);
             }
@@ -131,26 +157,74 @@ namespace HTJ21
 
         private void UpdateGPS()
         {
-            GPSNode node = GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position);
+            if (!_isOn) return;
 
-            if (HTJ21GameManager.Player != null && node.container != null)
-            {
-                Debug.DrawLine(HTJ21GameManager.Player.transform.position, node.position, Color.red, 0.1f);
-                Debug.Log($"Player: {HTJ21GameManager.Player.transform.position} Knot: {node.position} Distance: {Vector3.Distance(HTJ21GameManager.Player.transform.position, node.position)}");
-            }
-            else Debug.Log("Error!");
+            List<GPSNode> nodes = PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
+            DrawPath(nodes);
         }
 
-        private void Awake()
+        private void DrawPath(List<GPSNode> nodes)
         {
-            _roadways = RoadwayHelper.GetRoadways();
-            _target = GameObject.FindWithTag("GPSTarget").transform;
-            if (_target != null) _targetNode = GetClosestNodeToPoint(_roadways, _target.position);
+            Queue<GPSNode> queue = new Queue<GPSNode>(nodes);
+
+            List<Vector3> points  = new List<Vector3>();
+
+            if (HTJ21GameManager.Player != null) points.Add(HTJ21GameManager.Player.transform.position);
+
+            while (queue.Count > 1) 
+            {
+                GPSNode startNode = queue.Dequeue();
+                GPSNode endNode = queue.Peek();
+
+                Debug.Log($"Start: {startNode.splineIndex} {startNode.knotIndex}\tEnd: {endNode.splineIndex} {endNode.knotIndex}");
+
+                if (startNode.splineIndex == endNode.splineIndex && startNode.container == endNode.container) 
+                {
+                    Spline spline = startNode.container[startNode.splineIndex];
+
+                    int start = startNode.knotIndex;
+                    int end = endNode.knotIndex;
+
+                    float tStart = RoadwayHelper.KnotToT(spline, startNode.knotIndex);
+                    float tEnd = RoadwayHelper.KnotToT(spline, endNode.knotIndex);
+
+                    for (int j = 0; j < _gpsResolution; j++)
+                    {
+                        float t = Mathf.Lerp(tStart, tEnd, j / (float)_gpsResolution);
+                        Vector3 pos = startNode.container.EvaluatePosition(startNode.splineIndex, t);
+                        points.Add(pos);
+                    }
+                }
+                else
+                {
+                    Vector3 posStart = startNode.container.transform.TransformPoint(startNode.container[startNode.splineIndex][startNode.knotIndex].Position);
+                    Vector3 posEnd = endNode.container.transform.TransformPoint(endNode.container[endNode.splineIndex][endNode.knotIndex].Position);
+
+                    points.Add(posStart);
+                    points.Add(posEnd);
+                }
+            }
+
+            _renderer.positionCount = points.Count;
+            _renderer.SetPositions(points.ToArray());
         }
 
         private void Start()
         {
-            PathFindToTarget(GetClosestNodeToPoint(_roadways, HTJ21GameManager.Player.transform.position));
+            _roadways = RoadwayHelper.GetRoadways();
+            _target = GameObject.FindWithTag("GPSTarget").transform;
+
+            _renderer = GameObject.FindWithTag("GPSPath").GetComponent<LineRenderer>();
+            if (_renderer == null) 
+            {
+                GameObject path = new GameObject("GPSPath");
+                _renderer = path.AddComponent<LineRenderer>();
+            }
+
+            if (_target != null) _targetNode = GetClosestNodeToPoint(_roadways, _target.position);
+
+            //TODO: Remove Me
+            TurnOn();
         }
 
         private void Update()

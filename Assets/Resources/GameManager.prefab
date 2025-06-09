@@ -350,7 +350,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92beeb19f1c4c8a4a990420b7099826b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gpsResolution: 100
   _isOn: 0
+  _target: {fileID: 0}
+  _targetNode:
+    container: {fileID: 0}
+    splineIndex: 0
+    knotIndex: 0
+    position: {x: 0, y: 0, z: 0}
+  _roadways: []
 --- !u!1 &7294373588400986925
 GameObject:
   m_ObjectHideFlags: 0
