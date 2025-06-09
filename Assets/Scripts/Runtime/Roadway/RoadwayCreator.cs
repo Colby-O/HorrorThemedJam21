@@ -31,6 +31,7 @@ namespace HTJ21
         [Header("Mesh Parameters")]
         [SerializeField] Material _roadMat;
         [SerializeField] Material _intersectionMat;
+        [SerializeField] Material _curbMat;
 
         public static RoadwayCreator Instance { get; private set; }
 
@@ -146,6 +147,7 @@ namespace HTJ21
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
             RoadwayMeshGenerator.RoadMat = _roadMat;
             RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
+            RoadwayMeshGenerator.CurbMat = _curbMat;
             Spline.Changed += OnSplineChanged;
 #endif
             Instance = this;
@@ -157,6 +159,7 @@ namespace HTJ21
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
             RoadwayMeshGenerator.RoadMat = _roadMat;
             RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
+            RoadwayMeshGenerator.CurbMat = _curbMat;
             Spline.Changed += OnSplineChanged;
 #endif
             Instance = this;
