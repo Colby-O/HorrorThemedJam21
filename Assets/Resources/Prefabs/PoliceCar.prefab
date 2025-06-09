@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &550663153738574683
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8607249064973442406}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8607249064973442406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550663153738574683}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.037577342, y: -0, z: -0, w: 0.99929374}
+  m_LocalPosition: {x: -0.23273659, y: 0.34070003, z: 0.1359024}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6175583797295597915}
+  m_LocalEulerAnglesHint: {x: 4.307, y: 0, z: 0}
 --- !u!1 &1154467090689404685
 GameObject:
   m_ObjectHideFlags: 0
@@ -66,6 +97,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4280924085578469238}
+  - {fileID: 8607249064973442406}
   - {fileID: 4481384216094050014}
   - {fileID: 5240228316433552398}
   - {fileID: 1419213945856527219}
@@ -90,14 +122,16 @@ MonoBehaviour:
     airResistance: 13
     engineDynamicFriction: 0.01
     maxRpm: 7000
-    suspensionLength: 0.4
+    suspensionLength: 0.35
     suspensionStrength: 12000
     suspensionDamping: 4000
-    wheelRadius: 0.4
-    wheelStaticFriction: 0.8
-    wheelKineticFriction: 0.5
-    wheelTractionSpeed: 0.4
-    wheelSlideSpeed: 0.6
+    wheelRadius: 0.35
+    wheelStaticFriction: 1
+    wheelKineticFriction: 0.3
+    frontWheelTractionSpeed: 0.3
+    rearWheelTractionSpeed: 0.3
+    frontWheelSlideSpeed: 1.3
+    rearWheelSlideSpeed: 0.5
     brakeForce: 2000
     gearRatios:
     - -3.48
@@ -129,26 +163,29 @@ MonoBehaviour:
       torque: 0.9678899
     - rpm: 7250
       torque: 0.06880734
-    peakTorque: 140
-  _steeringAngle: -0.00035317818
+    peakTorque: 300
+  _steeringAngle: 0.85038406
   _throttle: 0
   _brake: 0
-  _gear: 3
-  _rpm: 671.34814
-  _speed: 0
+  _gear: 1
+  _rpm: 2568.6965
+  _speed: 9.800382
   _wheelsSliding: 00000000
-  _rpmScale: 4
+  _rpmScale: 3
   _drivingProfile:
     wheelTurnSpeed: 2
     steeringWheelAngleScale: 1
     maxTurnAngle: 35
     maxSpeedTurnAngle: 5
-    maxSpeedTurnAngleSpeed: 30
+    maxSpeedTurnAngleSpeed: 40
     maxThrottle: 1
     maxSpeed: 0
     automatic: 1
-    automaticUpShiftPoint: 3300
-    automaticDownShiftPoint: 2000
+    automaticUpShiftPoint: 6300
+    automaticDownShiftPoint: 4500
+  _cameraLerpSpeed: 5
+  _cameraBobScale: 0.16
+  _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
 --- !u!114 &4370499305851558824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,8 +395,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1624494, y: 0.6246548, z: 3.2380066}
-  m_Center: {x: 0.0056488514, y: 0.18767259, z: 0.1269722}
+  m_Size: {x: 1.1624494, y: 0.5634041, z: 3.2380066}
+  m_Center: {x: 0.0056488514, y: 0.21829794, z: 0.12697218}
 --- !u!1 &1670077266529777360
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +747,7 @@ GameObject:
   - component: {fileID: 8794564519346932701}
   - component: {fileID: 4073915014671091596}
   m_Layer: 0
-  m_Name: PlayerCamera
+  m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -724,13 +761,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4306673794134892602}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04886665, y: 0.024391146, z: -0.0011936639, w: 0.9985068}
-  m_LocalPosition: {x: -0.23273659, y: 0.32200396, z: 0.08148956}
+  m_LocalRotation: {x: 0.0671871, y: 0.024365123, z: -0.0016411891, w: 0.9974415}
+  m_LocalPosition: {x: 0.000000014901161, y: 0.000000029802322, z: 0.0000022426248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6175583797295597915}
-  m_LocalEulerAnglesHint: {x: 8.596, y: 359.696, z: -1.597}
+  m_LocalEulerAnglesHint: {x: 7.707, y: 362.799, z: 0}
 --- !u!20 &6848529156225241616
 Camera:
   m_ObjectHideFlags: 0
@@ -764,7 +801,7 @@ Camera:
     height: 1
   near clip plane: 0.03
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

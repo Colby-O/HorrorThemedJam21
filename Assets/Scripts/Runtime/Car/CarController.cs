@@ -25,8 +25,10 @@ namespace HTJ21
         public float wheelRadius;
         public float wheelStaticFriction;
         public float wheelKineticFriction;
-        public float wheelTractionSpeed;
-        public float wheelSlideSpeed;
+        public float frontWheelTractionSpeed;
+        public float rearWheelTractionSpeed;
+        public float frontWheelSlideSpeed;
+        public float rearWheelSlideSpeed;
 
         public float brakeForce;
 
@@ -115,9 +117,19 @@ namespace HTJ21
         [SerializeField] private float _rpmScale = 10;
         [SerializeField] private DrivingProfile _drivingProfile;
 
+        private Transform _cameraTarget;
+        private Transform _camera;
+        [SerializeField] private float _cameraLerpSpeed = 5;
+        [SerializeField] private float _cameraBobScale = 0.1f;
+        private Vector3 _cameraVelocity;
+        private InputHandler _inputHandler;
+        [SerializeField] private PlayerSettings _settings;
 
         private void Awake()
         {
+            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsSortMode.None)[0];
+            _camera = transform.Find("Camera");
+            _cameraTarget = transform.Find("CameraTarget");
             info.NormalizeTorqueCurve();
             _rig = GetComponent<Rigidbody>();
             _steeringWheel = transform.Find("Model").Find("SteeringWheel");
@@ -125,9 +137,25 @@ namespace HTJ21
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);
             _engineSound = GetComponent<EngineSound>();
         }
+        
+        private void ProcessLook()
+        {
+            Vector3 headRotation = _camera.localEulerAngles;
+            headRotation.x -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
+            headRotation.x = Mathf.Clamp(Mathf.Repeat(headRotation.x + 180, 360) - 180, _settings.YLookLimit.x, _settings.YLookLimit.y);
+            headRotation.y += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
+
+            _camera.localRotation = Quaternion.Euler(headRotation);
+
+            Vector3 cameraVelocity = _rig.GetPointVelocity(_cameraTarget.position);
+            Vector3 acceleration = cameraVelocity - _cameraVelocity;
+            _camera.position = Vector3.Lerp(_camera.position, _cameraTarget.position - acceleration * _cameraBobScale, Time.deltaTime * _cameraLerpSpeed);
+            _cameraVelocity = cameraVelocity;
+        }
 
         private void Update()
         {
+            ProcessLook();
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
                 if (_drivingProfile.automatic)
@@ -223,27 +251,31 @@ namespace HTJ21
                 float slidingSpeed = Vector3.Dot(wheelRight, wheelVelocity);
                 float absSlidingSpeed = Mathf.Abs(slidingSpeed);
 
+                float give = 0.4f;
                 if (Physics.Raycast(
-                        wheelPosition,
+                        wheelPosition + wheelUp * give,
                         -wheelUp,
                         out RaycastHit hit,
-                        info.wheelRadius))
+                        info.wheelRadius + give))
                 {
-                    Debug.DrawRay(wheelPosition, -wheelUp * hit.distance, Color.yellow);
                     Vector3 force = Vector3.zero;
-                    float suspensionPosition = info.suspensionLength - hit.distance;
+                    float suspensionPosition = info.suspensionLength - (hit.distance - give);
+                    Debug.Log(suspensionPosition);
                     Vector3 suspensionForce =
                         wheelUp * (
                             (suspensionPosition / info.suspensionLength * info.suspensionStrength) +
                             (Vector3.Dot(-wheelUp, wheelVelocity) * info.suspensionDamping));
                     force += suspensionForce;
 
-                    if (absSlidingSpeed < info.wheelTractionSpeed)
+                    float wheelTractionSpeed = wheel < 2 ? info.frontWheelTractionSpeed : info.rearWheelTractionSpeed;
+                    float wheelSlideSpeed = wheel < 2 ? info.frontWheelSlideSpeed : info.rearWheelSlideSpeed;
+
+                    if (absSlidingSpeed < wheelTractionSpeed)
                     {
                         _wheelsSliding[wheel] = false;
                     }
 
-                    if (absSlidingSpeed > info.wheelSlideSpeed)
+                    if (absSlidingSpeed > wheelSlideSpeed)
                     {
                         _wheelsSliding[wheel] = true;
                     }
