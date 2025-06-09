@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using PlazmaGames.Attribute;
 using Unity.Mathematics;
-using UnityEditor.Callbacks;
 using UnityEngine.Splines;
 
 #if UNITY_EDITOR
@@ -112,7 +111,6 @@ namespace HTJ21
 						if (leftOn)
 						{
 							Vector3 leftPos = leftEdge + offset;
-							Debug.Log(leftPos);
 							matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
 						}
 						

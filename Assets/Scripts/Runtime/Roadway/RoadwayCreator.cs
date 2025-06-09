@@ -83,7 +83,7 @@ namespace HTJ21
             return null;
         }
 
-#endif
+
         public void AddIntersection(RoadwayIntersection intersection)
         {
             if (_intersections == null) _intersections = new List<RoadwayIntersection>();
@@ -137,34 +137,43 @@ namespace HTJ21
         {
             GenerateRoadway();
         }
+#endif
 
         private void Awake()
         {
+#if UNITY_EDITOR
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
             RoadwayMeshGenerator.RoadMat = _roadMat;
             RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
-            Instance = this;
             Spline.Changed += OnSplineChanged;
+#endif
+            Instance = this;
         }
 
         private void OnEnable()
         {
+#if UNITY_EDITOR
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
             RoadwayMeshGenerator.RoadMat = _roadMat;
             RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
-            Instance = this;
             Spline.Changed += OnSplineChanged;
+#endif
+            Instance = this;
         }
 
         private void OnDisable()
         {
-            Instance = null;
+#if UNITY_EDITOR
             Spline.Changed -= OnSplineChanged;
+#endif
+            Instance = null;
         }
         private void OnDestroy()
         {
-            Instance = null;
+#if UNITY_EDITOR
             Spline.Changed -= OnSplineChanged;
+#endif
+            Instance = null;
         }
 
 #if UNITY_EDITOR
@@ -173,9 +182,8 @@ namespace HTJ21
         {
             if (Instance != null) Instance.GenerateRoadway();
         }
-
+#endif
         public float RoadWidth() => _roadWidth;
     }
-#endif
 }
 

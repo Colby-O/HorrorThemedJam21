@@ -4,6 +4,8 @@ using PlazmaGames.Core;
 using PlazmaGames.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace HTJ21
 {
@@ -51,6 +53,13 @@ namespace HTJ21
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        protected override void Update()
+        {
+            // TODO: Remove me testing code.
+            base.Update();
+            if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
