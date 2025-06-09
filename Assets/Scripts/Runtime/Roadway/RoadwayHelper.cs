@@ -33,6 +33,38 @@ namespace HTJ21
             p1 = position + width * right;
             p2 = position - width * right;
         }
+        
+        public static float GetKnotTInSpline(SplineContainer container, int spline, int knot)
+        {
+            return container[spline].ConvertIndexUnit(knot, PathIndexUnit.Knot, PathIndexUnit.Normalized);
+        }
+        
+        public static float GetKnotDistanceInSpline(SplineContainer container, int spline, int knot)
+        {
+            return container[spline].ConvertIndexUnit(knot, PathIndexUnit.Knot, PathIndexUnit.Distance);
+        }
+        
+        public static float GetTBetweenKnots(SplineContainer container, int spline, int knotFrom, int knotTo)
+        {
+            float distance = 0;
+            for (int k = knotFrom; k < knotTo; k++)
+            {
+                distance += GetKnotTInSpline(container, spline, k + 1) - GetKnotTInSpline(container, spline, k);
+            }
+
+            return distance;
+        }
+
+        public static float GetDistanceBetweenKnots(SplineContainer container, int spline, int knotFrom, int knotTo)
+        {
+            float distance = 0;
+            for (int k = knotFrom; k < knotTo; k++)
+            {
+                distance += container[spline].GetCurveLength(k);
+            }
+
+            return distance;
+        }
 
         public static List<SplineContainer> GetRoadwayContainers()
         {
@@ -73,7 +105,7 @@ namespace HTJ21
 
 #if UNITY_EDITOR
 
-        public static List<SelectableKnot> GetSelectedRoadwayKnots()
+        public static List<SelectableKnot> GetSelectedRoadwayKnots(bool onlyEnds = true)
         {
             List<SplineContainer> roadwayContainers = GetRoadwayContainers();
             List<SelectableKnot> selectedKnots = new List<SelectableKnot>();
@@ -91,7 +123,7 @@ namespace HTJ21
                         for (int j = selected.Count - 1; j >= 0; j--)
                         {
                             SelectableKnot knot  = selected[j];
-                            if (knot.KnotIndex != 0 && knot.KnotIndex != knot.SplineInfo.Spline.Count - 1) selected.RemoveAt(j);
+                            if (onlyEnds && knot.KnotIndex != 0 && knot.KnotIndex != knot.SplineInfo.Spline.Count - 1) selected.RemoveAt(j);
                         }
 
                         selectedKnots.AddRange(selected);

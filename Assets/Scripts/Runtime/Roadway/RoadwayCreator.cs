@@ -170,6 +170,8 @@ namespace HTJ21
         {
             if (Instance != null) Instance.GenerateRoadway();
         }
+
+        public float RoadWidth() => _roadWidth;
     }
 #endif
 }
