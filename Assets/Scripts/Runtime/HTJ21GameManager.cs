@@ -19,7 +19,8 @@ namespace HTJ21
         [SerializeField] private AudioMonoSystem _audioSystem;
         [SerializeField] private WeatherMonoSystem _weatherSystem;
         [SerializeField] private GPSMonoSystem _gpsSystem;
-        public static GameObject Player { get; set; }
+        public static PlayerController Player { get; set; }
+        public static CarController Car { get; set; }
 
         private void AttachMonoSystems()
         {
@@ -49,7 +50,8 @@ namespace HTJ21
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
-            Player = GameObject.FindWithTag("Player");
+            Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
+            Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
         }
 
         private void Start()
@@ -72,7 +74,7 @@ namespace HTJ21
         {
             // TODO: Remove me testing code.
             base.Update();
-            if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
