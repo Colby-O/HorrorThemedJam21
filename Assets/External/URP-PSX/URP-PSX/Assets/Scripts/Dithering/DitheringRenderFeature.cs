@@ -13,9 +13,14 @@ namespace PSX
             ditheringPass = new DitheringPass(RenderPassEvent.BeforeRenderingPostProcessing);
         }
 
-        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+        public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
             ditheringPass.Setup(renderer.cameraColorTargetHandle);
+
+        }
+
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+        {
             renderer.EnqueuePass(ditheringPass);
         }
     }
