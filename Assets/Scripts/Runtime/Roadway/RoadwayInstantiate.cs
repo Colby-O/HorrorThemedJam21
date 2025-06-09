@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using PlazmaGames.Attribute;
 using Unity.Mathematics;
-using UnityEditor.Callbacks;
 using UnityEngine.Splines;
 
 #if UNITY_EDITOR

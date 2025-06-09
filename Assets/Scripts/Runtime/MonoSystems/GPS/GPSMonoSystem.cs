@@ -2,11 +2,8 @@
 using System;
 using System.Collections.Generic;
 using PlazmaGames.Attribute;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Splines;
-using static UnityEditor.PlayerSettings;
 
 namespace HTJ21
 {
@@ -176,7 +173,7 @@ namespace HTJ21
                 GPSNode startNode = queue.Dequeue();
                 GPSNode endNode = queue.Peek();
 
-                Debug.Log($"Start: {startNode.splineIndex} {startNode.knotIndex}\tEnd: {endNode.splineIndex} {endNode.knotIndex}");
+                //Debug.Log($"Start: {startNode.splineIndex} {startNode.knotIndex}\tEnd: {endNode.splineIndex} {endNode.knotIndex}");
 
                 if (startNode.splineIndex == endNode.splineIndex && startNode.container == endNode.container) 
                 {
