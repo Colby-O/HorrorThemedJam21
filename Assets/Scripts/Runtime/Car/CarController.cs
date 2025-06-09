@@ -157,32 +157,11 @@ namespace HTJ21
         private void Update()
         {
             ProcessLook();
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+            if (_inputHandler.ReversePressed)
             {
-                if (_drivingProfile.automatic)
-                {
-                    if (_gear == -1) _gear = 1;
-                    else _gear += 1;
-                }
-                else
-                {
-                    _gear += 1;
-                }
+                if (_gear == -1) _gear = 1;
+                if (_gear == 1) _gear = -1;
             }
-
-            if (Keyboard.current.downArrowKey.wasPressedThisFrame)
-            {
-                if (_drivingProfile.automatic)
-                {
-                    if (_gear == 1) _gear = -1;
-                    else _gear -= 1;
-                }
-                else
-                {
-                    _gear -= 1;
-                }
-            }
-            _gear = Mathf.Clamp(_gear, -1, 6);
         }
 
         private void FixedUpdate()
@@ -190,31 +169,17 @@ namespace HTJ21
             _rpm = Rpm();
             _speed = Speed() * 3.6f;
             
-            if (Keyboard.current.wKey.IsPressed()) _throttle = _drivingProfile.maxThrottle;
-            if (!Keyboard.current.wKey.IsPressed()) _throttle = 0;
-            if (Keyboard.current.sKey.IsPressed()) _brake = 1f;
-            if (!Keyboard.current.sKey.IsPressed()) _brake = 0;
-
-            if (Keyboard.current.aKey.IsPressed())
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, -MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
-            else if (Keyboard.current.dKey.IsPressed())
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
-            else
-            {
-                _steeringAngle = Mathf.Lerp(_steeringAngle, 0, Time.deltaTime * _drivingProfile.wheelTurnSpeed);
-            }
+            _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
+            _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
+            _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
 
             _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
             _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
+
             Vector3 swRot = _steeringWheel.localRotation.eulerAngles;
             swRot.z = 90 + _steeringAngle * _drivingProfile.steeringWheelAngleScale;
             _steeringWheel.localRotation = Quaternion.Euler(swRot);
 
-            
             _engineSound.SetRpmAndThrottle(_rpm, _throttle);
 
             Simulate();
