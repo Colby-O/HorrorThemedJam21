@@ -288,6 +288,7 @@ namespace HTJ21
         public static void GenerateIntersectionMesh(RoadwayIntersection intersection, float roadWidth, float curveWidth, float curveHeight)
         {
             GameObject roadwayGameObject = new GameObject("intersection");
+            roadwayGameObject.layer = LayerMask.NameToLayer("Roadway");
             roadwayGameObject.transform.parent = Parent;
             MeshRenderer mr = roadwayGameObject.AddComponent<MeshRenderer>();
             MeshFilter mf = roadwayGameObject.AddComponent<MeshFilter>();
@@ -450,6 +451,7 @@ namespace HTJ21
             if (roadway.segments.Count == 0) return;
 
             GameObject roadwayGameObject = new GameObject("Road");
+            roadwayGameObject.layer = LayerMask.NameToLayer("Roadway");
             roadwayGameObject.transform.parent = Parent;
             MeshRenderer mr = roadwayGameObject.AddComponent<MeshRenderer>();
             MeshFilter mf = roadwayGameObject.AddComponent<MeshFilter>();
