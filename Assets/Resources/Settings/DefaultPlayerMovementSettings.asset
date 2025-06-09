@@ -24,3 +24,6 @@ MonoBehaviour:
   InvertLookX: 0
   CarYLookLimit: {x: -40, y: 40}
   CarXLookLimit: {x: -90, y: 90}
+  HeadBobbleSpeed: 5
+  HeadBobbleMagnitude: 0.16
+  RpmScale: 3

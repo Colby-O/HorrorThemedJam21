@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace HTJ21
 {
@@ -96,7 +97,7 @@ namespace HTJ21
 
     public class CarController : MonoBehaviour
     {
-        private EngineSound _engineSound;
+        [SerializeField] private PlayerSettings _settings;
         
         [SerializeField] private CarInfo info;
 
@@ -110,20 +111,16 @@ namespace HTJ21
 
         [SerializeField] private bool[] _wheelsSliding = new bool[4];
 
-        private Rigidbody _rig;
-
-        private Transform _steeringWheel;
-        private Transform[] _wheels = new Transform[4];
-        [SerializeField] private float _rpmScale = 10;
         [SerializeField] private DrivingProfile _drivingProfile;
 
-        private Transform _cameraTarget;
-        private Transform _camera;
-        [SerializeField] private float _cameraLerpSpeed = 5;
-        [SerializeField] private float _cameraBobScale = 0.1f;
-        private Vector3 _cameraVelocity;
+        private EngineSound _engineSound;
         private InputHandler _inputHandler;
-        [SerializeField] private PlayerSettings _settings;
+        private Rigidbody _rig;
+        private Transform _steeringWheel;
+        private Transform[] _wheels = new Transform[4];
+        private Transform _camera;
+        private Transform _cameraTarget;
+        private Vector3 _cameraVelocity;
 
         private void Awake()
         {
@@ -150,7 +147,7 @@ namespace HTJ21
 
             Vector3 cameraVelocity = _rig.GetPointVelocity(_cameraTarget.position);
             Vector3 acceleration = cameraVelocity - _cameraVelocity;
-            _camera.position = Vector3.Lerp(_camera.position, _cameraTarget.position - acceleration * _cameraBobScale, Time.deltaTime * _cameraLerpSpeed);
+            _camera.position = Vector3.Lerp(_camera.position, _cameraTarget.position - acceleration * _settings.HeadBobbleMagnitude, Time.deltaTime * _settings.HeadBobbleSpeed);
             _cameraVelocity = cameraVelocity;
         }
 
@@ -270,7 +267,7 @@ namespace HTJ21
         private float Rpm()
         {
             return Mathf.Clamp(
-                Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _rpmScale,
+                Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _settings.RpmScale,
                 0,
                 info.maxRpm);
         }
