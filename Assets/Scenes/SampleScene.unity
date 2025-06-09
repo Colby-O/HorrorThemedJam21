@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3613,6 +3613,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1054778773106275856, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: m_RendererIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1339760472102240983, guid: be9d853d5242ee252935774272b5cff2, type: 3}
       propertyPath: m_Name
       value: PoliceCar
@@ -3656,6 +3660,10 @@ PrefabInstance:
     - target: {fileID: 6175583797295597915, guid: be9d853d5242ee252935774272b5cff2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6864952884405237732, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 500
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
