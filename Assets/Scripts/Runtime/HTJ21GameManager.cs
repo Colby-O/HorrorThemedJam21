@@ -23,7 +23,7 @@ namespace HTJ21
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
 
-        public static GameObject CurrentControlable { get; set; }
+        public static GameObject CurrentControllable => Player.IsInCar() ? Car.gameObject : Player.gameObject;
 
         private void AttachMonoSystems()
         {
@@ -56,7 +56,6 @@ namespace HTJ21
         {
             Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
             Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
-            CurrentControlable = Car.gameObject;
         }
 
         private void Start()

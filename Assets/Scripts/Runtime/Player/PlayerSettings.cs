@@ -25,5 +25,6 @@ namespace HTJ21
         public float HeadBobbleSpeed = 5;
         public float HeadBobbleMagnitude = 0.16f;
         public float RpmScale = 3;
+        public float _parkingSpeed = 0.2f;
     }
 }

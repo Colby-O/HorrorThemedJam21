@@ -239,6 +239,13 @@ namespace HTJ21
                 if (_rpm <= _drivingProfile.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
                 _rpm = Rpm();
             }
+
+            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings._parkingSpeed)
+            {
+                _rig.isKinematic = true;
+                return;
+            }
+            _rig.isKinematic = false;
             _rig.AddForce(-transform.forward * (info.airResistance * MathExt.Square(Vector3.Dot(transform.forward, _rig.linearVelocity))));
             for (int wheel = 0; wheel < 4; wheel++)
             {
@@ -289,12 +296,9 @@ namespace HTJ21
                     Vector3 frictionForce = wheelRight * (-slidingSpeed * friction * Vector3.Dot(wheelUp, suspensionForce));
                     force += frictionForce;
 
-                    if (wheel >= 2)
-                    {
-                        force += wheelForward * (_throttle * info.SampleTorqueCurve(_rpm) * info.GearRatio(_gear));
-                        force += -wheelForward * (MathExt.Sign(Vector3.Dot(wheelForward, wheelVelocity)) * _brake * info.brakeForce);
-                        force += -wheelForward * (info.engineDynamicFriction * _rpm * (1.0f - _throttle) * info.GearRatio(_gear));
-                    }
+                    force += wheelForward * (_throttle * info.SampleTorqueCurve(_rpm) * info.GearRatio(_gear) / 2.0f);
+                    force += -wheelForward * (MathExt.Sign(Vector3.Dot(wheelForward, wheelVelocity)) * _brake * info.brakeForce);
+                    force += -wheelForward * (info.engineDynamicFriction * _rpm * (1.0f - _throttle) * info.GearRatio(_gear));
 
                     _rig.AddForceAtPosition(force, wheelPosition);
                 }

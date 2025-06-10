@@ -42,7 +42,7 @@ namespace HTJ21
 			public GameObject prefab;
 			public bool left, right;
 			public float step;
-			public float frequency;
+            public bool align;
 			public bool randomOffset;
 			public Vector3 offsetFrom;
 			public Vector3 offsetTo;
@@ -123,6 +123,7 @@ namespace HTJ21
 						Vector3 up = Vector3.Normalize(upF3);
 						Vector3 right = Vector3.Cross(forward, up);
 						Vector3 offset;
+                        Vector3 rotation = inst.align ? Quaternion.LookRotation(forward, up).eulerAngles : Vector3.zero;
 						if (inst.randomOffset)
 						{
 							offset =
@@ -142,7 +143,7 @@ namespace HTJ21
 						{
 							Vector3 leftPos = leftEdge + offset;
                             ds.bounds.Encapsulate(leftPos);
-							di.matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
+							di.matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.Euler(rotation), inst.prefab.transform.localScale);
 						}
 						
 						if (inst.randomOffset)
@@ -166,7 +167,7 @@ namespace HTJ21
                             ds.bounds.Encapsulate(rightPos);
 							int index = i;
 							if (leftOn) index += segmentCount;
-							di.matrices[index] = Matrix4x4.TRS(rightPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
+							di.matrices[index] = Matrix4x4.TRS(rightPos, Quaternion.Euler(rotation), inst.prefab.transform.localScale);
 						}
 					}
 				}
@@ -214,7 +215,7 @@ namespace HTJ21
             foreach (DrawnSection s in _drawnSections)
             {
                 float d = s.viewDistance;
-                if (HTJ21GameManager.Player && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.Player.transform.position, new float3(d, d, d))))
+                if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
                     continue;
                 foreach (DrawnInstance inst in s.instances)
                 {
@@ -224,7 +225,7 @@ namespace HTJ21
                         foreach (Matrix4x4 matrix in inst.matrices)
                         {
                             Vector3 pos = matrix.GetColumn(3);
-                            if (HTJ21GameManager.Player && (HTJ21GameManager.Player.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
+                            if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
                             _drawn.Add(matrix * part.localMatrix);
                         }
 
