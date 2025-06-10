@@ -12,7 +12,7 @@ namespace HTJ21
         [Header("References")]
         [SerializeField] private Terrain _terrain;
         [Header("Settings")]
-        [SerializeField, Min(0.01f)] float _resolution = 1f;
+        [SerializeField, Min(0.00001f)] float _resolution = 1f;
         [SerializeField] float _heightOffset = 1f;
         [SerializeField] float _shoulderWidth = 0f;
         [SerializeField] private AnimationCurve _falloff = AnimationCurve.Linear(0, 1, 1, 0);
