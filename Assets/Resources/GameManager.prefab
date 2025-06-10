@@ -185,10 +185,10 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -404,7 +404,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -540,7 +540,10 @@ MonoBehaviour:
   _ambientSound: 1
   _sfxSound: 1
   _musicSound: 1
-  _musicSounds: []
+  _musicSounds:
+  - id: 0
+    name: MainMenu
+    audio: {fileID: 8300000, guid: 68758232df28fdc409c93b9f915b8714, type: 3}
   _ambientSounds: []
   _sfxSounds:
   - id: 0
@@ -641,7 +644,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

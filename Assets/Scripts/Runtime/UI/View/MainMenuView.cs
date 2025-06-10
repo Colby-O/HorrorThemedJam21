@@ -1,3 +1,4 @@
+using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace HTJ21
 
         private void Play()
         {
+            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -31,6 +33,7 @@ namespace HTJ21
 
         public override void Init()
         {
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(0, PlazmaGames.Audio.AudioType.Music, true);
             _play.onPointerDown.AddListener(Play);
             _settings.onPointerDown.AddListener(Settings);
             _exit.onPointerDown.AddListener(Exit);

@@ -2,12 +2,10 @@ using PlazmaGames.Animation;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
-using UnityEngine.Splines.ExtrusionShapes;
-using static UnityEngine.GraphicsBuffer;
 
 namespace HTJ21
 {
@@ -36,9 +34,15 @@ namespace HTJ21
         [SerializeField] private float _speed;
         [SerializeField] private float _yOffset = 1f;
         [SerializeField] private float _exitTime = 2f;
+        [SerializeField] private List<int> _stopSigns;
+        [SerializeField] private float _stopTime = 1f;
+
 
         [SerializeField, ReadOnly] private bool _enabled = true;
+        [SerializeField, ReadOnly] private bool _isStopped = false;
+        [SerializeField, ReadOnly] private List<int> _currentStops;
         [SerializeField, ReadOnly] private float _currentT;
+        [SerializeField, ReadOnly] private int _currentKnot;
         [SerializeField, ReadOnly] private CinematicTransform _currentTransform;
         [SerializeField, ReadOnly] private CinematicTransform _endTransform;
 
@@ -118,17 +122,51 @@ namespace HTJ21
             int nextIndex = (minIndex == spline.Count - 1) ? 0 : minIndex + 1;
             Vector3 moveDir = (_path.transform.TransformPoint(spline[nextIndex].Position) - minPos).normalized;
             _currentT = RoadwayHelper.GetKnotTInSpline(_path, 0, minIndex);
+            _currentKnot = minIndex;
 
             LookTowardsNext(_currentT);
             _path.Evaluate(0, _currentT, out float3 position, out float3 tangent, out float3 upVector);
             transform.position = (Vector3)position + Vector3.Normalize(upVector) * _yOffset;
+            _currentStops = new List<int>(_stopSigns);
+            Stop();
+        }
+
+        private void Stop()
+        {
+            if (_currentStops.Contains(_currentKnot))
+            {
+                _currentStops.Remove(_currentKnot);
+                _isStopped = true;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                    this,
+                    _stopTime,
+                    (float t) => { },
+                    () => { _isStopped = false; }
+                );
+            }
         }
 
         private void Move()
         {
+            if (_isStopped) return;
+            
             _currentT += _speed * Time.deltaTime;
 
-            if (_currentT > 1f) _currentT = 0f;
+            if (_currentT > 1f)
+            {
+                _currentStops = new List<int>(_stopSigns);
+                _currentT = 0f;
+                _currentKnot = 0;
+                Stop();
+            }
+            else
+            {
+                if (_currentT >= RoadwayHelper.GetKnotTInSpline(_path, 0, _currentKnot))
+                {
+                    _currentKnot = GetNextKnot(_currentKnot);
+                    Stop();
+                }
+            }
 
             LookTowardsNext(_currentT);
             _path.Evaluate(0, _currentT, out float3 position, out float3 tangent, out float3 upVector);
