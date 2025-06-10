@@ -19,6 +19,7 @@ namespace HTJ21
         [SerializeField] private AudioMonoSystem _audioSystem;
         [SerializeField] private WeatherMonoSystem _weatherSystem;
         [SerializeField] private GPSMonoSystem _gpsSystem;
+        [SerializeField] private InputMonoSystem _inputSystem;
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
 
@@ -31,6 +32,7 @@ namespace HTJ21
             AddMonoSystem<AudioMonoSystem, IAudioMonoSystem>(_audioSystem);
             AddMonoSystem<WeatherMonoSystem, IWeatherMonoSystem>(_weatherSystem);
             AddMonoSystem<GPSMonoSystem, IGPSMonoSystem>(_gpsSystem);
+            AddMonoSystem<InputMonoSystem, IInputMonoSystem>(_inputSystem);
         }
 
         public override string GetApplicationName()

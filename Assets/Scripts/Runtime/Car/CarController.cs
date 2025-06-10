@@ -1,4 +1,5 @@
 using System.Linq;
+using PlazmaGames.Core;
 using UnityEngine;
 
 namespace HTJ21
@@ -113,7 +114,7 @@ namespace HTJ21
 
         private PlayerController _player;
         private EngineSound _engineSound;
-        private InputHandler _inputHandler;
+        private IInputMonoSystem _inputHandler;
         private Rigidbody _rig;
         private Transform _steeringWheel;
         private Transform[] _wheels = new Transform[4];
@@ -135,7 +136,7 @@ namespace HTJ21
         private void Awake()
         {
             _player = GameObject.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
-            _inputHandler = GameObject.FindObjectsByType<InputHandler>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
             _doorLocation = transform.Find("DoorLocation");
             _camera = transform.Find("Camera");
             _cameraTarget = transform.Find("CameraTarget");
@@ -181,13 +182,13 @@ namespace HTJ21
         {
             if (!InCar()) return;
             ProcessLook();
-            if (_inputHandler.ReversePressed)
+            if (_inputHandler.ReversePressed())
             {
                 if (_gear == -1) _gear = 1;
                 else if (_gear == 1) _gear = -1;
             }
 
-            if (_inputHandler.InteractPressed) ExitCar();
+            if (_inputHandler.InteractPressed()) ExitCar();
         }
 
         private void LateUpdate()

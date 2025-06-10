@@ -1,17 +1,18 @@
 using System.Diagnostics;
 using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace HTJ21
 {
-    [RequireComponent(typeof(CharacterController), typeof(InputHandler))]
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private CharacterController _controller;
-        [SerializeField] private InputHandler _inputHandler;
+        private IInputMonoSystem _inputHandler;
         [SerializeField] private Transform _head;
         [SerializeField] private GameObject _light;
         [SerializeField] private PlayerSettings _settings;
@@ -88,7 +89,7 @@ namespace HTJ21
 
         private void Awake()
         {
-            if (_inputHandler == null) _inputHandler = GetComponent<InputHandler>();
+            _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
             if (_controller == null) _controller = GetComponent<CharacterController>();
 
             _bodyRotation = transform.localRotation.eulerAngles;
@@ -104,7 +105,7 @@ namespace HTJ21
             ProcessGravity();
             _controller.Move(transform.TransformDirection(_movementSpeed));
 
-            if (!IsInCar() && _inputHandler.LightPressed) ToggleLight();
+            if (!IsInCar() && _inputHandler.LightPressed()) ToggleLight();
         }
     }
 }
