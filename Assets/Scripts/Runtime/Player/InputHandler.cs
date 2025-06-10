@@ -59,8 +59,11 @@ namespace HTJ21
         {
             if (Keyboard.current.escapeKey.wasPressedThisFrame)
             {
-                if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
-                else GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+                if (
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && 
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>()
+                ) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
+                else if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
             }
         }
 
