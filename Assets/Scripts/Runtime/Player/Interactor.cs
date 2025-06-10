@@ -5,11 +5,10 @@ using UnityEngine.InputSystem;
 
 namespace HTJ21
 {
-    [RequireComponent(typeof(InputHandler))]
     public class Interactor : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private InputHandler _input;
+        private IInputMonoSystem _input;
         [SerializeField] private Transform _head;
 
         [Header("Settings")]
@@ -78,7 +77,7 @@ namespace HTJ21
 
         private void Start()
         {
-            if (_input == null) _input = GetComponent<InputHandler>();
+            _input = GameManager.GetMonoSystem<IInputMonoSystem>();
 
             _input.InteractionCallback.AddListener(CheckForInteractionInteract);
         }
