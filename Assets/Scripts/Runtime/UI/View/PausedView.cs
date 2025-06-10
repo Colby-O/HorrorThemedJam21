@@ -17,7 +17,7 @@ namespace HTJ21
 
         private void Settings()
         {
-            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SettingsView>(remeber: false);
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<SettingsView>();
         }
 
         private void Exit()
