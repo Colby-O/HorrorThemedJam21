@@ -1,7 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 namespace HTJ21
 {
@@ -124,7 +122,15 @@ namespace HTJ21
         private Vector3 _cameraVelocity;
         private Transform _doorLocation;
 
+        private bool _wasEnteredThisFrame = false;
+        private bool _isDisabled = false;
+
         public bool InCar() => _camera.gameObject.activeSelf;
+
+        public void SetDisableState(bool state)
+        {
+            _isDisabled = state;
+        }
 
         private void Awake()
         {
@@ -159,12 +165,14 @@ namespace HTJ21
 
         public void EnterCar()
         {
+            _wasEnteredThisFrame = true;
             _camera.gameObject.SetActive(true);
         }
         
         private void ExitCar()
         {
             Debug.Log("EXIT CAR");
+            if (_wasEnteredThisFrame || !InCar()) return;
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);
         }
@@ -182,12 +190,17 @@ namespace HTJ21
             if (_inputHandler.InteractPressed) ExitCar();
         }
 
+        private void LateUpdate()
+        {
+            _wasEnteredThisFrame = false;
+        }
+
         private void FixedUpdate()
         {
             _rpm = Rpm();
             _speed = Speed() * 3.6f;
 
-            if (InCar())
+            if (InCar() && !_isDisabled)
             {
                 _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
                 _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
@@ -196,7 +209,7 @@ namespace HTJ21
             else
             {
                 _throttle = 0;
-                _brake = 0;
+                _brake = 1;
             }
 
             _wheels[0].localRotation = Quaternion.Euler(0, _steeringAngle, 90);

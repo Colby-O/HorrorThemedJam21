@@ -1,4 +1,8 @@
+using PlazmaGames.Core;
+using PlazmaGames.UI;
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace HTJ21
@@ -19,6 +23,8 @@ namespace HTJ21
         public bool ReversePressed => _reverseAction.WasPerformedThisFrame();
         public bool InteractPressed => _interactAction.WasPerformedThisFrame();
 
+        public UnityEvent InteractionCallback { get; private set; }
+
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
             RawMovement = e.ReadValue<Vector2>();
@@ -29,21 +35,38 @@ namespace HTJ21
             RawLook = e.ReadValue<Vector2>();
         }
 
+        private void HandleInteractAction(InputAction.CallbackContext e)
+        {
+            InteractionCallback.Invoke();
+        }
+
         private void Awake()
         {
             if (_input == null) _input = GetComponent<PlayerInput>();
+            InteractionCallback = new UnityEvent();
 
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
             _reverseAction = _input.actions["Reverse"];
             _interactAction = _input.actions["Interact"];
 
+            _interactAction.performed += HandleInteractAction;
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
         }
 
+        private void Update()
+        {
+            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
+                else GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+            }
+        }
+
         private void OnDestroy()
         {
+            _interactAction.performed -= HandleInteractAction;
             _moveAction.performed -= HandleMoveAction;
             _lookAction.performed -= HandleLookAction;
         }

@@ -22,6 +22,8 @@ namespace HTJ21
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
 
+        public static GameObject CurrentControlable { get; set; }
+
         private void AttachMonoSystems()
         {
             AddMonoSystem<UIMonoSystem, IUIMonoSystem>(_uiSystem);
@@ -52,12 +54,13 @@ namespace HTJ21
         {
             Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
             Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
+            CurrentControlable = Car.gameObject;
         }
 
         private void Start()
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
         }
 
         private void OnEnable()
