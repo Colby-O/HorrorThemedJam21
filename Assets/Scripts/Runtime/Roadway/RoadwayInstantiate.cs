@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlazmaGames.Attribute;
 using Unity.Mathematics;
+using Unity.Mathematics.Geometry;
+using Unity.VisualScripting;
 using UnityEngine.Splines;
+using Random = Unity.Mathematics.Random;
 
 #if UNITY_EDITOR
 using UnityEditor.Splines;
@@ -34,7 +37,8 @@ namespace HTJ21
 
 		[System.Serializable]
 		public class InstanceInfo
-		{
+        {
+            public int seed;
 			public GameObject prefab;
 			public bool left, right;
 			public float step;
@@ -42,13 +46,34 @@ namespace HTJ21
 			public bool randomOffset;
 			public Vector3 offsetFrom;
 			public Vector3 offsetTo;
-		}
-
+            public float viewDistance;
+        }
+        
 		[SerializeField] private List<InstanceInfo> _instances = new();
 		[SerializeField] private List<Section> _sections = new();
 
-		private List<List<Matrix4x4[]>> _instanceMatrices = new();
-		private Matrix4x4[] _tempMatrices = new Matrix4x4[100];
+        class DrawnPart
+        {
+            public Matrix4x4 localMatrix;
+            public Mesh mesh;
+            public Material[] materials;
+        }
+
+        class DrawnInstance
+        {
+            public Matrix4x4[] matrices;
+            public List<DrawnPart> parts = new();
+            public float viewDistanceSq;
+        }
+
+        class DrawnSection
+        {
+            public MinMaxAABB bounds = new();
+            public List<DrawnInstance> instances = new();
+            public float viewDistance = 0;
+        }
+
+        private List<DrawnSection> _drawnSections = new();
 		private Dictionary<Material, Material> _materialClones = new();
 
 #if UNITY_EDITOR
@@ -63,23 +88,30 @@ namespace HTJ21
 		[InspectorButton("Generate")] public bool buttonGenerate = false;
 #endif
 		void Generate()
-		{
-			_instanceMatrices = new List<List<Matrix4x4[]>>();
+        {
+            int pSeed = Mathf.FloorToInt(UnityEngine.Random.value * int.MaxValue);
+            
+			_drawnSections = new ();
 			
 			float roadWidth = RoadwayCreator.Instance.RoadWidth();
 			foreach (Section s in _sections)
 			{
-				List<Matrix4x4[]> instanceMatrices = new();
-				_instanceMatrices.Add(instanceMatrices);
+                DrawnSection ds = new();
+				_drawnSections.Add(ds);
 				foreach (InstanceInfo inst in _instances)
-				{
+                {
+                    UnityEngine.Random.InitState(inst.seed);
+                    if (ds.viewDistance < inst.viewDistance) ds.viewDistance = inst.viewDistance;
 					bool leftOn = inst.left && s.left;
 					bool rightOn = inst.right && s.right;
 					float tStart = RoadwayHelper.GetKnotTInSpline(s.container, s.spline, s.knotStart);
 					float tLength = RoadwayHelper.GetTBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd);
 					int segmentCount = Mathf.FloorToInt(RoadwayHelper.GetDistanceBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd) / inst.step);
-					Matrix4x4[] matrices = new Matrix4x4[(leftOn ? segmentCount : 0) + (rightOn ? segmentCount : 0)];
-					instanceMatrices.Add(matrices);
+                    DrawnInstance di = new();
+                    ds.instances.Add(di);
+                    di.viewDistanceSq = inst.viewDistance * inst.viewDistance;
+                    LoadDrawnParts(inst, di);
+					di.matrices = new Matrix4x4[(leftOn ? segmentCount : 0) + (rightOn ? segmentCount : 0)];
 					for (int i = 0; i < segmentCount; i++)
 					{
 						float t = tStart + i / (float)segmentCount * tLength;
@@ -109,7 +141,8 @@ namespace HTJ21
 						if (leftOn)
 						{
 							Vector3 leftPos = leftEdge + offset;
-							matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
+                            ds.bounds.Encapsulate(leftPos);
+							di.matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
 						}
 						
 						if (inst.randomOffset)
@@ -130,78 +163,78 @@ namespace HTJ21
 						if (rightOn)
 						{
 							Vector3 rightPos = rightEdge + offset;
+                            ds.bounds.Encapsulate(rightPos);
 							int index = i;
 							if (leftOn) index += segmentCount;
-							matrices[index] = Matrix4x4.TRS(rightPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
+							di.matrices[index] = Matrix4x4.TRS(rightPos, Quaternion.LookRotation(forward, up), inst.prefab.transform.localScale);
 						}
 					}
 				}
 			}
+            
+            UnityEngine.Random.InitState(pSeed);
 		}
 
-		private void Start()
+        private void LoadDrawnParts(InstanceInfo inst, DrawnInstance di)
+        {
+            foreach (MeshRenderer mr in inst.prefab.GetComponentsInChildren<MeshRenderer>())
+            {
+                DrawnPart p = new();
+                di.parts.Add(p);
+                MeshFilter mf = mr.GetComponent<MeshFilter>();
+                p.mesh = mf.sharedMesh;
+                p.localMatrix = inst.prefab.transform.worldToLocalMatrix * mr.localToWorldMatrix;
+                p.materials = mr.sharedMaterials;
+                for (int i = 0; i < p.materials.Length; i++)
+                {
+                    if (p.materials[i].enableInstancing) continue;
+                    if (_materialClones.TryGetValue(p.materials[i], out Material clone))
+                    {
+                        p.materials[i] = clone;
+                    }
+                    else
+                    {
+                        clone = new Material(p.materials[i]);
+                        clone.enableInstancing = true;
+                        _materialClones.Add(p.materials[i], clone);
+                        p.materials[i] = clone;
+                    }
+                }
+            }
+        }
+
+        private void Start()
 		{
 			Generate();
 		}
 
+        private List<Matrix4x4> _drawn = new(256);
 		private void Update()
 		{
-			if (_instanceMatrices.Count == 0) return;
+            foreach (DrawnSection s in _drawnSections)
+            {
+                float d = s.viewDistance;
+                if (HTJ21GameManager.Player && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.Player.transform.position, new float3(d, d, d))))
+                    continue;
+                foreach (DrawnInstance inst in s.instances)
+                {
+                    foreach (DrawnPart part in inst.parts)
+                    {
+                        _drawn.Clear();
+                        foreach (Matrix4x4 matrix in inst.matrices)
+                        {
+                            Vector3 pos = matrix.GetColumn(3);
+                            if (HTJ21GameManager.Player && (HTJ21GameManager.Player.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
+                            _drawn.Add(matrix * part.localMatrix);
+                        }
 
-			foreach (var instanceMatrices in _instanceMatrices)
-			{
-				for (int instId = 0; instId < _instances.Count; instId++)
-				{
-					InstanceInfo inst = _instances[instId];
-					Matrix4x4[] matrices = instanceMatrices[instId];
-					foreach (MeshRenderer renderer in inst.prefab.GetComponentsInChildren<MeshRenderer>())
-					{
-						MeshFilter filter = renderer.GetComponent<MeshFilter>();
-						if (!filter) continue;
-						Mesh mesh = filter.sharedMesh;
-						Material[] materials = renderer.sharedMaterials;
-
-						Transform child = renderer.transform;
-						Matrix4x4 localMatrix = inst.prefab.transform.worldToLocalMatrix * child.localToWorldMatrix;
-
-						for (int i = 0; i < mesh.subMeshCount && i < materials.Length; i++)
-						{
-							Material material = materials[i];
-							if (material.enableInstancing == false)
-							{
-								Material clone;
-								if (_materialClones.TryGetValue(material, out clone))
-								{
-									material = clone;
-								}
-								else
-								{
-									clone = new Material(material);
-									clone.enableInstancing = true;
-									_materialClones[material] = clone;
-									material = clone;
-								}
-							}
-
-							EnsureTempMatricesSize(matrices.Length);
-							for (int j = 0; j < matrices.Length; j++)
-							{
-								_tempMatrices[j] = matrices[j] * localMatrix;
-							}
-
-							Graphics.DrawMeshInstanced(mesh, i, material, _tempMatrices[0..matrices.Length]);
-						}
-					}
-				}
-			}
-		}
-
-		private void EnsureTempMatricesSize(int matricesLength)
-		{
-			if (_tempMatrices.Length < matricesLength)
-			{
-				_tempMatrices = new Matrix4x4[matricesLength];
-			}
+                        for (int i = 0; i < part.materials.Length; i++)
+                        {
+                            Graphics.DrawMeshInstanced(part.mesh, i, part.materials[i], _drawn);
+                        }
+                    }
+                }
+            }
 		}
 	}
 }
