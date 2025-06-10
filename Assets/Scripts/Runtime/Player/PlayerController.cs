@@ -13,6 +13,7 @@ namespace HTJ21
         [SerializeField] private CharacterController _controller;
         [SerializeField] private InputHandler _inputHandler;
         [SerializeField] private Transform _head;
+        [SerializeField] private GameObject _light;
         [SerializeField] private PlayerSettings _settings;
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
@@ -44,6 +45,11 @@ namespace HTJ21
         {
             _head.gameObject.SetActive(false);
             HTJ21GameManager.Car.EnterCar();
+        }
+
+        private void ToggleLight()
+        {
+            _light.SetActive(!_light.activeSelf);
         }
 
         private void ProcessMovement()
@@ -97,8 +103,8 @@ namespace HTJ21
             ProcessMovement();
             ProcessGravity();
             _controller.Move(transform.TransformDirection(_movementSpeed));
-            
-            if (_head.gameObject.activeSelf && _inputHandler.ReversePressed) EnterCar();
+
+            if (!IsInCar() && _inputHandler.LightPressed) ToggleLight();
         }
     }
 }
