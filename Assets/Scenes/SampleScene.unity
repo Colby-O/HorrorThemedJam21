@@ -8885,6 +8885,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6522682553521134980, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: info.rearWheelSlideSpeed
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522682553521134980, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: info.frontWheelSlideSpeed
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522682553521134980, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: _drivingProfile.maxSpeedTurnAngle
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6522682553521134980, guid: be9d853d5242ee252935774272b5cff2, type: 3}
+      propertyPath: _drivingProfile.maxSpeedTurnAngleSpeed
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
