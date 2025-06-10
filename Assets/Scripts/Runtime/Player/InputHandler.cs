@@ -17,11 +17,13 @@ namespace HTJ21
         private InputAction _lookAction;
         private InputAction _reverseAction;
         private InputAction _interactAction;
+        private InputAction _lightAction;
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
         public bool ReversePressed => _reverseAction.WasPerformedThisFrame();
         public bool InteractPressed => _interactAction.WasPerformedThisFrame();
+        public bool LightPressed => _lightAction.WasPerformedThisFrame();
 
         public UnityEvent InteractionCallback { get; private set; }
 
@@ -49,6 +51,7 @@ namespace HTJ21
             _lookAction = _input.actions["Look"];
             _reverseAction = _input.actions["Reverse"];
             _interactAction = _input.actions["Interact"];
+            _lightAction = _input.actions["Light"];
 
             _interactAction.performed += HandleInteractAction;
             _moveAction.performed += HandleMoveAction;
