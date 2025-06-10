@@ -17,7 +17,7 @@ namespace HTJ21
 
         public string GetHint()
         {
-            return string.Empty;
+            return "Click 'E' To Enter.";
         }
 
         public bool Interact(Interactor interactor)

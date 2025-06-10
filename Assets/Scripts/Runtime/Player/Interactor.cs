@@ -71,6 +71,7 @@ namespace HTJ21
                 {
                     if (!interactable.IsInteractable()) return;
                     interactable.AddOutline();
+                    if (interactable.GetHint() != string.Empty) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SetHint(interactable.GetHint());
                 }
             }
         }
