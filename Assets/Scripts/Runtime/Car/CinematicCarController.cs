@@ -1,0 +1,150 @@
+using PlazmaGames.Animation;
+using PlazmaGames.Attribute;
+using PlazmaGames.Core;
+using System;
+using System.Collections;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Splines;
+using UnityEngine.Splines.ExtrusionShapes;
+using static UnityEngine.GraphicsBuffer;
+
+namespace HTJ21
+{
+    [Serializable]
+    struct CinematicTransform
+    {
+        public Vector3 Position;
+        public Vector3 Rotation;
+
+        public CinematicTransform(Vector3 position, Vector3 rotation)
+        {
+            this.Position = position;
+            this.Rotation = rotation;
+        }
+    }
+
+    public class CinematicCarController : MonoBehaviour
+    {
+        [Header("References")]
+        [SerializeField] SplineContainer _path;
+        [SerializeField] Camera _camera;
+        [SerializeField] Camera _cameraMain;
+        [SerializeField] Transform _cameraTarget;
+
+        [Header("Settings")]
+        [SerializeField] private float _speed;
+        [SerializeField] private float _yOffset = 1f;
+        [SerializeField] private float _exitTime = 2f;
+
+        [SerializeField, ReadOnly] private bool _enabled = true;
+        [SerializeField, ReadOnly] private float _currentT;
+        [SerializeField, ReadOnly] private CinematicTransform _currentTransform;
+        [SerializeField, ReadOnly] private CinematicTransform _endTransform;
+
+        public void Enable()
+        {
+            SnapCarToClosestKnot();
+            _camera.gameObject.SetActive(true);
+            _cameraMain.gameObject.SetActive(false);
+            _enabled = true;
+        }
+
+        public void Disable()
+        {
+            _camera.gameObject.SetActive(false);
+            _cameraMain.gameObject.SetActive(true);
+           _enabled = false;
+        }
+
+        private void StopCinematicStep(float t, CinematicTransform start, CinematicTransform end)
+        {
+            Quaternion startRot = Quaternion.Euler(start.Rotation);
+            Quaternion endRot = Quaternion.Euler(end.Rotation);
+
+            _camera.transform.localPosition = Vector3.Lerp(start.Position, end.Position, t);
+            _camera.transform.localRotation = Quaternion.Lerp(startRot, endRot, t);
+        }
+
+        public void StopCinematic()
+        {
+            _enabled = false;
+            _cameraMain.gameObject.SetActive(true);
+            HTJ21GameManager.Car.SetDisableState(true);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                this, 
+                _exitTime, 
+                (float t) => StopCinematicStep(t, _currentTransform, _endTransform), 
+                () => { HTJ21GameManager.Car.SetDisableState(false); Disable(); }
+            );
+        }
+
+        private int GetNextKnot(int currentIndex)
+        {
+            Spline spline = _path.Spline;
+            return (currentIndex == spline.Count - 1) ? 0 : currentIndex + 1;
+        }
+
+        private void LookTowardsNext(float t)
+        {
+            Spline spline = _path.Spline;
+            float tNext = t + 0.01f;
+            if (tNext > 1f) tNext = 0f;
+            Vector3 moveDir = Vector3.Normalize(_path.EvaluatePosition(0, tNext) - _path.EvaluatePosition(0, t));
+            transform.rotation = Quaternion.LookRotation(moveDir);
+        }
+
+        private void SnapCarToClosestKnot()
+        {
+            float minDst = float.MaxValue;
+            Vector3 minPos = Vector3.zero;
+            int minIndex = -1;
+
+            Spline spline = _path.Spline;
+            for (int i = 0; i < spline.Count; i++)
+            {
+                BezierKnot knot = spline[i];
+                Vector3 pos = _path.transform.TransformPoint(knot.Position);
+                float dst = Vector3.Distance(transform.position, pos);
+
+                if (dst < minDst)
+                {
+                    minDst = dst;
+                    minPos = pos;
+                    minIndex = i;
+                }
+            }
+
+            int nextIndex = (minIndex == spline.Count - 1) ? 0 : minIndex + 1;
+            Vector3 moveDir = (_path.transform.TransformPoint(spline[nextIndex].Position) - minPos).normalized;
+            _currentT = RoadwayHelper.GetKnotTInSpline(_path, 0, minIndex);
+
+            LookTowardsNext(_currentT);
+            _path.Evaluate(0, _currentT, out float3 position, out float3 tangent, out float3 upVector);
+            transform.position = (Vector3)position + Vector3.Normalize(upVector) * _yOffset;
+        }
+
+        private void Move()
+        {
+            _currentT += _speed * Time.deltaTime;
+
+            if (_currentT > 1f) _currentT = 0f;
+
+            LookTowardsNext(_currentT);
+            _path.Evaluate(0, _currentT, out float3 position, out float3 tangent, out float3 upVector);
+            transform.position = (Vector3)position + Vector3.Normalize(upVector) * _yOffset;
+        }
+
+        private void Start()
+        {
+            Enable();
+            _currentTransform = new CinematicTransform(_camera.transform.localPosition, _camera.transform.localRotation.eulerAngles);
+            _endTransform = new CinematicTransform(_cameraTarget.localPosition, _cameraTarget.localRotation.eulerAngles);
+        }
+
+        private void Update()
+        {
+            if (_enabled) Move();
+        }
+    }
+}

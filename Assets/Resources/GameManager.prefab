@@ -359,6 +359,7 @@ MonoBehaviour:
     knotIndex: 0
     position: {x: 0, y: 0, z: 0}
   _roadways: []
+  _currentPath: []
 --- !u!1 &7294373588400986925
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +542,10 @@ MonoBehaviour:
   _musicSound: 1
   _musicSounds: []
   _ambientSounds: []
-  _sfxSounds: []
+  _sfxSounds:
+  - id: 0
+    name: UIClick
+    audio: {fileID: 8300000, guid: 808a170799d1cda43b9d9c885aa7a81f, type: 3}
   _musicSource: {fileID: 195588065376856404}
   _ambientSource: {fileID: 4362962532019312449}
   _sfxMainSource: {fileID: 6612727545592042322}
@@ -590,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9da330e6435104dbd42dda19171608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startingView: 
+  _startingView: HTJ21.MainMenuView, Assembly-CSharp
   _views: []
   _currentView: {fileID: 0}
 --- !u!1 &8795536048810382653

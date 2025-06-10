@@ -25,6 +25,8 @@ namespace HTJ21
 
         public bool LockMovement { get; set; }
 
+        public bool IsInCar() => !_head.gameObject.activeSelf;
+
         private void MoveTo(Vector3 position)
         {
             _controller.enabled = false;
@@ -38,7 +40,7 @@ namespace HTJ21
             _head.gameObject.SetActive(true);
         }
 
-        private void EnterCar()
+        public void EnterCar()
         {
             _head.gameObject.SetActive(false);
             HTJ21GameManager.Car.EnterCar();

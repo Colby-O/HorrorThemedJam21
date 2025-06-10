@@ -24,7 +24,7 @@ namespace HTJ21
 
         private void Update()
         {
-            if (HTJ21GameManager.Player != null && _weatherGameObject != null) _weatherGameObject.transform.position = HTJ21GameManager.Player.transform.position;
+            if (HTJ21GameManager.Player != null && _weatherGameObject != null) _weatherGameObject.transform.position = HTJ21GameManager.CurrentControlable.transform.position;
         }
     }
 }
