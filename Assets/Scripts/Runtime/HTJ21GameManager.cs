@@ -19,10 +19,11 @@ namespace HTJ21
         [SerializeField] private AudioMonoSystem _audioSystem;
         [SerializeField] private WeatherMonoSystem _weatherSystem;
         [SerializeField] private GPSMonoSystem _gpsSystem;
+        [SerializeField] private InputMonoSystem _inputSystem;
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
 
-        public static GameObject CurrentControlable { get; set; }
+        public static GameObject CurrentControllable => (Player && Player.IsInCar()) ? Car.gameObject : Player.gameObject;
 
         private void AttachMonoSystems()
         {
@@ -31,6 +32,7 @@ namespace HTJ21
             AddMonoSystem<AudioMonoSystem, IAudioMonoSystem>(_audioSystem);
             AddMonoSystem<WeatherMonoSystem, IWeatherMonoSystem>(_weatherSystem);
             AddMonoSystem<GPSMonoSystem, IGPSMonoSystem>(_gpsSystem);
+            AddMonoSystem<InputMonoSystem, IInputMonoSystem>(_inputSystem);
         }
 
         public override string GetApplicationName()
@@ -54,7 +56,6 @@ namespace HTJ21
         {
             Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
             Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
-            CurrentControlable = Car.gameObject;
         }
 
         private void Start()

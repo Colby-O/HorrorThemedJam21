@@ -1,6 +1,5 @@
 using PlazmaGames.Core;
 using PlazmaGames.UI;
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -8,10 +7,9 @@ using UnityEngine.InputSystem;
 namespace HTJ21
 {
     [RequireComponent(typeof(PlayerInput))]
-    public class InputHandler : MonoBehaviour
+    public class InputMonoSystem : MonoBehaviour, IInputMonoSystem
     {
-        [Header("References")]
-        [SerializeField] private PlayerInput _input;
+        private PlayerInput _input;
 
         private InputAction _moveAction;
         private InputAction _lookAction;
@@ -21,9 +19,9 @@ namespace HTJ21
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
-        public bool ReversePressed => _reverseAction.WasPerformedThisFrame();
-        public bool InteractPressed => _interactAction.WasPerformedThisFrame();
-        public bool LightPressed => _lightAction.WasPerformedThisFrame();
+        public bool ReversePressed() => _reverseAction.WasPerformedThisFrame();
+        public bool InteractPressed() => _interactAction.WasPerformedThisFrame();
+        public bool LightPressed() => _lightAction.WasPerformedThisFrame();
 
         public UnityEvent InteractionCallback { get; private set; }
 

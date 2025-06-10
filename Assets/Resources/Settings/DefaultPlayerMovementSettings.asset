@@ -27,3 +27,4 @@ MonoBehaviour:
   HeadBobbleSpeed: 5
   HeadBobbleMagnitude: 0.16
   RpmScale: 3
+  _parkingSpeed: 0.01
