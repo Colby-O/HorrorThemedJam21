@@ -19,6 +19,7 @@ namespace HTJ21
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            GameManager.EmitEvent(new Events.StartGame());
         }
 
         private void Settings()

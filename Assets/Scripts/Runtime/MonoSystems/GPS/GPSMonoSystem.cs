@@ -55,6 +55,8 @@ namespace HTJ21
 
         private LineRenderer _renderer;
 
+        public Transform GetTarget() => _target;
+
         public void TurnOn() => _isOn = true;
 
         public void TurnOff() => _isOn = false;
@@ -256,10 +258,21 @@ namespace HTJ21
                 _renderer = path.AddComponent<LineRenderer>();
             }
 
-            if (_target != null) _targetNode = GetClosestNodeToPoint(_roadways, _target.position);
-
+            SyncTarget();
+            
             //TODO: Remove Me
             TurnOn();
+        }
+
+        public void MoveTarget(Vector3 position)
+        {
+            _target.position = position;
+            SyncTarget();
+        }
+
+        private void SyncTarget()
+        {
+            if (_target != null) _targetNode = GetClosestNodeToPoint(_roadways, _target.position);
         }
 
         private void Start()

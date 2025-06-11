@@ -1,6 +1,7 @@
 using PlazmaGames.Animation;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.Core.Events;
 using PlazmaGames.UI;
 using UnityEditor;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace HTJ21
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
 
-        public static GameObject CurrentControllable => (Player && Player.IsInCar()) ? Car.gameObject : Player.gameObject;
+        public static GameObject CurrentControllable => (Player && Player.IsInCar()) ? Car ? Car.gameObject : null : Player ? Player.gameObject : null;
 
         private void AttachMonoSystems()
         {

@@ -129,6 +129,7 @@ MonoBehaviour:
   _cameraTarget: {fileID: 8607249064973442406}
   _speed: 0.01
   _yOffset: 0.6
+  _xOffset: -1
   _exitTime: 5
   _stopSigns: 2400000020000000
   _stopTime: 1
@@ -211,7 +212,7 @@ MonoBehaviour:
   _wheelsSliding: 00000000
   _drivingProfile:
     wheelTurnSpeed: 2
-    steeringWheelAngleScale: 1
+    steeringWheelAngleScale: 4
     maxTurnAngle: 35
     maxSpeedTurnAngle: 10
     maxSpeedTurnAngleSpeed: 50
