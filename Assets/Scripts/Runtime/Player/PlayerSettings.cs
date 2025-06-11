@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HTJ21
 {
@@ -25,6 +26,11 @@ namespace HTJ21
         public float HeadBobbleSpeed = 5;
         public float HeadBobbleMagnitude = 0.16f;
         public float RpmScale = 3;
-        public float _parkingSpeed = 0.2f;
+        [FormerlySerializedAs("_parkingSpeed")] public float ParkingSpeed = 0.2f;
+        public float SteeringWheelAngleScale = 4;
+        public float WheelTurnSpeed = 2;
+        public float MaxTurnAngle = 35;
+        public float MaxSpeedTurnAngle = 10;
+        public float MaxSpeedTurnAngleSpeed = 50;
     }
 }
