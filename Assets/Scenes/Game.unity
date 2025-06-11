@@ -854,7 +854,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 134797116}
-  - component: {fileID: 134797115}
+  - component: {fileID: 134797117}
   - component: {fileID: 134797114}
   - component: {fileID: 134797113}
   m_Layer: 0
@@ -876,7 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc9bbce49595129409dcdf82dfd7812e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _terrain: {fileID: 134797115}
+  _terrain: {fileID: 134797117}
   _resolution: 0.001
   _heightOffset: 0.1
   _shoulderWidth: 60
@@ -935,9 +935,24 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 7affa34300644d14a934d5d8d224f127, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 0dea92f70de999b3f9e3b56add888c89, type: 2}
   m_EnableTreeColliders: 1
---- !u!218 &134797115
+--- !u!4 &134797116
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134797112}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -358, y: -8.4, z: -456}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!218 &134797117
 Terrain:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -977,21 +992,6 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
---- !u!4 &134797116
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134797112}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -358, y: -8.4, z: -456}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &146322054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4911163901294016195, guid: b07f429faf88cad47b52a2e3dd4fb5c8, type: 3}
