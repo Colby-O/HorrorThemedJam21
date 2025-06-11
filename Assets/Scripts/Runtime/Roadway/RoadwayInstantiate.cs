@@ -257,7 +257,13 @@ namespace HTJ21
 									GameObject go = GameObject.Instantiate(light, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, light.transform.localRotation, transform).gameObject;
 									_components.Add(new MeshComponent(go, inst.viewComponentDistance));
 								}
-							}
+                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                {
+                                    GameObject go = GameObject.Instantiate(collider, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
+                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+                                }
+                            }
 						}
 						
 						if (inst.randomOffset)
@@ -296,6 +302,12 @@ namespace HTJ21
                                 if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
                                 {
 									GameObject go = GameObject.Instantiate(light, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+                                }
+                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                {
+                                    GameObject go = GameObject.Instantiate(collider, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
                                     _components.Add(new MeshComponent(go, inst.viewComponentDistance));
                                 }
                             }
