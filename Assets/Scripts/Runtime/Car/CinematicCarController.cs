@@ -3,9 +3,11 @@ using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using System;
 using System.Collections.Generic;
+using PlazmaGames.Core.Utils;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
+using Time = UnityEngine.Time;
 
 namespace HTJ21
 {
@@ -34,6 +36,7 @@ namespace HTJ21
         [Header("Settings")]
         [SerializeField] private float _speed;
         [SerializeField] private float _yOffset = 1f;
+        [SerializeField] private float _xOffset = 0;
         [SerializeField] private float _exitTime = 2f;
         [SerializeField] private List<int> _stopSigns;
         [SerializeField] private float _stopTime = 1f;
@@ -171,7 +174,8 @@ namespace HTJ21
 
             LookTowardsNext(_currentT);
             _path.Evaluate(0, _currentT, out float3 position, out float3 tangent, out float3 upVector);
-            transform.position = (Vector3)position + Vector3.Normalize(upVector) * _yOffset;
+            Vector3 right = Vector3.Cross(Vector3.Normalize(tangent), Vector3.Normalize(Vector3.up));
+            transform.position = (Vector3)position + Vector3.Normalize(upVector) * _yOffset + right * _xOffset;
         }
 
         private void Start()

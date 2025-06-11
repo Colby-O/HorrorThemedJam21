@@ -19,11 +19,14 @@ namespace HTJ21
         [SerializeField] private int _brushResolution = 3;
 
         [SerializeField, InspectorButton("ConformTerrainToRoadway")] private bool _conformTerrainToRoadway = false;
+        [SerializeField, InspectorButton("ResetTerrainHeight")] private bool _resetTerrain = false;
+        [SerializeField] private bool _autoReset = true; 
 
         public static TerrainRoadwayConformer Instance { get; private set; }
 
-        public void ResetTerrainHeight(float baseHeight = 0f)
+        public void ResetTerrainHeight()
         {
+            float baseHeight = 0;
             TerrainData tData = _terrain.terrainData;
 
             int width = tData.heightmapResolution;
@@ -45,7 +48,7 @@ namespace HTJ21
         public void ConformTerrainToRoadway()
         {
             if (!RoadwayCreator.Instance) return;
-            ResetTerrainHeight();
+            if (_autoReset) ResetTerrainHeight();
             Debug.Log("Here!");
 
             TerrainData tData = _terrain.terrainData;

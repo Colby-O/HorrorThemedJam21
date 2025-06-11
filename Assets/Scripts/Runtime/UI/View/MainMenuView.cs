@@ -21,6 +21,7 @@ namespace HTJ21
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation("Truro, NS\n11:00pm", () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.test));
+            GameManager.EmitEvent(new Events.StartGame());
         }
 
         private void Settings()
