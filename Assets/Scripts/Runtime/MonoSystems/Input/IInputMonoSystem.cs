@@ -13,5 +13,6 @@ namespace HTJ21
         public bool LightPressed();
 
         public UnityEvent InteractionCallback { get; }
+        public UnityEvent SkipCallback { get; }
     }
 }

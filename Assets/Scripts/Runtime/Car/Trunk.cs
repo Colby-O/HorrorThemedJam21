@@ -72,7 +72,7 @@ namespace HTJ21
 
         public string GetHint()
         {
-            return $"Click 'E' To {(_isOpen ? "Close" : "Open")}.";
+            return $"Click 'E' To {(_isOpen ? "Close" : "Open")}";
         }
 
         private void Awake()

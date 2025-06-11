@@ -1,8 +1,9 @@
+using PlazmaGames.Core.MonoSystem;
 using UnityEngine;
 
 namespace HTJ21
 {
-    public interface IDialogueMonoSystem 
+    public interface IDialogueMonoSystem : IMonoSystem
     {
         public void CloseDialogue();
         public void Load(DialogueSO dialogueEvent);

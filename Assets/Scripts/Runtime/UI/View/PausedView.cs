@@ -1,6 +1,9 @@
 using PlazmaGames.Core;
+using PlazmaGames.Rendering.Blur;
 using PlazmaGames.UI;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace HTJ21
 {
@@ -10,9 +13,11 @@ namespace HTJ21
         [SerializeField] private EventButton _settings;
         [SerializeField] private EventButton _exit;
 
-        private void Resume()
+        public void Resume()
         {
+            HTJ21GameManager.IsPaused = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+            HTJ21GameManager.ToggleRendererFeature(HTJ21GameManager.MainRendererData, "Blur", false);
         }
 
         private void Settings()
@@ -35,6 +40,9 @@ namespace HTJ21
         public override void Show()
         {
             base.Show();
+
+            HTJ21GameManager.ToggleRendererFeature(HTJ21GameManager.MainRendererData, "Blur", true);
+            HTJ21GameManager.IsPaused = true;
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }

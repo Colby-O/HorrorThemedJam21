@@ -16,6 +16,7 @@ namespace HTJ21
         private InputAction _reverseAction;
         private InputAction _interactAction;
         private InputAction _lightAction;
+        private InputAction _skipAction;
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
@@ -24,6 +25,8 @@ namespace HTJ21
         public bool LightPressed() => _lightAction.WasPerformedThisFrame();
 
         public UnityEvent InteractionCallback { get; private set; }
+        public UnityEvent SkipCallback { get; private set; }
+
 
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
@@ -37,21 +40,31 @@ namespace HTJ21
 
         private void HandleInteractAction(InputAction.CallbackContext e)
         {
+            if (HTJ21GameManager.IsPaused) return;
             InteractionCallback.Invoke();
+        }
+
+        private void HandleSkipAction(InputAction.CallbackContext e)
+        {
+            if (HTJ21GameManager.IsPaused) return;
+            SkipCallback.Invoke();
         }
 
         private void Awake()
         {
             if (_input == null) _input = GetComponent<PlayerInput>();
             InteractionCallback = new UnityEvent();
+            SkipCallback = new UnityEvent();
 
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
             _reverseAction = _input.actions["Reverse"];
             _interactAction = _input.actions["Interact"];
             _lightAction = _input.actions["Light"];
+            _skipAction = _input.actions["Skip"];
 
             _interactAction.performed += HandleInteractAction;
+            _skipAction.performed += HandleSkipAction;
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
         }
@@ -64,13 +77,14 @@ namespace HTJ21
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && 
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>()
                 ) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
-                else if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+                else if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<PausedView>().Resume();
             }
         }
 
         private void OnDestroy()
         {
             _interactAction.performed -= HandleInteractAction;
+            _skipAction.performed -=HandleSkipAction;
             _moveAction.performed -= HandleMoveAction;
             _lookAction.performed -= HandleLookAction;
         }

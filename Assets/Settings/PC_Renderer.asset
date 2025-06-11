@@ -50,6 +50,21 @@ MonoBehaviour:
   m_Name: DitheringRenderFeature
   m_EditorClassIdentifier: 
   m_Active: 1
+--- !u!114 &-2321754966366395916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74bfa7927ad5dc2488c736c7b914c347, type: 3}
+  m_Name: Blur
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _shader: {fileID: 4800000, guid: b4a1384139988ae488ebd1803257f6ae, type: 3}
+  _injectionPoint: 550
 --- !u!114 &-70723477897083109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +107,8 @@ MonoBehaviour:
   - {fileID: -7883183830535167423}
   - {fileID: -70723477897083109}
   - {fileID: -7213864703060006784}
-  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e99921b07aa1e5fbd04ff802861f44534e39b
+  - {fileID: -2321754966366395916}
+  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e99921b07aa1e5fbd04ff802861f44534e39bf4613bc62878c7df
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

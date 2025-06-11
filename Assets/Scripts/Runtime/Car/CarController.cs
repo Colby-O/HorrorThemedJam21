@@ -126,11 +126,14 @@ namespace HTJ21
         private bool _wasEnteredThisFrame = false;
         private bool _isDisabled = false;
 
+        private Vector3 _lastVelocity;
+
         public bool InCar() => _camera.gameObject.activeSelf;
 
         public void SetDisableState(bool state)
         {
             _isDisabled = state;
+            if (!state) _brake = 0;
         }
 
         private void Awake()
@@ -180,7 +183,7 @@ namespace HTJ21
 
         private void Update()
         {
-            if (!InCar()) return;
+            if (!InCar() || HTJ21GameManager.IsPaused) return;
             ProcessLook();
             if (_inputHandler.ReversePressed())
             {
@@ -201,7 +204,7 @@ namespace HTJ21
             _rpm = Rpm();
             _speed = Speed() * 3.6f;
 
-            if (InCar() && !_isDisabled)
+            if (InCar() && !_isDisabled && !HTJ21GameManager.IsPaused)
             {
                 _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
                 _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
@@ -232,6 +235,23 @@ namespace HTJ21
 
         private void Simulate()
         {
+            if (HTJ21GameManager.IsPaused)
+            {
+                if (!_rig.isKinematic) _lastVelocity = _rig.linearVelocity;
+                _rig.isKinematic = true;
+                return;
+            }
+            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings._parkingSpeed)
+            {
+                if (!_rig.isKinematic) _lastVelocity = _rig.linearVelocity;
+                _rig.isKinematic = true;
+                return;
+            }
+
+            bool wasKinematic = _rig.isKinematic;
+            _rig.isKinematic = false;
+            if (wasKinematic) _rig.linearVelocity = _lastVelocity;
+
             if (_drivingProfile.maxSpeed > 0 && Speed() * 3.6 > _drivingProfile.maxSpeed) _throttle = 0;
             if (_drivingProfile.automatic)
             {
@@ -239,13 +259,6 @@ namespace HTJ21
                 if (_rpm <= _drivingProfile.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
                 _rpm = Rpm();
             }
-
-            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings._parkingSpeed)
-            {
-                _rig.isKinematic = true;
-                return;
-            }
-            _rig.isKinematic = false;
             _rig.AddForce(-transform.forward * (info.airResistance * MathExt.Square(Vector3.Dot(transform.forward, _rig.linearVelocity))));
             for (int wheel = 0; wheel < 4; wheel++)
             {
