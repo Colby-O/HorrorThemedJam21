@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 819700673273166462}
   - component: {fileID: 6464152599274916559}
   - component: {fileID: 6310206512019443813}
+  - component: {fileID: 64344445336006656}
   m_Layer: 0
   m_Name: PoliceCar
   m_TagString: Car
@@ -468,6 +469,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1624494, y: 0.4522099, z: 3.2380066}
   m_Center: {x: 0.0056488514, y: 0.27389506, z: 0.1269722}
+--- !u!114 &64344445336006656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339760472102240983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92c54628dabc81a4783d66f14e682317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _verticalOffset: 1
+  _verticalBounds: {fileID: 0}
 --- !u!1 &1670077266529777360
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,6 +1335,7 @@ GameObject:
   - component: {fileID: 8172825253690478952}
   - component: {fileID: 4267664522264665619}
   - component: {fileID: 3634995345548662134}
+  - component: {fileID: 7028872773145125792}
   m_Layer: 0
   m_Name: SideMirrorR
   m_TagString: Untagged
@@ -1381,7 +1397,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: d4398204efd352f42bf225792291f1cb, type: 2}
   m_TargetDisplay: 0
@@ -1405,7 +1421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -1416,7 +1432,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1437,6 +1453,22 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &7028872773145125792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5446885591092693169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c28f64db37f6742bce60bf8d68b6df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _renderInterval: 0.1
+  _renderOffset: 0.1
+  _timeSinceLastRender: 0
 --- !u!1 &5552601916126976450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,6 +1807,7 @@ GameObject:
   - component: {fileID: 4592355315435221781}
   - component: {fileID: 4888730677117846747}
   - component: {fileID: 1084565321628903311}
+  - component: {fileID: 2448598159654390745}
   m_Layer: 0
   m_Name: RearView
   m_TagString: Untagged
@@ -1836,7 +1869,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 7551c1f541207df49a2b541177d9ad0a, type: 2}
   m_TargetDisplay: 0
@@ -1860,7 +1893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -1871,7 +1904,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1892,6 +1925,22 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &2448598159654390745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6295411072352367453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c28f64db37f6742bce60bf8d68b6df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _renderInterval: 0.1
+  _renderOffset: 0
+  _timeSinceLastRender: 0
 --- !u!1 &6508230240532160503
 GameObject:
   m_ObjectHideFlags: 0
@@ -2425,6 +2474,7 @@ GameObject:
   - component: {fileID: 3900454514531489087}
   - component: {fileID: 7682576092975383066}
   - component: {fileID: 1891486078208460996}
+  - component: {fileID: 3163727211929825775}
   m_Layer: 0
   m_Name: SideMirrorL
   m_TagString: Untagged
@@ -2486,7 +2536,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 215
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 8c196c95b64a5f34cb88e8d73ec58d0a, type: 2}
   m_TargetDisplay: 0
@@ -2510,7 +2560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -2521,7 +2571,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2542,6 +2592,22 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &3163727211929825775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7662091493034174430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c28f64db37f6742bce60bf8d68b6df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _renderInterval: 0.1
+  _renderOffset: 0.05
+  _timeSinceLastRender: 0
 --- !u!1 &7720171881362732322
 GameObject:
   m_ObjectHideFlags: 0

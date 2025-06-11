@@ -61,6 +61,11 @@ namespace HTJ21
 
         public void TurnOff() => _isOn = false;
 
+        public Vector3 GetClosestNodePositionToPoint(List<Roadway> roadways, Vector3 target)
+        {
+            return GetClosestNodeToPoint(roadways, target).position;
+        }
+
         private GPSNode GetClosestNodeToPoint(List<Roadway> roadways, Vector3 target)
         {
             float minDst = float.MaxValue;
