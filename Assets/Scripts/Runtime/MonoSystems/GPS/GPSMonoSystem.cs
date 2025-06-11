@@ -188,6 +188,8 @@ namespace HTJ21
 
         private void DrawPath(List<GPSNode> nodes)
         {
+            if (nodes.Count == 0) return;
+            
             float offsetY = 10f;
 
             Queue<GPSNode> queue = new Queue<GPSNode>(nodes);
@@ -205,6 +207,8 @@ namespace HTJ21
                 points.Add(playerPos);
                 points.Add(start);
             }
+            
+            if (queue.Count <= 1) return;
 
             while (queue.Count > 1) 
             {
