@@ -857,8 +857,8 @@ MonoBehaviour:
   _as: {fileID: 6405485548053735029}
   _holder: {fileID: 3278085956393355928}
   _typeSpeed: 0.1
-  _timeout: 4
-  _timeoutShow: 1
+  _timeout: 30
+  _timeoutShow: 25
   _hint: {fileID: 1585933634839909368}
   _waitDelayDialogue: 1
   _dialogueAvatarName: {fileID: 8256099144749659755}
