@@ -663,13 +663,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _overallSound: 1
-  _ambientSound: 1
-  _sfxSound: 1
-  _musicSound: 1
+  _ambientSound: 0.25
+  _sfxSound: 0.5
+  _musicSound: 0.25
   _musicSounds:
   - id: 0
     name: MainMenu
     audio: {fileID: 8300000, guid: 68758232df28fdc409c93b9f915b8714, type: 3}
+  - id: 1
+    name: Act1
+    audio: {fileID: 8300000, guid: 70827695dd0998b4e8f31d56a5c0e8b5, type: 3}
   _ambientSounds: []
   _sfxSounds:
   - id: 0
