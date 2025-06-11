@@ -29,6 +29,7 @@ namespace HTJ21
         [SerializeField] Camera _camera;
         [SerializeField] Camera _cameraMain;
         [SerializeField] Transform _cameraTarget;
+        [SerializeField] Rigidbody _rb;
 
         [Header("Settings")]
         [SerializeField] private float _speed;
@@ -36,6 +37,7 @@ namespace HTJ21
         [SerializeField] private float _exitTime = 2f;
         [SerializeField] private List<int> _stopSigns;
         [SerializeField] private float _stopTime = 1f;
+        [SerializeField] private float _stopSpeed = 1000f;
 
 
         [SerializeField, ReadOnly] private bool _enabled = true;
@@ -72,14 +74,13 @@ namespace HTJ21
 
         public void StopCinematic()
         {
-            _enabled = false;
             _cameraMain.gameObject.SetActive(true);
             HTJ21GameManager.Car.SetDisableState(true);
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                 this, 
                 _exitTime, 
                 (float t) => StopCinematicStep(t, _currentTransform, _endTransform), 
-                () => { HTJ21GameManager.Car.SetDisableState(false); Disable(); }
+                () => { _enabled = false; _rb.isKinematic = false; _rb.linearVelocity = _stopSpeed * transform.forward; HTJ21GameManager.Car.SetDisableState(false); Disable(); }
             );
         }
 
@@ -175,9 +176,10 @@ namespace HTJ21
 
         private void Start()
         {
-            Enable();
+            if (!_rb) _rb = GetComponent<Rigidbody>();
             _currentTransform = new CinematicTransform(_camera.transform.localPosition, _camera.transform.localRotation.eulerAngles);
             _endTransform = new CinematicTransform(_cameraTarget.localPosition, _cameraTarget.localRotation.eulerAngles);
+            Enable();
         }
 
         private void Update()

@@ -1,11 +1,12 @@
 using PlazmaGames.Core;
+using PlazmaGames.Core.Debugging;
 using PlazmaGames.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace HTJ21
 {
-    public class DialogueMonoSystem : MonoBehaviour
+    public class DialogueMonoSystem : MonoBehaviour, IDialogueMonoSystem
     {
         private bool _isDialogueInProgress = false;
 
@@ -17,17 +18,15 @@ namespace HTJ21
 
         private Dialogue _currentDialogue;
 
-        //private DialogueView _view;
-
         private void OpenDialogue()
         {
             _nextDialogue = false;
             _currentDialogue = _currentDialogueEvent.dialogues.Dequeue();
-            //if (_currentDialogue.dialogueEvent == null) _currentDialogue.dialogueEvent = new DefaultDialogueEvent();
-            //GameManager.GetMonoSystem<IUIMonoSystem>().Show<DialogueView>();
-            //GameManager.GetMonoSystem<IUIMonoSystem>().GetView<DialogueView>().Display(_currentDialogue);
-            _currentDialogue.dialogueEvent.OnEnter();
+            if (_currentDialogue.dialogueEvent == null) _currentDialogue.dialogueEvent = new DefaultDialogueEvent();
 
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowDialogue();
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().DisplayDialogue(_currentDialogue);
+            _currentDialogue.dialogueEvent.OnEnter();
         }
 
         public void CloseDialogue()
@@ -44,7 +43,7 @@ namespace HTJ21
         {
             if (_dialogueEvents.Count == 0)
             {
-                //if (GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DialogueView>()) GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+                GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().HideDialogue();
                 return;
             }
 
@@ -57,7 +56,7 @@ namespace HTJ21
             }
             else
             {
-                Debug.LogWarning("Trying to load a dialogue event when there is already an event loaded!");
+                PlazmaDebug.LogWarning("Trying to load a dialogue event when there is already an event loaded!", "Dialogue MonoSystem", 1);
             }
         }
 

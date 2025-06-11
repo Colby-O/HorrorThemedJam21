@@ -127,11 +127,13 @@ MonoBehaviour:
   _camera: {fileID: 91367656302004194}
   _cameraMain: {fileID: 6848529156225241616}
   _cameraTarget: {fileID: 8607249064973442406}
+  _rb: {fileID: 0}
   _speed: 0.01
   _yOffset: 0.6
   _exitTime: 5
   _stopSigns: 2400000020000000
   _stopTime: 1
+  _stopSpeed: 4
   _enabled: 1
   _isStopped: 0
   _currentStops: 
@@ -1076,7 +1078,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -1245,7 +1247,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -1822,7 +1824,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1

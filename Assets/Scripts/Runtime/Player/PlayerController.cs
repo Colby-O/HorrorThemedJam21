@@ -98,7 +98,7 @@ namespace HTJ21
 
         private void Update()
         {
-            if (LockMovement) return;
+            if (LockMovement || HTJ21GameManager.IsPaused) return;
             
             ProcessLook();
             ProcessMovement();

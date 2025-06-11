@@ -1,12 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
+using PlazmaGames.Runtime.DataStructures;
 
 namespace HTJ21
 {
     [System.Serializable]
+    public enum Language
+    {
+        EN,
+        FR
+    }
+
+    [System.Serializable]
     public class Dialogue
     {
-        public string msg;
+        public string avatarName;
+        public SerializableDictionary<Language, string> msg;
         public DialogueEvent dialogueEvent;
     }
 
