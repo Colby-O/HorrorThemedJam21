@@ -473,7 +473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _controller: {fileID: 2938089788199248647}
   _head: {fileID: 8557482328879248548}
-  _light: {fileID: 0}
+  _light: {fileID: 3310769220686601030}
   _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
   _movementSpeed: {x: 0, y: 0, z: 0}
   _currentVel: {x: 0, y: 0, z: 0}
