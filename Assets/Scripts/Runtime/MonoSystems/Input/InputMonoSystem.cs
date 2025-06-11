@@ -75,7 +75,8 @@ namespace HTJ21
             {
                 if (
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && 
-                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>()
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>() &&
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()
                 ) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
                 else if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<PausedView>().Resume();
             }
