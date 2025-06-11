@@ -44,9 +44,14 @@ namespace HTJ21
 			public float step;
             public bool align;
 			public bool randomOffset;
-			public Vector3 offsetFrom;
+            public Vector3 offsetFrom;
 			public Vector3 offsetTo;
+            public bool randomScale;
+            public float scaleFrom = 1f;
+            public float scaleTo = 1f;
+            public bool randomRotation;
             public float viewDistance;
+            public float viewComponentDistance;
         }
         
 		[SerializeField] private List<InstanceInfo> _instances = new();
@@ -73,6 +78,19 @@ namespace HTJ21
             public float viewDistance = 0;
         }
 
+		class MeshComponent
+		{
+			public GameObject go;
+			public float viewDst;
+
+			public MeshComponent(GameObject go, float viewDst)
+			{
+				this.go = go;
+				this.viewDst = viewDst;
+			}
+		}
+
+		private List<MeshComponent> _components;
         private List<DrawnSection> _drawnSections = new();
 		private Dictionary<Material, Material> _materialClones = new();
 
@@ -89,9 +107,23 @@ namespace HTJ21
 #endif
 		void Generate()
         {
+            if (_components != null)
+			{
+				for (int i = 0; i < _components.Count; i++)
+				{
+					GameObject.DestroyImmediate(_components[i].go);
+				}
+			}
+
+            while (transform.childCount > 0)
+            {
+                GameObject.DestroyImmediate(transform.GetChild(0).gameObject);
+            }
+
             int pSeed = Mathf.FloorToInt(UnityEngine.Random.value * int.MaxValue);
             
-			_drawnSections = new ();
+			_drawnSections = new();
+			_components = new();
 			
 			float roadWidth = RoadwayCreator.Instance.RoadWidth();
 			foreach (Section s in _sections)
@@ -124,6 +156,7 @@ namespace HTJ21
 						Vector3 right = Vector3.Cross(forward, up);
 						Vector3 offset;
                         Vector3 rotation = inst.align ? Quaternion.LookRotation(forward, up).eulerAngles : Vector3.zero;
+
 						if (inst.randomOffset)
 						{
 							offset =
@@ -143,7 +176,22 @@ namespace HTJ21
 						{
 							Vector3 leftPos = leftEdge + offset;
                             ds.bounds.Encapsulate(leftPos);
-							di.matrices[i] = Matrix4x4.TRS(leftPos, Quaternion.Euler(rotation), inst.prefab.transform.localScale);
+                            float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(inst.scaleFrom, inst.scaleTo) : 1f;
+							float rot = inst.align ? 180f : (inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f);
+                            di.matrices[i] = Matrix4x4.TRS(
+								leftPos, 
+								Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation), 
+								scaleFactor * inst.prefab.transform.localScale
+							);
+
+							for (int j = 0; j < inst.prefab.transform.childCount; j++)
+							{
+								if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
+								{
+									GameObject go = GameObject.Instantiate(light, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, light.transform.localRotation, transform).gameObject;
+									_components.Add(new MeshComponent(go, inst.viewComponentDistance));
+								}
+							}
 						}
 						
 						if (inst.randomOffset)
@@ -167,13 +215,40 @@ namespace HTJ21
                             ds.bounds.Encapsulate(rightPos);
 							int index = i;
 							if (leftOn) index += segmentCount;
-							di.matrices[index] = Matrix4x4.TRS(rightPos, Quaternion.Euler(rotation), inst.prefab.transform.localScale);
-						}
+
+							float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(inst.scaleFrom, inst.scaleTo) : 1f;
+                            float rot = inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f;
+
+                            di.matrices[index] = Matrix4x4.TRS(
+								rightPos,
+                                Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation), 
+                                scaleFactor * inst.prefab.transform.localScale
+							);
+
+                            for (int j = 0; j < inst.prefab.transform.childCount; j++)
+                            {
+                                if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
+                                {
+									GameObject go = GameObject.Instantiate(light, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+                                }
+                            }
+                        }
 					}
 				}
 			}
             
             UnityEngine.Random.InitState(pSeed);
+		}
+
+		private void HideUnusedComponents()
+		{
+			if (HTJ21GameManager.CurrentControllable == null) return;
+
+            foreach (MeshComponent component in _components)
+			{
+				component.go.SetActive(Vector3.Distance(HTJ21GameManager.CurrentControllable.transform.position, component.go.transform.position) < component.viewDst);
+			}
 		}
 
         private void LoadDrawnParts(InstanceInfo inst, DrawnInstance di)
@@ -212,6 +287,8 @@ namespace HTJ21
         private List<Matrix4x4> _drawn = new(256);
 		private void Update()
 		{
+			HideUnusedComponents();
+
             foreach (DrawnSection s in _drawnSections)
             {
                 float d = s.viewDistance;
