@@ -9,6 +9,7 @@ namespace HTJ21
     {
         [SerializeField] private Transform _targetAfterLog;
         [SerializeField] private TreeFall _sightingTree;
+        [SerializeField] private Transform _sightingLightningHit;
         [SerializeField] private WalkAndDie _firstCultist;
 
         private IGPSMonoSystem _gpsMs;
@@ -39,6 +40,7 @@ namespace HTJ21
             }));
             GameManager.AddEventListener<Events.DreamSighting>(Events.NewDreamSighting((from, data) =>
             {
+                GameManager.GetMonoSystem<IWeatherMonoSystem>().SpawnLightingAt(_sightingLightningHit.position);
                 _sightingTree.Fall();
                 _firstCultist.Walk();
             }));

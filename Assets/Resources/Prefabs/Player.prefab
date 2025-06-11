@@ -218,7 +218,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.03
-  far clip plane: 1000
+  far clip plane: 3000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -475,6 +475,7 @@ MonoBehaviour:
   _head: {fileID: 8557482328879248548}
   _light: {fileID: 3310769220686601030}
   _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
+  _camera: {fileID: 0}
   _movementSpeed: {x: 0, y: 0, z: 0}
   _currentVel: {x: 0, y: 0, z: 0}
   _bodyRotation: {x: 0, y: 0, z: 0}
