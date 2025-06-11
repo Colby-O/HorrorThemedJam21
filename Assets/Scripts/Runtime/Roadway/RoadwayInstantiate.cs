@@ -191,7 +191,14 @@ namespace HTJ21
 									GameObject go = GameObject.Instantiate(light, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, light.transform.localRotation, transform).gameObject;
 									_components.Add(new MeshComponent(go, inst.viewComponentDistance));
 								}
-							}
+
+                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                {
+                                    GameObject go = GameObject.Instantiate(collider, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
+									go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
+                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+                                }
+                            }
 						}
 						
 						if (inst.randomOffset)
@@ -230,6 +237,13 @@ namespace HTJ21
                                 if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
                                 {
 									GameObject go = GameObject.Instantiate(light, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+                                }
+
+                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                {
+                                    GameObject go = GameObject.Instantiate(collider, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
+                                    go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
                                     _components.Add(new MeshComponent(go, inst.viewComponentDistance));
                                 }
                             }
@@ -289,30 +303,30 @@ namespace HTJ21
 		{
 			HideUnusedComponents();
 
-            foreach (DrawnSection s in _drawnSections)
-            {
-                float d = s.viewDistance;
-                if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
-                    continue;
-                foreach (DrawnInstance inst in s.instances)
-                {
-                    foreach (DrawnPart part in inst.parts)
-                    {
-                        _drawn.Clear();
-                        foreach (Matrix4x4 matrix in inst.matrices)
-                        {
-                            Vector3 pos = matrix.GetColumn(3);
-                            if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
-                            _drawn.Add(matrix * part.localMatrix);
-                        }
+			foreach (DrawnSection s in _drawnSections)
+			{
+				float d = s.viewDistance;
+				if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
+					continue;
+				foreach (DrawnInstance inst in s.instances)
+				{
+					foreach (DrawnPart part in inst.parts)
+					{
+						_drawn.Clear();
+						foreach (Matrix4x4 matrix in inst.matrices)
+						{
+							Vector3 pos = matrix.GetColumn(3);
+							if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
+							_drawn.Add(matrix * part.localMatrix);
+						}
 
-                        for (int i = 0; i < part.materials.Length; i++)
-                        {
-                            Graphics.DrawMeshInstanced(part.mesh, i, part.materials[i], _drawn);
-                        }
-                    }
-                }
-            }
+						for (int i = 0; i < part.materials.Length; i++)
+						{
+							Graphics.DrawMeshInstanced(part.mesh, i, part.materials[i], _drawn);
+						}
+					}
+				}
+			}
 		}
 	}
 }

@@ -8,6 +8,7 @@ TagManager:
   - GPSTarget
   - GPSPath
   - Car
+  - VerticalBounds
   layers:
   - Default
   - TransparentFX
