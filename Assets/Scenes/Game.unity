@@ -463,8 +463,8 @@ MonoBehaviour:
     step: 0.005
     align: 0
     randomOffset: 1
-    offsetFrom: {x: 4, y: 1, z: 0}
-    offsetTo: {x: 25, y: 1, z: 0}
+    offsetFrom: {x: 4, y: -0.6, z: 0}
+    offsetTo: {x: 25, y: -0.6, z: 0}
     viewDistance: 30
   - seed: 1
     prefab: {fileID: 6086270700845524050, guid: a018586244f17bc3db9f39a38c79b8c4, type: 3}
