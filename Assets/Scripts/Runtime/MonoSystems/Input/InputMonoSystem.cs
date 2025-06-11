@@ -1,5 +1,6 @@
 using PlazmaGames.Core;
 using PlazmaGames.UI;
+using PlazmaGames.UI.Views;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -76,9 +77,19 @@ namespace HTJ21
                 if (
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && 
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>() &&
-                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>() &&
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>()
                 ) GameManager.GetMonoSystem<IUIMonoSystem>().Show<PausedView>();
-                else if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<PausedView>().Resume();
+                else if (
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>() &&
+                    !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>()
+                ) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<PausedView>().Resume();
+            }
+
+            if (Keyboard.current.backquoteKey.wasPressedThisFrame) 
+            {
+                if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<DeveloperConsoleView>();
+                else GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
             }
         }
 
