@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using Unity.Mathematics;
 using Unity.Mathematics.Geometry;
 using Unity.VisualScripting;
@@ -18,7 +19,6 @@ namespace HTJ21
 	[ExecuteInEditMode]
 	public class RoadwayInstantiate : MonoBehaviour
     {
-        [SerializeField] private float _viewDistanceCheckInterval = 1;
         private float _lastViewDistanceCheck = 0;
         
 		[System.Serializable]
@@ -53,8 +53,6 @@ namespace HTJ21
             public float scaleFrom = 1f;
             public float scaleTo = 1f;
             public bool randomRotation;
-            public float viewDistance;
-            public float viewComponentDistance;
         }
         
 		[System.Serializable]
@@ -103,26 +101,22 @@ namespace HTJ21
         {
             public Matrix4x4[] matrices;
             public List<DrawnPart> parts = new();
-            public float viewDistanceSq;
         }
 
         class DrawnSection
         {
             public MinMaxAABB bounds = new();
             public List<DrawnInstance> instances = new();
-            public float viewDistance = 0;
             public bool inViewDistance;
         }
 
 		class MeshComponent
 		{
 			public GameObject go;
-			public float viewDst;
 
-			public MeshComponent(GameObject go, float viewDst)
+			public MeshComponent(GameObject go)
 			{
 				this.go = go;
-				this.viewDst = viewDst;
 			}
 		}
 
@@ -201,13 +195,11 @@ namespace HTJ21
                         scaleTo = overrides.scaleTo;
                     }
                     UnityEngine.Random.InitState(seed);
-                    if (ds.viewDistance < inst.viewDistance) ds.viewDistance = inst.viewDistance;
 					float tStart = RoadwayHelper.GetKnotTInSpline(s.container, s.spline, s.knotStart);
 					float tLength = RoadwayHelper.GetTBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd);
 					int segmentCount = Mathf.FloorToInt(RoadwayHelper.GetDistanceBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd) / step);
                     DrawnInstance di = new();
                     ds.instances.Add(di);
-                    di.viewDistanceSq = inst.viewDistance * inst.viewDistance;
                     LoadDrawnParts(inst, di);
 					di.matrices = new Matrix4x4[(leftOn ? segmentCount : 0) + (rightOn ? segmentCount : 0)];
 					for (int i = 0; i < segmentCount; i++)
@@ -244,24 +236,27 @@ namespace HTJ21
                             ds.bounds.Encapsulate(leftPos);
                             float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(scaleFrom, scaleTo) : 1f;
 							float rot = inst.align ? 180f : (inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f);
-                            di.matrices[i] = Matrix4x4.TRS(
-								leftPos, 
-								Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation), 
-								scaleFactor * inst.prefab.transform.localScale
-							);
+
+                            Matrix4x4 mat = Matrix4x4.TRS(
+                                leftPos,
+                                Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation),
+                                scaleFactor * inst.prefab.transform.localScale
+                            );
+                            di.matrices[i] = mat;
 
 							for (int j = 0; j < inst.prefab.transform.childCount; j++)
 							{
 								if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
 								{
-									GameObject go = GameObject.Instantiate(light, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, light.transform.localRotation, transform).gameObject;
-									_components.Add(new MeshComponent(go, inst.viewComponentDistance));
+									GameObject go = GameObject.Instantiate(light, leftPos, Quaternion.Euler(rotation), transform).gameObject;
+                                    SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
+									_components.Add(new MeshComponent(go));
 								}
                                 if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
                                 {
-                                    GameObject go = GameObject.Instantiate(collider, leftPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
-                                    go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
-                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+									GameObject go = GameObject.Instantiate(collider, leftPos, Quaternion.Euler(rotation), transform).gameObject;
+                                    SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
+                                    _components.Add(new MeshComponent(go));
                                 }
                             }
 						}
@@ -291,24 +286,27 @@ namespace HTJ21
 							float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(scaleFrom, scaleTo) : 1f;
                             float rot = inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f;
 
-                            di.matrices[index] = Matrix4x4.TRS(
-								rightPos,
-                                Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation), 
+                            Matrix4x4 mat = Matrix4x4.TRS(
+                                rightPos,
+                                Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation),
                                 scaleFactor * inst.prefab.transform.localScale
-							);
+                            );
+
+                            di.matrices[index] = mat;
 
                             for (int j = 0; j < inst.prefab.transform.childCount; j++)
                             {
                                 if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
                                 {
-									GameObject go = GameObject.Instantiate(light, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * light.transform.localPosition, transform.localRotation, transform).gameObject;
-                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+									GameObject go = GameObject.Instantiate(light, rightPos, Quaternion.Euler(rotation), transform).gameObject;
+                                    SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
+                                    _components.Add(new MeshComponent(go));
                                 }
                                 if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
                                 {
-                                    GameObject go = GameObject.Instantiate(collider, rightPos + Quaternion.AngleAxis(rot, up) * Quaternion.Euler(rotation) * collider.transform.localPosition, transform.localRotation, transform).gameObject;
-                                    go.transform.localScale = scaleFactor * inst.prefab.transform.localScale;
-                                    _components.Add(new MeshComponent(go, inst.viewComponentDistance));
+									GameObject go = GameObject.Instantiate(collider, rightPos, Quaternion.Euler(rotation), transform).gameObject;
+                                    SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
+                                    _components.Add(new MeshComponent(go));
                                 }
                             }
                         }
@@ -319,13 +317,22 @@ namespace HTJ21
             UnityEngine.Random.InitState(pSeed);
 		}
 
-		private void HideUnusedComponents()
+        private void SetChildMatrix(Transform set, Transform parent, Transform child, Matrix4x4 mat)
+        {
+            Matrix4x4 m = mat * (parent.worldToLocalMatrix * child.transform.localToWorldMatrix);
+            set.position = m.ExtractPosition();
+            set.rotation = m.ExtractRotation();
+            set.localScale = m.ExtractScale();
+        }
+
+        private void HideUnusedComponents()
 		{
 			if (HTJ21GameManager.CurrentControllable == null) return;
 
             foreach (MeshComponent component in _components)
-			{
-				component.go.SetActive(Vector3.Distance(HTJ21GameManager.CurrentControllable.transform.position, component.go.transform.position) < component.viewDst);
+            {
+                float distanceSq = (HTJ21GameManager.CurrentControllable.transform.position - component.go.transform.position).sqrMagnitude;
+				component.go.SetActive(distanceSq < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance));
 			}
 		}
 
@@ -366,7 +373,7 @@ namespace HTJ21
         {
             foreach (DrawnSection s in _drawnSections)
             {
-                float d = s.viewDistance;
+                float d = GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000;
                 if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
                 {
                     s.inViewDistance = false;
@@ -381,7 +388,11 @@ namespace HTJ21
                         foreach (Matrix4x4 matrix in inst.matrices)
                         {
                             Vector3 pos = matrix.GetColumn(3);
-                            if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
+                            if (HTJ21GameManager.CurrentControllable)
+                            {
+                                float distanceSq = (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude;
+                                if (distanceSq >= MathExt.Square(HTJ21GameManager.Preferences.ViewDistance)) continue;
+                            }
                             part.matrices.Add(matrix * part.localMatrix);
                         }
                     }
@@ -392,11 +403,10 @@ namespace HTJ21
         private List<Matrix4x4> _drawn = new(256);
 		private void Update()
 		{
-			HideUnusedComponents();
-
-            if (Time.time - _lastViewDistanceCheck >= _viewDistanceCheckInterval)
+            if (!GameManager.Instance || Time.time - _lastViewDistanceCheck >= HTJ21GameManager.Preferences.ComputeViewDistanceInterval)
             {
                 _lastViewDistanceCheck = Time.time;
+                HideUnusedComponents();
                 MarkInViewDistance();
             }
 
