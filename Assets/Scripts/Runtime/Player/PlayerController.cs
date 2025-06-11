@@ -91,6 +91,8 @@ namespace HTJ21
 
             _bodyRotation = transform.localRotation.eulerAngles;
             _headRotation = _head.localRotation.eulerAngles;
+
+            _head.gameObject.SetActive(false);
         }
 
         private void Start()

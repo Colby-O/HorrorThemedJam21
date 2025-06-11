@@ -15,12 +15,13 @@ namespace HTJ21
         private void Play()
         {
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(1, PlazmaGames.Audio.AudioType.Music, true);
             HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
-            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation("Truro, NS\n11:00pm", () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.test));
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation("London, ON\nCanada\n11:00pm", () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.test));
             GameManager.EmitEvent(new Events.StartGame());
         }
 
