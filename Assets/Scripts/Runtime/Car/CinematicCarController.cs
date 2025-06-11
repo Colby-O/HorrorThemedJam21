@@ -51,6 +51,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private CinematicTransform _currentTransform;
         [SerializeField, ReadOnly] private CinematicTransform _endTransform;
 
+
+        public Camera GetCamera() => _camera;
         public void Enable()
         {
             SnapCarToClosestKnot();

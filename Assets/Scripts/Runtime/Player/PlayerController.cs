@@ -13,6 +13,7 @@ namespace HTJ21
         [SerializeField] private Transform _head;
         [SerializeField] private GameObject _light;
         [SerializeField] private PlayerSettings _settings;
+        [SerializeField] private Camera _camera;
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
@@ -23,6 +24,8 @@ namespace HTJ21
         private float gravity = -9.81f;
 
         public bool LockMovement { get; set; }
+
+        public Camera GetCamera() => _camera;
 
         public bool IsInCar() => !_head.gameObject.activeSelf;
 
