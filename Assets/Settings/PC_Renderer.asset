@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b343126609dbc45bb771f5ec339ec8, type: 3}
   m_Name: CRTRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   _shader: {fileID: 4800000, guid: 22c8e59f6a328e04f81d588008473cb8, type: 3}
   _injectionPoint: 550
   _screenResolution: {x: 256, y: 256}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffbcefd41474f6c42bb21978228b247e, type: 3}
   m_Name: DitheringRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
 --- !u!114 &-70723477897083109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb4200125595f347afc722cd225cb71, type: 3}
   m_Name: PixelationRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
