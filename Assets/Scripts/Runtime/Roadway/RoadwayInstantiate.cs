@@ -4,7 +4,9 @@ using PlazmaGames.Attribute;
 using Unity.Mathematics;
 using Unity.Mathematics.Geometry;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine.Splines;
+using UnityEngine.UI;
 using Random = Unity.Mathematics.Random;
 
 #if UNITY_EDITOR
@@ -15,14 +17,17 @@ namespace HTJ21
 {
 	[ExecuteInEditMode]
 	public class RoadwayInstantiate : MonoBehaviour
-	{
+    {
+        [SerializeField] private float _viewDistanceCheckInterval = 1;
+        private float _lastViewDistanceCheck = 0;
+        
 		[System.Serializable]
 		class Section
 		{
 			public SplineContainer container;
 			public int spline;
 			public int knotStart, knotEnd;
-			public bool left, right;
+            public List<SectionOverride> instanceOverrides = new();
 
 			public Section(SplineContainer container, int spline, int knotStart, int knotEnd)
 			{
@@ -30,8 +35,6 @@ namespace HTJ21
 				this.spline = spline;
 				this.knotStart = knotStart;
 				this.knotEnd = knotEnd;
-				this.left = true;
-				this.right = true;
 			}
 		}
 
@@ -54,6 +57,37 @@ namespace HTJ21
             public float viewComponentDistance;
         }
         
+		[System.Serializable]
+		public class InstanceOverrideInfo
+        {
+            public bool oSeed;
+            public int seed;
+            
+            public bool oLeft;
+            public bool left;
+            
+            public bool oRight;
+            public bool right;
+            
+            public bool oStep;
+			public float step;
+            
+            public bool oOffset;
+            public Vector3 offsetFrom;
+			public Vector3 offsetTo;
+            
+            public bool oScale;
+            public float scaleFrom = 1f;
+            public float scaleTo = 1f;
+        }
+
+        [System.Serializable]
+        public class SectionOverride
+        {
+            public int instanceId;
+            public InstanceOverrideInfo overrides;
+        }
+        
 		[SerializeField] private List<InstanceInfo> _instances = new();
 		[SerializeField] private List<Section> _sections = new();
 
@@ -62,6 +96,7 @@ namespace HTJ21
             public Matrix4x4 localMatrix;
             public Mesh mesh;
             public Material[] materials;
+            public List<Matrix4x4> matrices = new();
         }
 
         class DrawnInstance
@@ -76,6 +111,7 @@ namespace HTJ21
             public MinMaxAABB bounds = new();
             public List<DrawnInstance> instances = new();
             public float viewDistance = 0;
+            public bool inViewDistance;
         }
 
 		class MeshComponent
@@ -132,13 +168,43 @@ namespace HTJ21
 				_drawnSections.Add(ds);
 				foreach (InstanceInfo inst in _instances)
                 {
-                    UnityEngine.Random.InitState(inst.seed);
+                    InstanceOverrideInfo overrides = null;
+                    foreach (SectionOverride so in s.instanceOverrides)
+                    {
+                        int iid = so.instanceId;
+                        if (iid >= 0 && iid < _instances.Count && _instances[iid] == inst)
+                        {
+                            overrides = so.overrides;
+                            break;
+                        } 
+                    }
+                    int seed = inst.seed;
+                    if (overrides is { oSeed: true }) seed = overrides.seed;
+                    bool leftOn = inst.left;
+                    if (overrides is { oLeft: true }) leftOn = overrides.left;
+                    bool rightOn = inst.right;
+                    if (overrides is { oRight: true }) rightOn = overrides.right;
+                    float step = inst.step;
+                    if (overrides is { oStep: true }) step = overrides.step;
+                    Vector3 offsetFrom = inst.offsetFrom;
+                    Vector3 offsetTo = inst.offsetTo;
+                    if (overrides is { oOffset: true })
+                    {
+                        offsetFrom = overrides.offsetFrom;
+                        offsetTo = overrides.offsetTo;
+                    }
+                    float scaleFrom = inst.scaleFrom;
+                    float scaleTo = inst.scaleTo;
+                    if (overrides is { oScale: true })
+                    {
+                        scaleFrom = overrides.scaleFrom;
+                        scaleTo = overrides.scaleTo;
+                    }
+                    UnityEngine.Random.InitState(seed);
                     if (ds.viewDistance < inst.viewDistance) ds.viewDistance = inst.viewDistance;
-					bool leftOn = inst.left && s.left;
-					bool rightOn = inst.right && s.right;
 					float tStart = RoadwayHelper.GetKnotTInSpline(s.container, s.spline, s.knotStart);
 					float tLength = RoadwayHelper.GetTBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd);
-					int segmentCount = Mathf.FloorToInt(RoadwayHelper.GetDistanceBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd) / inst.step);
+					int segmentCount = Mathf.FloorToInt(RoadwayHelper.GetDistanceBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd) / step);
                     DrawnInstance di = new();
                     ds.instances.Add(di);
                     di.viewDistanceSq = inst.viewDistance * inst.viewDistance;
@@ -160,23 +226,23 @@ namespace HTJ21
 						if (inst.randomOffset)
 						{
 							offset =
-								right * UnityEngine.Random.Range(inst.offsetFrom.x, inst.offsetTo.x) +
-								up * UnityEngine.Random.Range(inst.offsetFrom.y, inst.offsetTo.y) +
-								forward * UnityEngine.Random.Range(inst.offsetFrom.z, inst.offsetTo.z);
+								right * UnityEngine.Random.Range(offsetFrom.x, offsetTo.x) +
+								up * UnityEngine.Random.Range(offsetFrom.y, offsetTo.y) +
+								forward * UnityEngine.Random.Range(offsetFrom.z, offsetTo.z);
 						}
 						else
 						{
 							offset =
-								right * inst.offsetFrom.x +
-								up * inst.offsetFrom.y +
-								forward * inst.offsetFrom.z;
+								right * offsetFrom.x +
+								up * offsetFrom.y +
+								forward * offsetFrom.z;
 						}
 
 						if (leftOn)
 						{
 							Vector3 leftPos = leftEdge + offset;
                             ds.bounds.Encapsulate(leftPos);
-                            float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(inst.scaleFrom, inst.scaleTo) : 1f;
+                            float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(scaleFrom, scaleTo) : 1f;
 							float rot = inst.align ? 180f : (inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f);
                             di.matrices[i] = Matrix4x4.TRS(
 								leftPos, 
@@ -197,16 +263,16 @@ namespace HTJ21
 						if (inst.randomOffset)
 						{
 							offset =
-								-right * UnityEngine.Random.Range(inst.offsetFrom.x, inst.offsetTo.x) +
-								up * UnityEngine.Random.Range(inst.offsetFrom.y, inst.offsetTo.y) +
-								forward * UnityEngine.Random.Range(inst.offsetFrom.z, inst.offsetTo.z);
+								-right * UnityEngine.Random.Range(offsetFrom.x, offsetTo.x) +
+								up * UnityEngine.Random.Range(offsetFrom.y, offsetTo.y) +
+								forward * UnityEngine.Random.Range(offsetFrom.z, offsetTo.z);
 						}
 						else
 						{
 							offset =
-								-right * inst.offsetFrom.x +
-								up * inst.offsetFrom.y +
-								forward * inst.offsetFrom.z;
+								-right * offsetFrom.x +
+								up * offsetFrom.y +
+								forward * offsetFrom.z;
 						}
 						
 						if (rightOn)
@@ -216,7 +282,7 @@ namespace HTJ21
 							int index = i;
 							if (leftOn) index += segmentCount;
 
-							float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(inst.scaleFrom, inst.scaleTo) : 1f;
+							float scaleFactor = inst.randomScale ? UnityEngine.Random.Range(scaleFrom, scaleTo) : 1f;
                             float rot = inst.randomRotation ? UnityEngine.Random.Range(0f, 360f) : 0f;
 
                             di.matrices[index] = Matrix4x4.TRS(
@@ -284,31 +350,54 @@ namespace HTJ21
 			Generate();
 		}
 
+        private void MarkInViewDistance()
+        {
+            foreach (DrawnSection s in _drawnSections)
+            {
+                float d = s.viewDistance;
+                if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
+                {
+                    s.inViewDistance = false;
+                    continue;
+                }
+                s.inViewDistance = true;
+                foreach (DrawnInstance inst in s.instances)
+                {
+                    foreach (DrawnPart part in inst.parts)
+                    {
+                        part.matrices.Clear();
+                        foreach (Matrix4x4 matrix in inst.matrices)
+                        {
+                            Vector3 pos = matrix.GetColumn(3);
+                            if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
+                            part.matrices.Add(matrix * part.localMatrix);
+                        }
+                    }
+                }
+            }
+        }
+
         private List<Matrix4x4> _drawn = new(256);
 		private void Update()
 		{
 			HideUnusedComponents();
 
+            if (Time.time - _lastViewDistanceCheck >= _viewDistanceCheckInterval)
+            {
+                _lastViewDistanceCheck = Time.time;
+                MarkInViewDistance();
+            }
+
             foreach (DrawnSection s in _drawnSections)
             {
-                float d = s.viewDistance;
-                if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
-                    continue;
+                if (!s.inViewDistance) continue;
                 foreach (DrawnInstance inst in s.instances)
                 {
                     foreach (DrawnPart part in inst.parts)
                     {
-                        _drawn.Clear();
-                        foreach (Matrix4x4 matrix in inst.matrices)
-                        {
-                            Vector3 pos = matrix.GetColumn(3);
-                            if (HTJ21GameManager.CurrentControllable && (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude >= inst.viewDistanceSq) continue;
-                            _drawn.Add(matrix * part.localMatrix);
-                        }
-
                         for (int i = 0; i < part.materials.Length; i++)
                         {
-                            Graphics.DrawMeshInstanced(part.mesh, i, part.materials[i], _drawn);
+                            Graphics.DrawMeshInstanced(part.mesh, i, part.materials[i], part.matrices);
                         }
                     }
                 }
