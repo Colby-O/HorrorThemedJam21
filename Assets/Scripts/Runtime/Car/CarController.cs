@@ -130,6 +130,8 @@ namespace HTJ21
 
         public bool InCar() => _camera.gameObject.activeSelf;
 
+        public Camera GetCamera() => _camera.GetComponent<Camera>();
+
         public void SetDisableState(bool state)
         {
             _isDisabled = state;

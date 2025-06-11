@@ -34,6 +34,7 @@ namespace HTJ21
         public static ScriptableRendererData MainRendererData => (Instance as HTJ21GameManager)._rendrerData;
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
+        public static CinematicCarController CinematicCar { get; set; }
 
         public static bool IsPaused { get; set; }
 
@@ -49,6 +50,14 @@ namespace HTJ21
                     return;
                 }
             }
+        }
+
+        public static Camera GetActiveCamera()
+        {
+            if (GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentView<MainMenuView>()) return CinematicCar.GetCamera();
+            if (Player && Car && Player.IsInCar()) return Car.GetCamera();
+            if (Player) return Player.GetCamera();
+            return null;
         }
 
         private void AttachMonoSystems()
@@ -83,6 +92,7 @@ namespace HTJ21
         {
             Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
             Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
+            if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
         }
 
         private void Start()
