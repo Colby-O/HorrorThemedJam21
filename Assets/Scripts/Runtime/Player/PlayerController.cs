@@ -1,9 +1,6 @@
-using System.Diagnostics;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace HTJ21
 {
@@ -94,6 +91,10 @@ namespace HTJ21
 
             _bodyRotation = transform.localRotation.eulerAngles;
             _headRotation = _head.localRotation.eulerAngles;
+        }
+
+        private void Start()
+        {
         }
 
         private void Update()
