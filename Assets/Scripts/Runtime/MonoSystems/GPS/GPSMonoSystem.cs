@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
@@ -51,6 +52,7 @@ namespace HTJ21
         [SerializeField, ReadOnly] private GPSNode _targetNode;
         [SerializeField, ReadOnly] private List<Roadway> _roadways;
         [SerializeField, ReadOnly] private List<GPSNode> _currentPath;
+        [SerializeField, ReadOnly] private bool _hasInitialized = false;
 
 
         private LineRenderer _renderer;
@@ -257,20 +259,38 @@ namespace HTJ21
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
-            _roadways = RoadwayHelper.GetRoadways();
-            _target = GameObject.FindWithTag("GPSTarget")?.transform;
-
-            _renderer = GameObject.FindWithTag("GPSPath").GetComponent<LineRenderer>();
-            if (_renderer == null)
+            if (!_hasInitialized)
             {
-                GameObject path = new GameObject("GPSPath");
-                _renderer = path.AddComponent<LineRenderer>();
+                GameObject gpsPath = GameObject.FindWithTag("GPSPath");
+                if (gpsPath != null)
+                {
+                    gpsPath.gameObject.name = "====GPS====";
+                    gpsPath.transform.parent = null;
+                    DontDestroyOnLoad(gpsPath.gameObject);
+                    _renderer = gpsPath.GetComponent<LineRenderer>();
+                }
+
+                if (_renderer == null)
+                {
+                    GameObject path = new GameObject("====GPS====");
+                    _renderer = path.AddComponent<LineRenderer>();
+                    DontDestroyOnLoad(path);
+                }
+
+                GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame(
+                    (from, data) =>
+                    {
+                        TurnOn();
+                    }
+                ));
+
+                _hasInitialized = true;
             }
 
+            _roadways = RoadwayHelper.GetRoadways();
+            _target = GameObject.FindWithTag("GPSTarget")?.transform;
             SyncTarget();
-            
-            //TODO: Remove Me
-            TurnOn();
+            TurnOff();
         }
 
         public void MoveTarget(Vector3 position)
@@ -286,7 +306,6 @@ namespace HTJ21
 
         private void Start()
         {
-
         }
 
         private void OnEnable()

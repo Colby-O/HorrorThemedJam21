@@ -91,7 +91,29 @@ namespace HTJ21
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
+
+        }
+
+        private void PlayThunderSound()
+        {
+            if (_thunderClips == null || _thunderClips.Count == 0) return;
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_thunderClips[Random.Range(0, _thunderClips.Count)], PlazmaGames.Audio.AudioType.Sfx);
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoad;
+        }
+
+        private void Awake()
+        {
             _weatherGameObject = GameObject.Instantiate(Resources.Load("Prefabs/Weather")) as GameObject;
+            _weatherGameObject.name = "====Weather====";
             _rain = _weatherGameObject.transform.GetChild(0).GetComponent<ParticleSystem>();
             _lighting = _weatherGameObject.transform.GetChild(1).GetComponent<ParticleSystem>();
             _lightingHitter = _weatherGameObject.transform.GetChild(2).GetComponent<ParticleSystem>();
@@ -109,22 +131,7 @@ namespace HTJ21
 
             EnableRain();
             EnableThunder();
-        }
-
-        private void PlayThunderSound()
-        {
-            if (_thunderClips == null || _thunderClips.Count == 0) return;
-            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_thunderClips[Random.Range(0, _thunderClips.Count)], PlazmaGames.Audio.AudioType.Sfx);
-        }
-
-        private void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoad;
-        }
-
-        private void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoad;
+            DontDestroyOnLoad(_weatherGameObject);
         }
 
         private void Update()
@@ -145,10 +152,10 @@ namespace HTJ21
             if (_skyQueued && _skyTimer > _timeToNextSky)
             {
                 _skylight.gameObject.SetActive(false);
-                HTJ21GameManager.GetActiveCamera().backgroundColor = Color.black;
-                HTJ21GameManager.Player.GetCamera().backgroundColor = Color.black;
-                HTJ21GameManager.Car.GetCamera().backgroundColor = Color.black;
-                HTJ21GameManager.CinematicCar.GetCamera().backgroundColor = Color.black;
+                if (HTJ21GameManager.GetActiveCamera()) HTJ21GameManager.GetActiveCamera().backgroundColor = Color.black;
+                if (HTJ21GameManager.Player && HTJ21GameManager.Player.GetCamera()) HTJ21GameManager.Player.GetCamera().backgroundColor = Color.black;
+                if (HTJ21GameManager.Car && HTJ21GameManager.Car.GetCamera()) HTJ21GameManager.Car.GetCamera().backgroundColor = Color.black;
+                if (HTJ21GameManager.CinematicCar && HTJ21GameManager.CinematicCar.GetCamera()) HTJ21GameManager.CinematicCar.GetCamera().backgroundColor = Color.black;
                 _timeToNextSky = Random.Range(_skyDelay.x, _skyDelay.y);
                 _skyQueued = false;
             }
@@ -177,7 +184,7 @@ namespace HTJ21
                     _skyQueued = true;
                     _timeToNextLighting = Random.Range(_lightingInterval.x, _lightingInterval.y);
                     _skylight.gameObject.SetActive(true);
-                    HTJ21GameManager.GetActiveCamera().backgroundColor = _lightingColor;
+                    if (HTJ21GameManager.GetActiveCamera()) HTJ21GameManager.GetActiveCamera().backgroundColor = _lightingColor;
                 }
             }
         }

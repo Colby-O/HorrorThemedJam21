@@ -16,7 +16,7 @@ namespace HTJ21
             }
             if (int.TryParse(args[0], out int value))
             {
-                if (HTJ21GameManager.Instance)
+                if (HTJ21GameManager.Instance && HTJ21GameManager.Car)
                 {
                     if (value == 0) HTJ21GameManager.Car.DisableSiren();
                     else HTJ21GameManager.Car.EnableSiren();
@@ -25,7 +25,7 @@ namespace HTJ21
                 }
                 else
                 {
-                    msg = new ConsoleResponse("GameManager is null.", ResponseType.Error);
+                    msg = new ConsoleResponse("Car is null.", ResponseType.Error);
                 }
             }
             else
