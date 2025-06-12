@@ -19,6 +19,7 @@ TagManager:
   - DiveBellDoor
   - DiveBellHatch
   - DiveBell
+  - TeleportTarget
   layers:
   - Default
   - TransparentFX
