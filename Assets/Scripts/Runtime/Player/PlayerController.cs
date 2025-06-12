@@ -19,13 +19,20 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
-        [SerializeField, ReadOnly] private Vector3 _bodyRotation;
-        [SerializeField, ReadOnly] private Vector3 _headRotation;
         [SerializeField, ReadOnly] private float _velY;
+        
+        [SerializeField] private Transform _lookAt = null;
+        [SerializeField] private float _lookAtSpeed = 4;
 
         private float gravity = -9.81f;
 
         public bool LockMovement { get; set; }
+
+        public bool LockMoving = false;
+        public float UncontrollableApproach = 0;
+
+        public void LookAt(Transform t) => _lookAt = t;
+        public void StopLookAt() => _lookAt = null;
 
         public Camera GetCamera() => _camera;
 
@@ -60,15 +67,40 @@ namespace HTJ21
 
         private void ProcessMovement()
         {
-            float verticalSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;
-            float horizontalSpeed = _settings.WalkingStrideSpeed;
+            if (LockMoving)
+            {
+                _movementSpeed = Vector3.zero;
+                return;
+            }
 
-            verticalSpeed *= _settings.Speed;
-            horizontalSpeed *= _settings.Speed;
+            float dirSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;
+            float forwardSpeed = _inputHandler.RawMovement.y * dirSpeed;
+            float rightSpeed = _inputHandler.RawMovement.x * _settings.WalkingStrideSpeed;
+
+            if (UncontrollableApproach != 0)
+            {
+                if (forwardSpeed >= 0)
+                {
+                    forwardSpeed = UncontrollableApproach;
+                }
+                else
+                {
+                    forwardSpeed = -UncontrollableApproach / 3;
+                }
+            }
+            else
+            {
+                forwardSpeed *= _settings.Speed;
+            }
+            
+            rightSpeed *= _settings.Speed;
 
             _movementSpeed = Vector3.SmoothDamp(
                 _movementSpeed, 
-                new Vector3(-verticalSpeed * _inputHandler.RawMovement.y * Time.deltaTime, 0, horizontalSpeed * _inputHandler.RawMovement.x * Time.deltaTime), 
+                new Vector3(
+                    rightSpeed * Time.deltaTime, 
+                    0,
+                    forwardSpeed * Time.deltaTime),
                 ref _currentVel, 
                 _settings.MovementSmoothing
             );
@@ -76,12 +108,25 @@ namespace HTJ21
 
         private void ProcessLook()
         {
-            _headRotation.z -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
-            _headRotation.z = Mathf.Clamp(_headRotation.z, _settings.YLookLimit.x, _settings.YLookLimit.y);
-            _bodyRotation.y += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
-
-            _head.localRotation = Quaternion.Euler(_headRotation);
-            transform.localRotation = Quaternion.Euler(_bodyRotation);
+            float xRot = _head.localEulerAngles.x;
+            float yRot = transform.localEulerAngles.y;
+            if (!_lookAt)
+            {
+                xRot -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
+                xRot = Mathf.Clamp(MathExt.Angle360To180(xRot), _settings.YLookLimit.x, _settings.YLookLimit.y);
+                yRot += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
+            }
+            else
+            {
+                Vector3 dir = Vector3.Normalize(_lookAt.position - _head.position);
+                float targetXRot = -MathExt.Angle360To180(Vector3.SignedAngle(dir.SetY(0), dir, Vector3.Cross(dir, Vector3.up)));
+                float targetYRot = MathExt.Angle360To180(Vector3.SignedAngle(Vector3.forward, dir.SetY(0), Vector3.up));
+                xRot = targetXRot;
+                yRot = targetYRot;
+            }
+            
+            _head.localEulerAngles = _head.localEulerAngles.SetX(xRot);
+            transform.localEulerAngles = transform.localEulerAngles.SetY(yRot);
         }
 
         private void ProcessGravity()
@@ -104,9 +149,6 @@ namespace HTJ21
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
             if (!_controller) _controller = GetComponent<CharacterController>();
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
-
-            _bodyRotation = transform.localRotation.eulerAngles;
-            _headRotation = _head.localRotation.eulerAngles;
 
             _light.SetActive(false);
             _head.gameObject.SetActive(false);
