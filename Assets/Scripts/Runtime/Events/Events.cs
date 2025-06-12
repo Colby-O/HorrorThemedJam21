@@ -12,5 +12,7 @@ namespace HTJ21
         public static EventResponse NewDreamFallenLog(UnityAction<Component, DreamFallenLog> func) => new EventResponse((comp, data) => func.Invoke(comp, data as DreamFallenLog));
         public record DreamSighting();
         public static EventResponse NewDreamSighting(UnityAction<Component, DreamSighting> func) => new EventResponse((comp, data) => func.Invoke(comp, data as DreamSighting));
+        public record DreamFoundCult();
+        public static EventResponse NewDreamFoundCult(UnityAction<Component, DreamFoundCult> func) => new EventResponse((comp, data) => func.Invoke(comp, data as DreamFoundCult));
     }
 }
