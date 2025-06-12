@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using PlazmaGames.Core;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace HTJ21
@@ -78,22 +80,7 @@ namespace HTJ21
             }
         }
     }
-
-    [System.Serializable]
-    public class DrivingProfile
-    {
-        public float wheelTurnSpeed = 4;
-        public float steeringWheelAngleScale = 1.0f;
-        public float maxTurnAngle = 35;
-        public float maxSpeedTurnAngle = 10;
-        public float maxSpeedTurnAngleSpeed = 100;
-        public float maxThrottle = 1;
-        public float maxSpeed = 0;
-        public bool automatic = true;
-        public float automaticUpShiftPoint;
-        public float automaticDownShiftPoint;
-    }
-
+    
     public class CarController : MonoBehaviour
     {
         [SerializeField] private PlayerSettings _settings;
@@ -110,7 +97,9 @@ namespace HTJ21
 
         [SerializeField] private bool[] _wheelsSliding = new bool[4];
 
-        [SerializeField] private DrivingProfile _drivingProfile;
+        private Dictionary<string, DrivingProfileSO> _drivingProfiles = new();
+
+        public DrivingProfileSO DrivingProfile;
 
         [Header("Headlights")]
         [SerializeField] private Light _headLight;
@@ -187,8 +176,16 @@ namespace HTJ21
             if (!state) _brake = 0;
         }
 
+        private void LoadProfile(string name)
+        {
+            _drivingProfiles.Add(name, Resources.Load<DrivingProfileSO>($"DrivingProfiles/{name}"));
+        }
+
         private void Awake()
         {
+            LoadProfile("Normal");
+            LoadProfile("Emergency");
+            LoadProfile("Debug");
             _player = GameObject.FindObjectsByType<PlayerController>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
             _doorLocation = transform.Find("DoorLocation");
@@ -261,9 +258,9 @@ namespace HTJ21
 
             if (InCar() && !_isDisabled && !HTJ21GameManager.IsPaused)
             {
-                _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * _drivingProfile.maxThrottle;
+                _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * DrivingProfile.MaxThrottle;
                 _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
-                _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _drivingProfile.wheelTurnSpeed);
+                _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _settings.WheelTurnSpeed);
             }
             else
             {
@@ -275,7 +272,7 @@ namespace HTJ21
             _wheels[1].localRotation = Quaternion.Euler(0, _steeringAngle, 90);
 
             Vector3 swRot = _steeringWheel.localRotation.eulerAngles;
-            swRot.z = 90 + _steeringAngle * _drivingProfile.steeringWheelAngleScale;
+            swRot.z = 90 + _steeringAngle * _settings.SteeringWheelAngleScale;
             _steeringWheel.localRotation = Quaternion.Euler(swRot);
 
             _engineSound.SetRpmAndThrottle(_rpm, _throttle);
@@ -285,7 +282,7 @@ namespace HTJ21
 
         private float MaxTurnAngle()
         {
-            return Mathf.Lerp(_drivingProfile.maxTurnAngle, _drivingProfile.maxSpeedTurnAngle, Speed() / (_drivingProfile.maxSpeedTurnAngleSpeed / 3.6f));
+            return Mathf.Lerp(_settings.MaxTurnAngle, _settings.MaxSpeedTurnAngle, Speed() / (_settings.MaxSpeedTurnAngleSpeed / 3.6f));
         }
 
         private void Simulate()
@@ -296,7 +293,7 @@ namespace HTJ21
                 _rig.isKinematic = true;
                 return;
             }
-            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings._parkingSpeed)
+            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings.ParkingSpeed)
             {
                 if (!_rig.isKinematic) _lastVelocity = _rig.linearVelocity;
                 _rig.isKinematic = true;
@@ -307,11 +304,11 @@ namespace HTJ21
             _rig.isKinematic = false;
             if (wasKinematic) _rig.linearVelocity = _lastVelocity;
 
-            if (_drivingProfile.maxSpeed > 0 && Speed() * 3.6 > _drivingProfile.maxSpeed) _throttle = 0;
-            if (_drivingProfile.automatic)
+            if (DrivingProfile.MaxSpeed > 0 && Speed() * 3.6 > DrivingProfile.MaxSpeed) _throttle = 0;
+            if (DrivingProfile.Automatic)
             {
-                if (_rpm >= _drivingProfile.automaticUpShiftPoint && _gear >= 1) _gear = Mathf.Min(6, _gear + 1);
-                if (_rpm <= _drivingProfile.automaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
+                if (_rpm >= DrivingProfile.AutomaticUpShiftPoint && _gear >= 1) _gear = Mathf.Min(6, _gear + 1);
+                if (_rpm <= DrivingProfile.AutomaticDownShiftPoint && _gear > 1) _gear = Mathf.Max(1, _gear - 1);
                 _rpm = Rpm();
             }
             _rig.AddForce(-transform.forward * (info.airResistance * MathExt.Square(Vector3.Dot(transform.forward, _rig.linearVelocity))));
@@ -364,7 +361,7 @@ namespace HTJ21
                     Vector3 frictionForce = wheelRight * (-slidingSpeed * friction * Vector3.Dot(wheelUp, suspensionForce));
                     force += frictionForce;
 
-                    force += wheelForward * (_throttle * info.SampleTorqueCurve(_rpm) * info.GearRatio(_gear) / 2.0f);
+                    force += wheelForward * (_throttle * DrivingProfile.TorqueScale * info.SampleTorqueCurve(_rpm) * info.GearRatio(_gear) / 2.0f);
                     force += -wheelForward * (MathExt.Sign(Vector3.Dot(wheelForward, wheelVelocity)) * _brake * info.brakeForce);
                     force += -wheelForward * (info.engineDynamicFriction * _rpm * (1.0f - _throttle) * info.GearRatio(_gear));
 
@@ -384,6 +381,19 @@ namespace HTJ21
                 Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _settings.RpmScale,
                 0,
                 info.maxRpm);
+        }
+
+        public bool SetDrivingProfile(string name)
+        {
+            if (_drivingProfiles.TryGetValue(name, out DrivingProfileSO profile))
+            {
+                DrivingProfile = profile;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

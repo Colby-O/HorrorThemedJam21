@@ -49,5 +49,10 @@ namespace HTJ21
             scale.z = new Vector4(matrix.m02, matrix.m12, matrix.m22, matrix.m32).magnitude;
             return scale;
         }
+
+        public static int SignInt(float v)
+        {
+            return Mathf.RoundToInt(Mathf.Sign(v));
+        }
     }
 }
