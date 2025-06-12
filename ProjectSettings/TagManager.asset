@@ -9,6 +9,16 @@ TagManager:
   - GPSPath
   - Car
   - VerticalBounds
+  - LightingSystem
+  - Surface
+  - StartDoor
+  - InsideDiveBell
+  - MenuLight
+  - UnderwaterLight
+  - RainSystem
+  - DiveBellDoor
+  - DiveBellHatch
+  - DiveBell
   layers:
   - Default
   - TransparentFX
@@ -18,7 +28,7 @@ TagManager:
   - UI
   - Roadway
   - Interactable
-  - 
+  - Player
   - 
   - 
   - 

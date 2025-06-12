@@ -23,15 +23,14 @@ namespace HTJ21
         [SerializeField] private GPSMonoSystem _gpsSystem;
         [SerializeField] private InputMonoSystem _inputSystem;
         [SerializeField] private DialogueMonoSystem _dialogueSystem;
+        [SerializeField] private ScreenEffectMonoSystem _screenEffectSystem;
 
         [Header("Settings")]
         [SerializeField] private GamePreferences preferences;
         [SerializeField] private DialogueSO _test;
-        [SerializeField] private ScriptableRendererData _rendrerData;
 
         public static DialogueSO test => (Instance as HTJ21GameManager)._test;
         public static GamePreferences Preferences => (Instance as HTJ21GameManager).preferences;
-        public static ScriptableRendererData MainRendererData => (Instance as HTJ21GameManager)._rendrerData;
         public static PlayerController Player { get; set; }
         public static CarController Car { get; set; }
         public static CinematicCarController CinematicCar { get; set; }
@@ -39,18 +38,6 @@ namespace HTJ21
         public static bool IsPaused { get; set; }
 
         public static GameObject CurrentControllable => Player ? (((Player.IsInCar()) ? (Car ? Car.gameObject : null) : Player.gameObject)) : null;
-
-        public static void ToggleRendererFeature(ScriptableRendererData rendererData, string featureName, bool state)
-        {
-            foreach (ScriptableRendererFeature feature in rendererData.rendererFeatures)
-            {
-                if (feature != null && feature.name == featureName)
-                {
-                    feature.SetActive(state);
-                    return;
-                }
-            }
-        }
 
         public static Camera GetActiveCamera()
         {
@@ -69,6 +56,7 @@ namespace HTJ21
             AddMonoSystem<GPSMonoSystem, IGPSMonoSystem>(_gpsSystem);
             AddMonoSystem<InputMonoSystem, IInputMonoSystem>(_inputSystem);
             AddMonoSystem<DialogueMonoSystem, IDialogueMonoSystem>(_dialogueSystem);
+            AddMonoSystem<ScreenEffectMonoSystem, IScreenEffectMonoSystem>(_screenEffectSystem);
         }
 
         public override string GetApplicationName()
@@ -98,7 +86,6 @@ namespace HTJ21
         private void Start()
         {
             HTJ21GameManager.IsPaused = true;
-            ToggleRendererFeature(_rendrerData, "Blur", false);
             //Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
         }

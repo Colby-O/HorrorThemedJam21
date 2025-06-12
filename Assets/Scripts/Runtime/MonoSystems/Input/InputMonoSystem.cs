@@ -27,7 +27,7 @@ namespace HTJ21
 
         public UnityEvent InteractionCallback { get; private set; }
         public UnityEvent SkipCallback { get; private set; }
-
+        public UnityEvent LightCallback { get; private set; }
 
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
@@ -45,6 +45,12 @@ namespace HTJ21
             InteractionCallback.Invoke();
         }
 
+        private void HandleLightAction(InputAction.CallbackContext e)
+        {
+            if (HTJ21GameManager.IsPaused) return;
+            LightCallback.Invoke();
+        }
+
         private void HandleSkipAction(InputAction.CallbackContext e)
         {
             if (HTJ21GameManager.IsPaused) return;
@@ -56,18 +62,20 @@ namespace HTJ21
             if (_input == null) _input = GetComponent<PlayerInput>();
             InteractionCallback = new UnityEvent();
             SkipCallback = new UnityEvent();
+            LightCallback = new UnityEvent();
 
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
             _reverseAction = _input.actions["Reverse"];
-            _interactAction = _input.actions["Interact"];
             _lightAction = _input.actions["Light"];
+            _interactAction = _input.actions["Interact"];
             _skipAction = _input.actions["Skip"];
 
             _interactAction.performed += HandleInteractAction;
             _skipAction.performed += HandleSkipAction;
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
+            _lightAction.performed += HandleLightAction;
         }
 
         private void Update()
@@ -88,8 +96,16 @@ namespace HTJ21
 
             if (Keyboard.current.backquoteKey.wasPressedThisFrame) 
             {
-                if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<DeveloperConsoleView>();
-                else GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+                if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>())
+                {
+                    HTJ21GameManager.IsPaused = true;
+                    GameManager.GetMonoSystem<IUIMonoSystem>().Show<DeveloperConsoleView>();
+                }
+                else
+                {
+                    GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
+                    HTJ21GameManager.IsPaused = GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() || GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<SettingsView>();
+                }
             }
         }
 

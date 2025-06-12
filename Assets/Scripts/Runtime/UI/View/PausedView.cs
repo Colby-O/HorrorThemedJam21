@@ -26,7 +26,7 @@ namespace HTJ21
             _blurredView.SetActive(false);
             _view.SetActive(true);
 #else
-            HTJ21GameManager.ToggleRendererFeature(HTJ21GameManager.MainRendererData, "Blur", false);
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ToggleRendererFeature("Blur", false);
 #endif
         }
 
@@ -56,7 +56,7 @@ namespace HTJ21
             _view.SetActive(false);
 #else
 
-            HTJ21GameManager.ToggleRendererFeature(HTJ21GameManager.MainRendererData, "Blur", true);
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ToggleRendererFeature("Blur", true);
 #endif
 
             HTJ21GameManager.IsPaused = true;

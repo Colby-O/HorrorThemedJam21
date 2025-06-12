@@ -1,5 +1,6 @@
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
+using PlazmaGames.UI;
 using UnityEngine;
 
 namespace HTJ21
@@ -87,6 +88,13 @@ namespace HTJ21
             _movementSpeed.y = _velY;
         }
 
+        public bool CheckIfInDoors()
+        {
+            if (GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) return false;
+            bool isIndoors = IsInCar();
+            return isIndoors;
+        }
+
         private void Awake()
         {
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
@@ -105,7 +113,7 @@ namespace HTJ21
         private void Update()
         {
             if (LockMovement || HTJ21GameManager.IsPaused) return;
-            
+            CheckIfInDoors();
             ProcessLook();
             ProcessMovement();
             ProcessGravity();

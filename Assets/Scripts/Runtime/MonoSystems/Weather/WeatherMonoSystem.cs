@@ -1,4 +1,6 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
+using PlazmaGames.Core;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +10,11 @@ namespace HTJ21
     public class WeatherMonoSystem : MonoBehaviour, IWeatherMonoSystem
     {
         [SerializeField] private float _height = 40f;
+
+        [Header("Rain Settings")]
+        [SerializeField] private AudioClip _indoorRainClip;
+        [SerializeField] private AudioClip _outdoorRainClip;
+        private AudioSource _rainAS;
 
         [Header("Lighting Settings")]
         [SerializeField, ColorUsage(true, true)] private Color _lightingColor;
@@ -37,6 +44,35 @@ namespace HTJ21
         private float _thunderTimer = 0;
         private float _skyTimer = 0;
 
+        private bool _isIndoors = false;
+
+        public void DisableThunder() => _isLightingOn = false;
+        public void EnableThunder() => _isLightingOn = true;
+
+        public void EnableRain()
+        {
+            _rain.Play();
+            if (!_rainAS) return;
+            _rainAS.clip = _isIndoors ? _indoorRainClip : _outdoorRainClip;
+            _rainAS.Play();
+        }
+        public void DisableRain()
+        {
+            _rain.Stop();
+            if (!_rainAS) return;
+            _rainAS.Stop();
+        }
+
+        public void SetRainState(bool isIndoors)
+        {
+            if (isIndoors == _isIndoors || _rain.isStopped) return;
+            _isIndoors = isIndoors;
+            if (!_rainAS) return;
+            _rainAS.Stop();
+            _rainAS.clip = _isIndoors ? _indoorRainClip : _outdoorRainClip;
+            _rainAS.Play();
+        }
+
         public void SpawnLightingAt(Vector3 pos)
         {
             _lightingHitter.Emit(1);
@@ -57,6 +93,7 @@ namespace HTJ21
             _lighting = _weatherGameObject.transform.GetChild(1).GetComponent<ParticleSystem>();
             _lightingHitter = _weatherGameObject.transform.GetChild(2).GetComponent<ParticleSystem>();
             _skylight = _weatherGameObject.transform.GetChild(3).GetComponent<Light>();
+            _rainAS = _weatherGameObject.transform.GetChild(4).GetComponent<AudioSource>();
 
             _skylight.gameObject.SetActive(false);
 
@@ -66,6 +103,15 @@ namespace HTJ21
             _lightingTimer = 0;
             _thunderTimer = 0;
             _skyTimer = 0;
+
+            EnableRain();
+            EnableThunder();
+        }
+
+        private void PlayThunderSound()
+        {
+            if (_thunderClips == null || _thunderClips.Count == 0) return;
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_thunderClips[Random.Range(0, _thunderClips.Count)], PlazmaGames.Audio.AudioType.Sfx);
         }
 
         private void OnEnable()
@@ -87,11 +133,19 @@ namespace HTJ21
                 _weatherGameObject.transform.position = playerPos;
             }
 
+            if (HTJ21GameManager.Player != null)
+            {
+                SetRainState(HTJ21GameManager.Player.CheckIfInDoors());
+            }
+
             if (_skyQueued) _skyTimer += Time.deltaTime;
             if (_skyQueued && _skyTimer > _timeToNextSky)
             {
                 _skylight.gameObject.SetActive(false);
                 HTJ21GameManager.GetActiveCamera().backgroundColor = Color.black;
+                HTJ21GameManager.Player.GetCamera().backgroundColor = Color.black;
+                HTJ21GameManager.Car.GetCamera().backgroundColor = Color.black;
+                HTJ21GameManager.CinematicCar.GetCamera().backgroundColor = Color.black;
                 _timeToNextSky = Random.Range(_skyDelay.x, _skyDelay.y);
                 _skyQueued = false;
             }
@@ -104,7 +158,7 @@ namespace HTJ21
 
                 if (_thunderTimer > _timeToNextThunder && _thunderQueued)
                 {
-                    //TODO Thunder Audio HERE
+                    PlayThunderSound();
                     _timeToNextThunder = Random.Range(_thunderDelay.x, _thunderDelay.y);
                     _thunderQueued = false;
                 }

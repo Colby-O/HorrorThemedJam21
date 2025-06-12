@@ -258,6 +258,14 @@ MonoBehaviour:
     automatic: 1
     automaticUpShiftPoint: 3300
     automaticDownShiftPoint: 2300
+  _headLight: {fileID: 4490874309016495164}
+  _blueLight: {fileID: 6898159019706559256}
+  _redLight: {fileID: 6237613282143728762}
+  _sirenAudio: {fileID: 5955064665933370612}
+  _carCamera: {fileID: 6848529156225241616}
+  _leftMirrorCam: {fileID: 3163727211929825775}
+  _rightMirrorCam: {fileID: 7028872773145125792}
+  _backMirrorCam: {fileID: 2448598159654390745}
 --- !u!114 &4370499305851558824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -970,7 +978,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 503
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -1139,7 +1147,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 503
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -1397,7 +1405,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 215
+    m_Bits: 471
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: d4398204efd352f42bf225792291f1cb, type: 2}
   m_TargetDisplay: 0
@@ -1468,6 +1476,7 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0.1
+  _isEnabled: 0
   _timeSinceLastRender: 0
 --- !u!1 &5552601916126976450
 GameObject:
@@ -1869,7 +1878,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 215
+    m_Bits: 471
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 7551c1f541207df49a2b541177d9ad0a, type: 2}
   m_TargetDisplay: 0
@@ -1940,6 +1949,7 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0
+  _isEnabled: 0
   _timeSinceLastRender: 0
 --- !u!1 &6508230240532160503
 GameObject:
@@ -2536,7 +2546,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 215
+    m_Bits: 471
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 8c196c95b64a5f34cb88e8d73ec58d0a, type: 2}
   m_TargetDisplay: 0
@@ -2607,6 +2617,7 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0.05
+  _isEnabled: 0
   _timeSinceLastRender: 0
 --- !u!1 &7720171881362732322
 GameObject:
