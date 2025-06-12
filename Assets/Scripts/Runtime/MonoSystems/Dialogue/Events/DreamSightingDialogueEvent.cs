@@ -8,12 +8,12 @@ namespace HTJ21
     {
         public override void OnEnter()
         {
-
+            HTJ21GameManager.Car.Unlock();
         }
 
         public override void OnExit()
         {
-            HTJ21GameManager.Car.Unlock();
+
         }
 
         public override void OnUpdate()
