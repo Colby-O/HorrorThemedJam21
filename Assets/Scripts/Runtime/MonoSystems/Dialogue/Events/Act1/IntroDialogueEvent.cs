@@ -12,7 +12,7 @@ namespace HTJ21
 
         public override void OnExit()
         {
-            HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
+            if (HTJ21GameManager.Car) HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
             HTJ21GameManager.IsPaused = false;
         }
 

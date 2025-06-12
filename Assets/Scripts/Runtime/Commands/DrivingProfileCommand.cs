@@ -14,11 +14,18 @@ namespace HTJ21
                 return false;
             }
 
+            if (!HTJ21GameManager.Instance || !HTJ21GameManager.Car)
+            {
+                msg = new("Car is null!", ResponseType.Error);
+                return false;
+            }
+
             if (!HTJ21GameManager.Car.SetDrivingProfile(args[0]))
             {
                 msg = new("Invalid profile name!", ResponseType.Error);
                 return false;
             }
+
             msg = new($"Driving profile has been set to '{args[0]}'", ResponseType.Response);
             return true;
         }

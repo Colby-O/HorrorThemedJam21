@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debug: 1
-  _verbose: 1
+  _verbose: 2
   _monoSystemHolder: {fileID: 7202734959094077488}
   _uiSystem: {fileID: 2999991884575964212}
   _animSystem: {fileID: 8189270598657297784}
@@ -233,7 +233,6 @@ MonoBehaviour:
   _dialogueSystem: {fileID: 5410517105309124607}
   _screenEffectSystem: {fileID: 5879531003170447106}
   preferences: {fileID: 11400000, guid: 38bdb04705ff93445b211c9bddcc4683, type: 2}
-  _test: {fileID: 11400000, guid: 8c56af6cab36a6d4e8a1c6a40ac96368, type: 2}
 --- !u!1 &6636354303301076341
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,9 +786,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9da330e6435104dbd42dda19171608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _preserveUIAcrossScenes: 1
   _startingView: HTJ21.MainMenuView, Assembly-CSharp
   _views: []
   _currentView: {fileID: 0}
+  _hasInitialized: 0
 --- !u!1 &8795536048810382653
 GameObject:
   m_ObjectHideFlags: 0

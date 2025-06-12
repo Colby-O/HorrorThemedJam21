@@ -77,8 +77,8 @@ namespace HTJ21
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
-            Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
-            Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
+            Player = FindAnyObjectByType<PlayerController>();
+            Car = FindAnyObjectByType<CarController>();
             if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
             if (Player) PickupManager = Player.GetComponent<PickupManager>();
         }

@@ -34,9 +34,17 @@ namespace HTJ21
 
             msg = new($"Teleporting to '{args[0]}'!", ResponseType.Response);
 
-            HTJ21GameManager.CurrentControllable.transform.position = found.transform.position;
-            HTJ21GameManager.CurrentControllable.transform.rotation = found.transform.rotation;
-            
+            if (HTJ21GameManager.CurrentControllable)
+            {
+                HTJ21GameManager.CurrentControllable.transform.position = found.transform.position;
+                HTJ21GameManager.CurrentControllable.transform.rotation = found.transform.rotation;
+            }
+            else
+            {
+                msg = new($"There is no controllable character in the scene!", ResponseType.Error);
+                return false;
+            }
+
             return true;
         }
     }
