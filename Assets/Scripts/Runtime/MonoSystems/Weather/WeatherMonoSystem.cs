@@ -46,6 +46,11 @@ namespace HTJ21
 
         private bool _isIndoors = false;
 
+        public ParticleSystem GetThunderHitter()
+        {
+            return _lightingHitter.GetComponent<ParticleSystem>();
+        }
+
         public void DisableThunder() => _isLightingOn = false;
         public void EnableThunder() => _isLightingOn = true;
 

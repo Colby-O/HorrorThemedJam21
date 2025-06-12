@@ -11,5 +11,6 @@ namespace HTJ21
         public void EnableRain();
         public void DisableRain();
         public void SetRainState(bool isIndoors);
+        public ParticleSystem GetThunderHitter();
     }
 }
