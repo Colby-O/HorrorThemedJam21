@@ -124,6 +124,8 @@ namespace HTJ21
         private List<DrawnSection> _drawnSections = new();
 		private Dictionary<Material, Material> _materialClones = new();
 
+        private bool _hasRanFirstTime = false;
+
 #if UNITY_EDITOR
 		[InspectorButton("CreateSection")] public bool buttonCreateSection = false;
 		void CreateSection()
@@ -367,7 +369,8 @@ namespace HTJ21
         private void Start()
 		{
 			Generate();
-		}
+            _hasRanFirstTime = false;
+        }
 
         private void MarkInViewDistance()
         {
@@ -403,8 +406,9 @@ namespace HTJ21
         private List<Matrix4x4> _drawn = new(256);
 		private void Update()
 		{
-            if (!GameManager.Instance || Time.time - _lastViewDistanceCheck >= HTJ21GameManager.Preferences.ComputeViewDistanceInterval)
+            if (!GameManager.Instance || Time.time - _lastViewDistanceCheck >= HTJ21GameManager.Preferences.ComputeViewDistanceInterval || !_hasRanFirstTime)
             {
+                _hasRanFirstTime = true;
                 _lastViewDistanceCheck = Time.time;
                 HideUnusedComponents();
                 MarkInViewDistance();

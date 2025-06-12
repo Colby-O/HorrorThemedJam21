@@ -136,6 +136,21 @@ namespace HTJ21
 
         public Camera GetCamera() => _carCamera;
 
+        private bool _isLocked = false;
+
+        public bool IsLocked() => _isLocked;
+
+
+        public void Lock()
+        {
+            _isLocked = true;
+        }
+
+        public void Unlock()
+        {
+            _isLocked = false;
+        }
+
         public void ToggleHeadLight()
         {
             if (!InCar()) return;
@@ -199,6 +214,8 @@ namespace HTJ21
             _engineSound = GetComponent<EngineSound>();
             _inputHandler.LightCallback.AddListener(ToggleHeadLight);
             DisableSiren();
+            Lock();
+            _headLight.gameObject.SetActive(false);
         }
 
         private void ProcessLook()
@@ -219,6 +236,7 @@ namespace HTJ21
 
         public void EnterCar()
         {
+            if (_isLocked) return;
             _wasEnteredThisFrame = true;
             EnableMirrors();
             _camera.gameObject.SetActive(true);
@@ -227,7 +245,7 @@ namespace HTJ21
         private void ExitCar()
         {
             Debug.Log("EXIT CAR");
-            if (_wasEnteredThisFrame || !InCar()) return;
+            if (_isLocked || _wasEnteredThisFrame || !InCar()) return;
             DisableMirrors();
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);

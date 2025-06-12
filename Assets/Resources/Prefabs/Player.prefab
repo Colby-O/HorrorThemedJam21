@@ -305,6 +305,7 @@ GameObject:
   - component: {fileID: 6403047995376083610}
   - component: {fileID: 395365650849582277}
   - component: {fileID: 5671014847207815499}
+  - component: {fileID: 7279299204589610972}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -475,7 +476,8 @@ MonoBehaviour:
   _head: {fileID: 8557482328879248548}
   _light: {fileID: 3310769220686601030}
   _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
-  _camera: {fileID: 0}
+  _camera: {fileID: 3265058368475678808}
+  _pickupManager: {fileID: 7279299204589610972}
   _movementSpeed: {x: 0, y: 0, z: 0}
   _currentVel: {x: 0, y: 0, z: 0}
   _bodyRotation: {x: 0, y: 0, z: 0}
@@ -500,6 +502,21 @@ MonoBehaviour:
     m_Bits: 128
   _interactionRadius: 1
   _spehreCastRadius: 0.1
+--- !u!114 &7279299204589610972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150105805117102395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76dc8607bc8e6ca4ca7806a791ba1122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _items:
+    list: []
+    keyCollision: 0
 --- !u!1 &7684018280675919263
 GameObject:
   m_ObjectHideFlags: 0

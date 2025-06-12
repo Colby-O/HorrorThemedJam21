@@ -26,6 +26,11 @@ namespace HTJ21
 
         private IGPSMonoSystem _gpsMs;
 
+        public Transform GetAfterLogTarget()
+        {
+            return _targetAfterLog;
+        }
+
         private Dictionary<string, DialogueSO> _dialogues = new();
 
         private void LoadDialogue(string name)
@@ -40,14 +45,16 @@ namespace HTJ21
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(d);
             }
         }
-        
+
         private void Start()
         {
             LoadDialogue("FallenTree");
+            LoadDialogue("HeadlightTutorial");
+            LoadDialogue("DreamSighting");
             _gpsMs = GameManager.GetMonoSystem<IGPSMonoSystem>();
             GameManager.AddEventListener<Events.DreamFallenLog>(Events.NewDreamFallenLog((from, data) =>
             {
-                _gpsMs.MoveTarget(_targetAfterLog.position);
+                //_gpsMs.MoveTarget(_targetAfterLog.position);
                 StartDialogue("FallenTree");
             }));
             GameManager.AddEventListener<Events.DreamSighting>(Events.NewDreamSighting((from, data) =>
@@ -55,6 +62,7 @@ namespace HTJ21
                 GameManager.GetMonoSystem<IWeatherMonoSystem>().SpawnLightingAt(_sightingLightningHit.position);
                 _sightingTree.Fall();
                 _firstCultist.Walk();
+                StartDialogue("DreamSighting");
             }));
             GameManager.AddEventListener<Events.DreamFoundCult>(Events.NewDreamSighting((from, data) =>
             {
@@ -62,6 +70,11 @@ namespace HTJ21
                 _moonStartPosition = _moon.position;
                 _moonStartScale = _moon.localScale;
                 _moveMoveStartTime = Time.time;
+            }));
+
+            GameManager.AddEventListener<Events.HeadlightTutorial>(Events.NewHeadlightTutorial((from, data) =>
+            {
+                StartDialogue("HeadlightTutorial");
             }));
         }
 

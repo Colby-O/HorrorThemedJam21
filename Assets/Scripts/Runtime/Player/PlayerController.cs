@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HTJ21
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(CharacterController), typeof(PickupManager))]
     public class PlayerController : MonoBehaviour
     {
         [Header("References")]
@@ -15,6 +15,7 @@ namespace HTJ21
         [SerializeField] private GameObject _light;
         [SerializeField] private PlayerSettings _settings;
         [SerializeField] private Camera _camera;
+        [SerializeField] private PickupManager _pickupManager;
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
@@ -39,6 +40,7 @@ namespace HTJ21
 
         public void EnterAt(Vector3 position)
         {
+            gameObject.SetActive(true);
             MoveTo(position);
             _head.gameObject.SetActive(true);
         }
@@ -47,10 +49,12 @@ namespace HTJ21
         {
             _head.gameObject.SetActive(false);
             HTJ21GameManager.Car.EnterCar();
+            gameObject.SetActive(false);
         }
 
         private void ToggleLight()
         {
+            if (!_pickupManager.HasItem(PickupableItem.FlashLight)) return;
             _light.SetActive(!_light.activeSelf);
         }
 
@@ -98,16 +102,19 @@ namespace HTJ21
         private void Awake()
         {
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
-            if (_controller == null) _controller = GetComponent<CharacterController>();
+            if (!_controller) _controller = GetComponent<CharacterController>();
+            if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
 
             _bodyRotation = transform.localRotation.eulerAngles;
             _headRotation = _head.localRotation.eulerAngles;
 
+            _light.SetActive(false);
             _head.gameObject.SetActive(false);
         }
 
         private void Start()
         {
+
         }
 
         private void Update()
