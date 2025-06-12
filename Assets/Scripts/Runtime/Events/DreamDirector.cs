@@ -26,6 +26,12 @@ namespace HTJ21
         [FormerlySerializedAs("_effectHigh")] [SerializeField] private float _chromaticEffectHigh;
         [SerializeField] private float _effectDistance;
         [SerializeField] private float _playerApproachSpeed;
+        [SerializeField] private float _thunderInterval = 2.3f;
+        [SerializeField] private float _thunderLifespan = 0.3f;
+        
+
+        private IWeatherMonoSystem _weather;
+        private float _initialThunderLifespan;
 
         private bool _movingMoon = false;
         private Vector3 _moonStartPosition;
@@ -41,6 +47,8 @@ namespace HTJ21
         }
 
         private Dictionary<string, DialogueSO> _dialogues = new();
+        private bool _thundering = false;
+        private float _lastThunder = 0;
 
         private void LoadDialogue(string name)
         {
@@ -55,8 +63,17 @@ namespace HTJ21
             }
         }
 
+        private void EndAct()
+        {
+            ParticleSystem.MainModule m = _weather.GetThunderHitter().main;
+            m.startLifetime = new ParticleSystem.MinMaxCurve(_initialThunderLifespan);
+        }
+
         private void Start()
         {
+            _weather = GameManager.GetMonoSystem<IWeatherMonoSystem>();
+            _initialThunderLifespan = _weather.GetThunderHitter().main.startLifetime.constant;
+            
             LoadDialogue("FallenTree");
             LoadDialogue("HeadlightTutorial");
             LoadDialogue("DreamSighting");
@@ -68,7 +85,7 @@ namespace HTJ21
             }));
             GameManager.AddEventListener<Events.DreamSighting>(Events.NewDreamSighting((from, data) =>
             {
-                GameManager.GetMonoSystem<IWeatherMonoSystem>().SpawnLightingAt(_sightingLightningHit.position);
+                _weather.SpawnLightingAt(_sightingLightningHit.position);
                 _sightingTree.Fall();
                 _firstCultist.Walk();
                 StartDialogue("DreamSighting");
@@ -103,6 +120,12 @@ namespace HTJ21
                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetChromicOffset(val);
                 }
             }
+
+            if (_thundering && Time.time - _lastThunder >= _thunderInterval)
+            {
+                _lastThunder = Time.time;
+                _weather.SpawnLightingAt(_cultCircle.position);
+            }
             if (_movingMoon)
             {
                 float t = (Time.time - _moveMoveStartTime) / _moonApproachSpeed;
@@ -117,6 +140,9 @@ namespace HTJ21
                     _sacrificeBody.GetComponent<Levitate>().StopLevitatingAtNextBase();
                     HTJ21GameManager.Player.LockMoving = false;
                     HTJ21GameManager.Player.UncontrollableApproach = _playerApproachSpeed;
+                    _thundering = true;
+                    ParticleSystem.MainModule m = _weather.GetThunderHitter().main;
+                    m.startLifetime = new ParticleSystem.MinMaxCurve(_thunderLifespan);
                 }
             }
         }
