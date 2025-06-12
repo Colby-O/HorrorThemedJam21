@@ -247,17 +247,7 @@ MonoBehaviour:
   _rpm: 1045.6476
   _speed: 3.9894733
   _wheelsSliding: 00000000
-  _drivingProfile:
-    wheelTurnSpeed: 2
-    steeringWheelAngleScale: 4
-    maxTurnAngle: 35
-    maxSpeedTurnAngle: 10
-    maxSpeedTurnAngleSpeed: 50
-    maxThrottle: 1
-    maxSpeed: 25
-    automatic: 1
-    automaticUpShiftPoint: 3300
-    automaticDownShiftPoint: 2300
+  DrivingProfile: {fileID: 11400000, guid: f63dfa2ddfabbc6f6afeaed128e74ef7, type: 2}
   _headLight: {fileID: 4490874309016495164}
   _blueLight: {fileID: 6898159019706559256}
   _redLight: {fileID: 6237613282143728762}
