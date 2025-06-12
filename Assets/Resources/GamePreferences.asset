@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: GamePreferences
   m_EditorClassIdentifier: 
   SelectedLanguage: 0
+  ViewDistance: 45
+  ComponentViewDistance: 30
+  ComputeViewDistanceInterval: 1
