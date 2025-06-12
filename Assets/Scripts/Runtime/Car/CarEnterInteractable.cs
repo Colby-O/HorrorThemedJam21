@@ -22,7 +22,7 @@ namespace HTJ21
 
         public bool Interact(Interactor interactor)
         {
-            if (HTJ21GameManager.Player.IsInCar()) return true;
+            if (HTJ21GameManager.Player.IsInCar() || !HTJ21GameManager.Car || HTJ21GameManager.Car.IsLocked()) return true;
             HTJ21GameManager.Player.EnterCar();
             return true;
         }

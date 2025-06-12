@@ -85,7 +85,16 @@ namespace HTJ21
                 this, 
                 _exitTime, 
                 (float t) => StopCinematicStep(t, _currentTransform, _endTransform), 
-                () => { _enabled = false; _rb.isKinematic = false; _rb.linearVelocity = _stopSpeed * transform.forward; HTJ21GameManager.Car.SetDisableState(false); Disable(); }
+                () => 
+                { 
+                    _enabled = false;
+                    _rb.isKinematic = false; 
+                    _rb.linearVelocity = _stopSpeed * transform.forward; 
+                    HTJ21GameManager.Car.SetDisableState(false); 
+                    Disable();
+
+                    GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.DriveTutorialDialogue);
+                }
             );
         }
 
@@ -163,7 +172,7 @@ namespace HTJ21
                 _currentStops = new List<int>(_stopSigns);
                 _currentT = 0f;
                 _currentKnot = 0;
-                Stop();
+                //Stop();
             }
             else
             {

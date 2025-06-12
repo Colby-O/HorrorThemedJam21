@@ -13,10 +13,53 @@ MonoBehaviour:
   m_Name: FallenTree
   m_EditorClassIdentifier: 
   _dialogues:
-  - avatarName: You
+  - avatarName: Officer Graves
     msg:
       list:
       - Key: 0
-        Value: The damn road is blocked. I think I saw another route before.
+        Value: "Dispatch, 2-4, be advised\u2014I\u2019ve reached a dead end. Large
+          tree down across Old Mill about a half-mile north of the river bridge.
+          Roadway completely blocked; no safe shoulder to go around. Request alternate
+          route."
       keyCollision: 0
     dialogueEvent: {fileID: 0}
+    waitDelayOverride: -1
+    typeSpeedOverride: -1
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: "Copy, 2-4. Stand by \u2026 "
+      keyCollision: 0
+    dialogueEvent: {fileID: 11400000, guid: a37359d17434aac49a54163fdd4dbe15, type: 2}
+    waitDelayOverride: -1
+    typeSpeedOverride: -1
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: "There is an alternate route west of the bridge that\u2019ll put you
+          two minutes from the original 10-66 location. I\u2019m updating your GPS
+          route now."
+      keyCollision: 0
+    dialogueEvent: {fileID: 11400000, guid: e6ac67f2dae1ff946936f5746bdd6cae, type: 2}
+    waitDelayOverride: -1
+    typeSpeedOverride: -1
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: "10-4. I\u2019ll advise when I\u2019m back on Highway 17."
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: -1
+    typeSpeedOverride: -1
+  - avatarName: Tutorial
+    msg:
+      list:
+      - Key: 0
+        Value: Click 'R' to toggle reverse mode.
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 4
+    typeSpeedOverride: 0.033

@@ -16,3 +16,7 @@ MonoBehaviour:
   ViewDistance: 45
   ComponentViewDistance: 30
   ComputeViewDistanceInterval: 1
+  Act1Location: Snoqualmie, Washington\n11:00pm
+  IntroDialogue: {fileID: 11400000, guid: 8c56af6cab36a6d4e8a1c6a40ac96368, type: 2}
+  DriveTutorialDialogue: {fileID: 11400000, guid: 267b02396a5f92f41828ce872e36fb74, type: 2}
+  PickupFlashlightDialogue: {fileID: 11400000, guid: 56b64fa339c9c49468143647f8769bbd, type: 2}

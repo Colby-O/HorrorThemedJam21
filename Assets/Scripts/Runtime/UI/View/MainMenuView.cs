@@ -17,12 +17,14 @@ namespace HTJ21
             HTJ21GameManager.IsPaused = false;
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(1, PlazmaGames.Audio.AudioType.Music, true);
-            HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
-            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation("London, ON\nCanada\n11:00pm", () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.test));
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
+                HTJ21GameManager.Preferences.Act1Location, 
+                () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.IntroDialogue)
+            );
             GameManager.EmitEvent(new Events.StartGame());
         }
 

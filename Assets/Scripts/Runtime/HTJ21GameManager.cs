@@ -27,11 +27,10 @@ namespace HTJ21
 
         [Header("Settings")]
         [SerializeField] private GamePreferences preferences;
-        [SerializeField] private DialogueSO _test;
 
-        public static DialogueSO test => (Instance as HTJ21GameManager)._test;
         public static GamePreferences Preferences => (Instance as HTJ21GameManager).preferences;
         public static PlayerController Player { get; set; }
+        public static PickupManager PickupManager { get; set; }
         public static CarController Car { get; set; }
         public static CinematicCarController CinematicCar { get; set; }
 
@@ -81,6 +80,7 @@ namespace HTJ21
             Player = GameObject.FindObjectsByType<PlayerController>(FindObjectsSortMode.None)[0];
             Car = GameObject.FindObjectsByType<CarController>(FindObjectsSortMode.None)[0];
             if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
+            if (Player) PickupManager = Player.GetComponent<PickupManager>();
         }
 
         private void Start()

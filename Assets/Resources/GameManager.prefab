@@ -47,7 +47,6 @@ MonoBehaviour:
   _height: 20
   _indoorRainClip: {fileID: 8300000, guid: 6ef06cdfe242f1b48b348e0406f779e9, type: 3}
   _outdoorRainClip: {fileID: 8300000, guid: fe129e443aaea4a4fa3c9c07adb45081, type: 3}
-  _rainAS: {fileID: 0}
   _lightingColor: {r: 0.18943574, g: 0.37170774, b: 0.4056604, a: 1}
   _lightingInterval: {x: 10, y: 20}
   _thunderDelay: {x: 0.5, y: 3}
@@ -234,7 +233,7 @@ MonoBehaviour:
   _dialogueSystem: {fileID: 5410517105309124607}
   _screenEffectSystem: {fileID: 5879531003170447106}
   preferences: {fileID: 11400000, guid: 38bdb04705ff93445b211c9bddcc4683, type: 2}
-  _test: {fileID: 11400000, guid: ed8b801f982a04d4fa2ca0ac03acd1b6, type: 2}
+  _test: {fileID: 11400000, guid: 8c56af6cab36a6d4e8a1c6a40ac96368, type: 2}
 --- !u!1 &6636354303301076341
 GameObject:
   m_ObjectHideFlags: 0

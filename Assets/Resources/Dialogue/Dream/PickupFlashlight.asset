@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06264d2f54d6c884eb47ac2cbc4ec893, type: 3}
+  m_Name: PickupFlashlight
+  m_EditorClassIdentifier: 
+  _dialogues:
+  - avatarName: Tutorial
+    msg:
+      list:
+      - Key: 0
+        Value: Click 'F' to toggle your flashlight.
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 2
+    typeSpeedOverride: 0.03
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: "Dispatch, be advised, I\u2019ve arrived on scene. No subject visible
+          at this time, but\u2026 there\u2019s a trail of blood leading off the road
+          and into the tree line. Appears fresh. I\u2019m going to investigate."
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: -1
+    typeSpeedOverride: -1
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: "10-4. Confirm you\u2019re breaking from your unit on foot?"
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 2
+    typeSpeedOverride: 0.03
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: Affirmative. Leaving the cruiser now. Trail heads northwest into the
+          woods by the lake.
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 2
+    typeSpeedOverride: 0.03
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: 'Proceed with extreme caution. Backup is en route, ETA seven minutes. '
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 2
+    typeSpeedOverride: 0.03

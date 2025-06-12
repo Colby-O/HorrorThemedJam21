@@ -17,6 +17,8 @@ namespace HTJ21
         public string avatarName;
         public SerializableDictionary<Language, string> msg;
         public DialogueEvent dialogueEvent;
+        public float waitDelayOverride = -1;
+        public float typeSpeedOverride = -1;
     }
 
     [CreateAssetMenu(fileName = "Dialogue", menuName = "Dialogue/New Dialogue")]

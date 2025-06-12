@@ -40,7 +40,7 @@ namespace HTJ21
         [SerializeField, ReadOnly] private string _currentMessage;
         [SerializeField, ReadOnly] private bool _showedMessage = false;
 
-        IEnumerator TypeDialogue(string msg, float delay, TMP_Text target, bool isDialogue, UnityAction onFinished = null)
+        IEnumerator TypeDialogue(string msg, float delay, float typeSpeed, TMP_Text target, bool isDialogue, UnityAction onFinished = null)
         {
             _isWriting = true;
             _currentMessage = msg;
@@ -59,7 +59,7 @@ namespace HTJ21
                 while (HTJ21GameManager.IsPaused) yield return null;
 
                 target.text += c;
-                yield return new WaitForSeconds(_typeSpeed);
+                yield return new WaitForSeconds(typeSpeed);
             }
 
             _as?.Stop();
@@ -102,7 +102,14 @@ namespace HTJ21
         public void DisplayDialogue(Dialogue dialogue)
         {
             _dialogueAvatarName.text = dialogue.avatarName;
-            StartCoroutine(TypeDialogue(dialogue.msg[HTJ21GameManager.Preferences.SelectedLanguage], _waitDelayDialogue, _dialogue, true, Next));
+            StartCoroutine(TypeDialogue(
+                dialogue.msg[HTJ21GameManager.Preferences.SelectedLanguage], 
+                (dialogue.waitDelayOverride <= 0) ? _waitDelayDialogue : dialogue.waitDelayOverride, 
+                (dialogue.typeSpeedOverride <= 0) ? _typeSpeed : dialogue.typeSpeedOverride,
+                _dialogue, 
+                true, 
+                Next)
+            );
         }
 
         public void HideDialogue()
@@ -116,10 +123,12 @@ namespace HTJ21
         {
             if(_isWritingDialogue)
             {
+                StopAllCoroutines();
                 _isWriting = false;
                 _showedMessage = false;
                 _isWritingDialogue = false;
                 _isWritingLocation = false;
+                _dialogue.text = string.Empty;
                 _as?.Stop();
                 Next();
             }
@@ -129,7 +138,7 @@ namespace HTJ21
         {
             _location.transform.parent.gameObject.SetActive(true);
             _currentLocationCallback = onFinished;
-            StartCoroutine(TypeDialogue(location, _waitDelayLocation, _location, false, () => { if (onFinished != null) onFinished.Invoke(); HideLocation(); }));
+            StartCoroutine(TypeDialogue(location, _waitDelayLocation, _typeSpeed, _location, false, () => { if (onFinished != null) onFinished.Invoke(); HideLocation(); }));
         }
 
         public void HideLocation()
