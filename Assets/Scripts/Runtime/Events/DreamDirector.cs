@@ -70,6 +70,7 @@ namespace HTJ21
                 _moonStartPosition = _moon.position;
                 _moonStartScale = _moon.localScale;
                 _moveMoveStartTime = Time.time;
+                HTJ21GameManager.Player.LookAt(_moon);
             }));
 
             GameManager.AddEventListener<Events.HeadlightTutorial>(Events.NewHeadlightTutorial((from, data) =>

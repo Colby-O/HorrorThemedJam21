@@ -54,5 +54,48 @@ namespace HTJ21
         {
             return Mathf.RoundToInt(Mathf.Sign(v));
         }
+        
+        public static Vector2 SetX(this Vector2 v, float x)
+        {
+            v.x = x;
+            return v;
+        }
+        public static Vector2 SetY(this Vector2 v, float x)
+        {
+            v.y = x;
+            return v;
+        }
+
+        public static Vector3 SetX(this Vector3 v, float x)
+        {
+            v.x = x;
+            return v;
+        }
+        public static Vector3 SetY(this Vector3 v, float x)
+        {
+            v.y = x;
+            return v;
+        }
+        public static Vector3 SetZ(this Vector3 v, float x)
+        {
+            v.z = x;
+            return v;
+        }
+
+        public static float AngleBetweenVectorsOnPlane(Vector3 v1, Vector3 v2, Vector3 planeNormal)
+        {
+            v1 = v1.normalized;
+            v2 = v2.normalized;
+            planeNormal = planeNormal.normalized;
+            Vector3 proj1 = Vector3.Normalize(v1 - planeNormal * Vector3.Dot(v1, planeNormal));
+            Vector3 proj2 = Vector3.Normalize(v2 - planeNormal * Vector3.Dot(v2, planeNormal));
+
+            if (proj1.magnitude < 0.0001 || proj2.magnitude < 0.0001) return 0;
+
+            float angle = Mathf.Atan2(Vector3.Dot(planeNormal, Vector3.Cross(proj1, proj2)), Vector3.Dot(proj1, proj2));
+            return angle * 180.0f / Mathf.PI;
+        }
+
+        public static float Angle360To180(float angle) => Mathf.Repeat(angle + 180, 360) - 180;
     }
 }
