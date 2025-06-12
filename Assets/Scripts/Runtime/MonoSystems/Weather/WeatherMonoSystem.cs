@@ -75,6 +75,9 @@ namespace HTJ21
 
         public void SpawnLightingAt(Vector3 pos)
         {
+            _lightingHitter.transform.parent = null;
+            pos.y = HTJ21GameManager.CurrentControllable.transform.position.y + _height;
+            _lightingHitter.transform.position = pos;
             _lightingHitter.Emit(1);
             _lightingTimer = 0;
             _thunderTimer = 0;
