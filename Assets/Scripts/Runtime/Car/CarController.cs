@@ -112,6 +112,21 @@ namespace HTJ21
 
         [SerializeField] private DrivingProfile _drivingProfile;
 
+        [Header("Headlights")]
+        [SerializeField] private Light _headLight;
+
+        [Header("Siren")]
+        [SerializeField] private Light _blueLight;
+        [SerializeField] private Light _redLight;
+        [SerializeField] private AudioSource _sirenAudio;
+
+        [Header("Cameras")]
+        [SerializeField] private Camera _carCamera;
+        [SerializeField] private MirrorCamera _leftMirrorCam;
+        [SerializeField] private MirrorCamera _rightMirrorCam;
+        [SerializeField] private MirrorCamera _backMirrorCam;
+
+
         private PlayerController _player;
         private EngineSound _engineSound;
         private IInputMonoSystem _inputHandler;
@@ -130,7 +145,41 @@ namespace HTJ21
 
         public bool InCar() => _camera.gameObject.activeSelf;
 
-        public Camera GetCamera() => _camera.GetComponent<Camera>();
+        public Camera GetCamera() => _carCamera;
+
+        public void ToggleHeadLight()
+        {
+            if (!InCar()) return;
+            _headLight.gameObject.SetActive(!_headLight.gameObject.activeSelf);
+        }
+
+        public void EnableSiren()
+        {
+            _blueLight.gameObject.SetActive(true);
+            _redLight.gameObject.SetActive(true);
+            _sirenAudio.Play();
+        }
+
+        public void DisableSiren()
+        {
+            _blueLight.gameObject.SetActive(false);
+            _redLight.gameObject.SetActive(false);
+            _sirenAudio.Stop();
+        }
+
+        public void DisableMirrors()
+        {
+            _backMirrorCam.Disable();
+            _leftMirrorCam.Disable();
+            _rightMirrorCam.Disable();
+        }
+
+        public void EnableMirrors()
+        {
+            _backMirrorCam.Enable();
+            _leftMirrorCam.Enable();
+            _rightMirrorCam.Enable();
+        }
 
         public void SetDisableState(bool state)
         {
@@ -151,6 +200,8 @@ namespace HTJ21
             Transform wheels = transform.Find("Wheels");
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);
             _engineSound = GetComponent<EngineSound>();
+            _inputHandler.LightCallback.AddListener(ToggleHeadLight);
+            DisableSiren();
         }
 
         private void ProcessLook()
@@ -172,6 +223,7 @@ namespace HTJ21
         public void EnterCar()
         {
             _wasEnteredThisFrame = true;
+            EnableMirrors();
             _camera.gameObject.SetActive(true);
         }
         
@@ -179,6 +231,7 @@ namespace HTJ21
         {
             Debug.Log("EXIT CAR");
             if (_wasEnteredThisFrame || !InCar()) return;
+            DisableMirrors();
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);
         }

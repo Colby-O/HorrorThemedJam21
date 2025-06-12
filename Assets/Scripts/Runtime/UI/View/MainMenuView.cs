@@ -14,6 +14,7 @@ namespace HTJ21
 
         private void Play()
         {
+            HTJ21GameManager.IsPaused = false;
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(1, PlazmaGames.Audio.AudioType.Music, true);
             HTJ21GameManager.Car.GetComponent<CinematicCarController>().StopCinematic();
