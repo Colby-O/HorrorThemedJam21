@@ -28,6 +28,9 @@ namespace HTJ21
 
         public bool LockMovement { get; set; }
 
+        public bool LockMoving = false;
+        public float UncontrollableApproach = 0;
+
         public void LookAt(Transform t) => _lookAt = t;
         public void StopLookAt() => _lookAt = null;
 
@@ -64,18 +67,40 @@ namespace HTJ21
 
         private void ProcessMovement()
         {
-            float forwardSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;
-            float rightSpeed = _settings.WalkingStrideSpeed;
+            if (LockMoving)
+            {
+                _movementSpeed = Vector3.zero;
+                return;
+            }
 
-            forwardSpeed *= _settings.Speed;
+            float dirSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;
+            float forwardSpeed = _inputHandler.RawMovement.y * dirSpeed;
+            float rightSpeed = _inputHandler.RawMovement.x * _settings.WalkingStrideSpeed;
+
+            if (UncontrollableApproach != 0)
+            {
+                if (forwardSpeed >= 0)
+                {
+                    forwardSpeed = UncontrollableApproach;
+                }
+                else
+                {
+                    forwardSpeed = -UncontrollableApproach / 3;
+                }
+            }
+            else
+            {
+                forwardSpeed *= _settings.Speed;
+            }
+            
             rightSpeed *= _settings.Speed;
 
             _movementSpeed = Vector3.SmoothDamp(
                 _movementSpeed, 
                 new Vector3(
-                    rightSpeed * _inputHandler.RawMovement.x * Time.deltaTime, 
+                    rightSpeed * Time.deltaTime, 
                     0,
-                    forwardSpeed * _inputHandler.RawMovement.y * Time.deltaTime),
+                    forwardSpeed * Time.deltaTime),
                 ref _currentVel, 
                 _settings.MovementSmoothing
             );
@@ -94,7 +119,7 @@ namespace HTJ21
             else
             {
                 Vector3 dir = Vector3.Normalize(_lookAt.position - _head.position);
-                float targetXRot = MathExt.Angle360To180(Vector3.SignedAngle(dir.SetY(0), dir, Vector3.Cross(dir, Vector3.up)));
+                float targetXRot = -MathExt.Angle360To180(Vector3.SignedAngle(dir.SetY(0), dir, Vector3.Cross(dir, Vector3.up)));
                 float targetYRot = MathExt.Angle360To180(Vector3.SignedAngle(Vector3.forward, dir.SetY(0), Vector3.up));
                 xRot = targetXRot;
                 yRot = targetYRot;

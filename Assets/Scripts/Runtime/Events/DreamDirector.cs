@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using PlazmaGames.Core;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Splines.ExtrusionShapes;
 
 namespace HTJ21
 {
@@ -18,11 +20,18 @@ namespace HTJ21
         [SerializeField] private Transform _moonTarget;
         [SerializeField] private float _moonApproachSpeed = 6;
         [SerializeField] private int _moonLerpExp = 5;
+        [FormerlySerializedAs("_effectLow")] [SerializeField] private float _noiseEffectLow;
+        [FormerlySerializedAs("_effectHigh")] [SerializeField] private float _noiseEffectHigh;
+        [FormerlySerializedAs("_effectLow")] [SerializeField] private float _chromaticEffectLow;
+        [FormerlySerializedAs("_effectHigh")] [SerializeField] private float _chromaticEffectHigh;
+        [SerializeField] private float _effectDistance;
+        [SerializeField] private float _playerApproachSpeed;
 
         private bool _movingMoon = false;
         private Vector3 _moonStartPosition;
         private Vector3 _moonStartScale;
         private float _moveMoveStartTime;
+        private bool _captivated = false;
 
         private IGPSMonoSystem _gpsMs;
 
@@ -71,6 +80,8 @@ namespace HTJ21
                 _moonStartScale = _moon.localScale;
                 _moveMoveStartTime = Time.time;
                 HTJ21GameManager.Player.LookAt(_moon);
+                _captivated = true;
+                HTJ21GameManager.Player.LockMoving = true;
             }));
 
             GameManager.AddEventListener<Events.HeadlightTutorial>(Events.NewHeadlightTutorial((from, data) =>
@@ -81,6 +92,17 @@ namespace HTJ21
 
         private void Update()
         {
+            if (_captivated)
+            {
+                float dist = Vector3.Distance(HTJ21GameManager.Player.transform.position, _cultCircle.transform.position);
+                if (dist < _effectDistance)
+                {
+                    float val = Mathf.Lerp(_noiseEffectLow, _noiseEffectHigh, (_effectDistance - dist) / _effectDistance);
+                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetStaticLevel(val);
+                    val = Mathf.Lerp(_chromaticEffectLow, _chromaticEffectHigh, (_effectDistance - dist) / _effectDistance);
+                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetChromicOffset(val);
+                }
+            }
             if (_movingMoon)
             {
                 float t = (Time.time - _moveMoveStartTime) / _moonApproachSpeed;
@@ -93,6 +115,8 @@ namespace HTJ21
                     _movingMoon = false;
                     _moon.GetComponent<Levitate>().StartLevitateFromPosition();
                     _sacrificeBody.GetComponent<Levitate>().StopLevitatingAtNextBase();
+                    HTJ21GameManager.Player.LockMoving = false;
+                    HTJ21GameManager.Player.UncontrollableApproach = _playerApproachSpeed;
                 }
             }
         }

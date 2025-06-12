@@ -97,5 +97,11 @@ namespace HTJ21
         }
 
         public static float Angle360To180(float angle) => Mathf.Repeat(angle + 180, 360) - 180;
+
+        public static float ClampMagnitude(float v, float low, float high)
+        {
+            float av = Mathf.Clamp(Mathf.Abs(v), low, high);
+            return av * Mathf.Sign(v);
+        }
     }
 }
