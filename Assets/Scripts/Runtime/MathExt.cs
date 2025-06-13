@@ -82,6 +82,30 @@ namespace HTJ21
             return v;
         }
 
+        public static Color SetR(this Color c, float v)
+        {
+            c.r = v;
+            return c;
+        }
+
+        public static Color SetG(this Color c, float v)
+        {
+            c.g = v;
+            return c;
+        }
+
+        public static Color SetB(this Color c, float v)
+        {
+            c.b = v;
+            return c;
+        }
+
+        public static Color SetA(this Color c, float v)
+        {
+            c.a = v;
+            return c;
+        }
+
         public static float AngleBetweenVectorsOnPlane(Vector3 v1, Vector3 v2, Vector3 planeNormal)
         {
             v1 = v1.normalized;
