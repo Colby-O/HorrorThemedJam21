@@ -3,6 +3,7 @@ using PlazmaGames.Rendering.CRT;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 
 namespace HTJ21
 {
@@ -13,6 +14,22 @@ namespace HTJ21
         [Header("Default CRT Values")]
         [SerializeField] private float _defaultNoiseScale = 0f;
         [SerializeField] private float _defaultChromicOffset = 0f;
+
+        private bool _fadeToBlack = false;
+        private float _fadeToBlackStartTime;
+        private float _fadeToBlackLength;
+        private System.Action _fadeToBlackCallback;
+
+        private UnityEngine.UI.Image _fadeToBlackImage;
+        
+
+        public void FadeToBlack(float time, System.Action then)
+        {
+            _fadeToBlack = true;
+            _fadeToBlackCallback = then;
+            _fadeToBlackLength = time;
+            _fadeToBlackStartTime = Time.time;
+        }
 
         private T GetRendererFeature<T>(ScriptableRendererData rendererData, string featureName) where T : ScriptableRendererFeature
         {
@@ -65,6 +82,23 @@ namespace HTJ21
         public void Start()
         {
             RestoreDefaults();
+            GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
+            _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
+        }
+
+        private void Update()
+        {
+            if (_fadeToBlack)
+            {
+                float t = (Time.time - _fadeToBlackStartTime) / _fadeToBlackLength;
+                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(Mathf.Clamp01(t));
+                if (t >= 1)
+                {
+                    _fadeToBlack = false;
+                    _fadeToBlackCallback();
+                    _fadeToBlackCallback = null;
+                }
+            }
         }
     }
 }

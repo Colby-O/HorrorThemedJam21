@@ -83,7 +83,17 @@ void AdditionalLights_float(float3 SpecColor, float Smoothness, float3 WorldPosi
     {
         Light light = GetAdditionalLight(i, WorldPosition);
         half3 attenuatedLightColor = light.color * (light.distanceAttenuation * light.shadowAttenuation);
-        diffuseColor += LightingLambert(attenuatedLightColor, light.direction, WorldNormal);
+        if (light.layerMask == 2)
+        {
+            half3 attenuation = sqrt(light.distanceAttenuation);
+            half3 attenuatedLightColor2 = light.color * (attenuation * light.shadowAttenuation);
+            float diff = max(0.4, max(dot(light.direction, WorldNormal), 0));
+            diffuseColor += diff * attenuatedLightColor2;
+        }
+        else
+        {
+            diffuseColor += LightingLambert(attenuatedLightColor, light.direction, WorldNormal);
+        }
         specularColor += LightingSpecular(attenuatedLightColor, light.direction, WorldNormal, WorldView, float4(SpecColor, 0), Smoothness);
     }
 #endif
@@ -106,7 +116,17 @@ void AdditionalLights_half(half3 SpecColor, half Smoothness, half3 WorldPosition
     {
         Light light = GetAdditionalLight(i, WorldPosition);
         half3 attenuatedLightColor = light.color * (light.distanceAttenuation * light.shadowAttenuation);
-        diffuseColor += LightingLambert(attenuatedLightColor, light.direction, WorldNormal);
+        if (light.layerMask == 2)
+        {
+            half3 attenuation = sqrt(light.distanceAttenuation);
+            half3 attenuatedLightColor2 = light.color * (attenuation * light.shadowAttenuation);
+            half diff = max(dot(light.direction, WorldNormal), 0);
+            diffuseColor += diff * attenuatedLightColor2;
+        }
+        else
+        {
+            diffuseColor += LightingLambert(attenuatedLightColor, light.direction, WorldNormal);
+        }
         specularColor += LightingSpecular(attenuatedLightColor, light.direction, WorldNormal, WorldView, half4(SpecColor, 0), Smoothness);
     }
 #endif
