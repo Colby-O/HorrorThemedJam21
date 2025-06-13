@@ -277,6 +277,13 @@ namespace HTJ21
                     DontDestroyOnLoad(path);
                 }
 
+                GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame(
+                    (from, data) =>
+                    {
+                        TurnOn();
+                    }
+                ));
+
                 _hasInitialized = true;
             }
             else

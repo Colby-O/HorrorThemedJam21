@@ -90,7 +90,7 @@ namespace HTJ21
 
         private void Awake()
         {
-            SceneManager.LoadScene("Act1");
+            //SceneManager.LoadScene("Act1");
         }
 
         private void Start()
