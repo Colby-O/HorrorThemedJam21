@@ -168,8 +168,17 @@ namespace HTJ21
         {
             base.Show();
             _holder.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+
+            if (HTJ21GameManager.Inspector && HTJ21GameManager.Inspector.IsInspecting())
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         private void HandleTimeout()

@@ -4,6 +4,7 @@ using PlazmaGames.Core;
 using PlazmaGames.Core.Events;
 using PlazmaGames.UI;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -30,6 +31,7 @@ namespace HTJ21
 
         public static GamePreferences Preferences => (Instance as HTJ21GameManager).preferences;
         public static PlayerController Player { get; set; }
+        public static Inspector Inspector { get; set; }
         public static PickupManager PickupManager { get; set; }
         public static CarController Car { get; set; }
         public static CinematicCarController CinematicCar { get; set; }
@@ -81,16 +83,12 @@ namespace HTJ21
             Car = FindAnyObjectByType<CarController>();
             if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
             if (Player) PickupManager = Player.GetComponent<PickupManager>();
+            if (Player) Inspector = Player.GetComponent<Inspector>();
         }
 
         private void OnSceneUnload(Scene scene)
         {
             RemoveAllEventListeners();
-        }
-
-        private void Awake()
-        {
-            //SceneManager.LoadScene("Act1");
         }
 
         private void Start()
