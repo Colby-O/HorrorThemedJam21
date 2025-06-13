@@ -1,8 +1,10 @@
+using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using System;
 using System.Linq;
 using System.Reflection;
-using PlazmaGames.Core;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace HTJ21
 {
@@ -11,7 +13,7 @@ namespace HTJ21
         [SerializeField] private string _eventName;
         [SerializeField] private bool _once = true;
 
-        private bool _triggered = false;
+        [SerializeField, ReadOnly] private bool _triggered = false;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -23,6 +25,21 @@ namespace HTJ21
             ConstructorInfo con = t.GetConstructor(Type.EmptyTypes);
             if (con == null) return;
             GameManager.EmitEvent(con.Invoke(Array.Empty<object>()));
+        }
+
+        private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            _triggered = false;
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoad;
         }
     }
 }

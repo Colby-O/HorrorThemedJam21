@@ -83,6 +83,16 @@ namespace HTJ21
             if (Player) PickupManager = Player.GetComponent<PickupManager>();
         }
 
+        private void OnSceneUnload(Scene scene)
+        {
+            RemoveAllEventListeners();
+        }
+
+        private void Awake()
+        {
+            SceneManager.LoadScene("Act1");
+        }
+
         private void Start()
         {
             HTJ21GameManager.IsPaused = true;
@@ -93,11 +103,13 @@ namespace HTJ21
         private void OnEnable()
         {
             SceneManager.sceneLoaded += OnSceneLoad;
+            SceneManager.sceneUnloaded += OnSceneUnload;
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoad;
+            SceneManager.sceneUnloaded -= OnSceneUnload;
         }
 
         protected override void Update()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeaabe34fbdcf448829c2058a2f795e, type: 3}
   m_Name: ClearHistoryCommand
   m_EditorClassIdentifier: 
-  id: -1
+  id: 1
   includeInDatabase: 1
-  _command: ClearHistory
+  _command: clear_history
   _description: Clear the console history

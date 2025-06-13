@@ -55,8 +55,20 @@ namespace HTJ21
         public void EnterCar()
         {
             _head.gameObject.SetActive(false);
-            HTJ21GameManager.Car.EnterCar();
+            if (HTJ21GameManager.Car) HTJ21GameManager.Car.EnterCar();
             gameObject.SetActive(false);
+        }
+
+        public void EnablePlayer()
+        {
+            gameObject.SetActive(true);
+            _head.gameObject.SetActive(true);
+        }
+
+        public void DisablePlayer()
+        {
+            gameObject.SetActive(false);
+            _head.gameObject.SetActive(false);
         }
 
         private void ToggleLight()
@@ -151,7 +163,6 @@ namespace HTJ21
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
 
             _light.SetActive(false);
-            _head.gameObject.SetActive(false);
         }
 
         private void Start()

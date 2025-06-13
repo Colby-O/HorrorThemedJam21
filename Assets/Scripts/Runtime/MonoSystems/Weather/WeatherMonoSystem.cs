@@ -24,6 +24,8 @@ namespace HTJ21
         [SerializeField] private List<AudioClip> _thunderClips;
 
         [SerializeField, ReadOnly] private bool _isLightingOn = true;
+        [SerializeField, ReadOnly] private bool _isRainOn = true;
+
 
         private ParticleSystem _rain;
         private ParticleSystem _lighting;
@@ -56,6 +58,7 @@ namespace HTJ21
 
         public void EnableRain()
         {
+            _isRainOn = true;
             _rain.Play();
             if (!_rainAS) return;
             _rainAS.clip = _isIndoors ? _indoorRainClip : _outdoorRainClip;
@@ -63,14 +66,16 @@ namespace HTJ21
         }
         public void DisableRain()
         {
-            _rain.Stop();
+            _isRainOn = false;
+            _rain.Stop(); 
             if (!_rainAS) return;
+            _rainAS.clip = null;
             _rainAS.Stop();
         }
 
         public void SetRainState(bool isIndoors)
         {
-            if (isIndoors == _isIndoors || _rain.isStopped) return;
+            if (!_isRainOn || isIndoors == _isIndoors || _rain.isStopped) return;
             _isIndoors = isIndoors;
             if (!_rainAS) return;
             _rainAS.Stop();
@@ -102,7 +107,7 @@ namespace HTJ21
         private void PlayThunderSound()
         {
             if (_thunderClips == null || _thunderClips.Count == 0) return;
-            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_thunderClips[Random.Range(0, _thunderClips.Count)], PlazmaGames.Audio.AudioType.Sfx);
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_thunderClips[Random.Range(0, _thunderClips.Count)], PlazmaGames.Audio.AudioType.Sfx, loop: false);
         }
 
         private void OnEnable()
