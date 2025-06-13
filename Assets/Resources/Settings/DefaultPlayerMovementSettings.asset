@@ -18,7 +18,7 @@ MonoBehaviour:
   WalkingStrideSpeed: 1
   MovementSmoothing: 0.1
   GravityMultiplier: 0.01
-  Sensitivity: {x: 2, y: 2}
+  Sensitivity: {x: 10, y: 10}
   YLookLimit: {x: -80, y: 80}
   InvertLookY: 0
   InvertLookX: 0
@@ -27,4 +27,9 @@ MonoBehaviour:
   HeadBobbleSpeed: 5
   HeadBobbleMagnitude: 0.16
   RpmScale: 3
-  _parkingSpeed: 0.01
+  ParkingSpeed: 0.01
+  SteeringWheelAngleScale: 4
+  WheelTurnSpeed: 2
+  MaxTurnAngle: 35
+  MaxSpeedTurnAngle: 10
+  MaxSpeedTurnAngleSpeed: 50

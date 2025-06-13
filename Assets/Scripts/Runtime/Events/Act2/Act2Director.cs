@@ -13,6 +13,8 @@ namespace HTJ21
             if (player) player.EnablePlayer();
 
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            HTJ21GameManager.IsPaused = false;
+
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
             GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogue();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();

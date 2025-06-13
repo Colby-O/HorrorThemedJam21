@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: -1
   includeInDatabase: 1
-  _command: load_scene
+  _command: load
   _description: Loads a scene given it's name

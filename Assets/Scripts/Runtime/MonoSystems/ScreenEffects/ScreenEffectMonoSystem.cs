@@ -52,24 +52,24 @@ namespace HTJ21
 
         public void ToggleRendererFeature(string featureName, bool state)
         {
-            PlazmaDebug.Log($"Setting renderer feature '{featureName}' to an {state} state.", verboseLevel: 2);
+            PlazmaDebug.Log($"Setting renderer feature '{featureName}' to an {state} state.", "ScreenEffectMonoSystem", verboseLevel: 2, color: Color.green);
             ToggleRendererFeature(_rendererData, featureName, state);
         }
 
         public void SetStaticLevel(float scale)
         {
-            PlazmaDebug.Log($"Setting renderer feature '{"CRTRendererFeature"}' noise scale to {scale}.", verboseLevel: 2);
+            PlazmaDebug.Log($"Setting renderer feature '{"CRTRendererFeature"}' noise scale to {scale}.", "ScreenEffectMonoSystem", verboseLevel: 2, color: Color.green);
             CRTRendererFeature crt = GetRendererFeature<CRTRendererFeature>(_rendererData, "CRTRendererFeature");
             if (crt) crt.SetNoiseLevel(scale);
-            else PlazmaDebug.LogWarning($"Setting renderer feature '{"CRTRendererFeature"}' is null.", verboseLevel: 2);
+            else PlazmaDebug.LogWarning($"Setting renderer feature '{"CRTRendererFeature"}' is null.", "ScreenEffectMonoSystem", verboseLevel: 2, color: Color.yellow);
         }
 
         public void SetChromicOffset(float level)
         {
-            PlazmaDebug.Log($"Setting renderer feature '{"CRTRendererFeature"}' chromic offset to {level}.", verboseLevel: 2);
+            PlazmaDebug.Log($"Setting renderer feature '{"CRTRendererFeature"}' chromic offset to {level}.", "ScreenEffectMonoSystem", verboseLevel: 2, color: Color.green);
             CRTRendererFeature crt = GetRendererFeature<CRTRendererFeature>(_rendererData, "CRTRendererFeature");
             if (crt) crt.SetChromicOffset(level);
-            else PlazmaDebug.LogWarning($"Setting renderer feature '{"CRTRendererFeature"}' is null.", verboseLevel: 2);
+            else PlazmaDebug.LogWarning($"Setting renderer feature '{"CRTRendererFeature"}' is null.", "ScreenEffectMonoSystem", verboseLevel: 2, color: Color.yellow);
         }
 
         public void RestoreDefaults()
@@ -105,27 +105,11 @@ namespace HTJ21
             }
         }
 
-
         public void Start()
         {
             GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
             _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
             RestoreDefaults();
-        }
-
-        private void Update()
-        {
-            if (_fadeToBlack)
-            {
-                float t = (Time.time - _fadeToBlackStartTime) / _fadeToBlackLength;
-                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(Mathf.Clamp01(t));
-                if (t >= 1)
-                {
-                    _fadeToBlack = false;
-                    _fadeToBlackCallback();
-                    _fadeToBlackCallback = null;
-                }
-            }
         }
     }
 }
