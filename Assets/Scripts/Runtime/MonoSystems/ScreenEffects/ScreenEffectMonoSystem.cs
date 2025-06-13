@@ -77,7 +77,7 @@ namespace HTJ21
             SetStaticLevel(_defaultNoiseScale);
             SetChromicOffset(_defaultChromicOffset);
             ToggleRendererFeature("Blur", false);
-            _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
+            if (_fadeToBlackImage) _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
         }
         
         private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoad;
