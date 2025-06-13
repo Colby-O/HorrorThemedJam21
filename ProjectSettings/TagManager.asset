@@ -10,6 +10,8 @@ TagManager:
   - Car
   - VerticalBounds
   - TeleportTarget
+  - LightingSystem
+  - FadeToBlackScreen
   layers:
   - Default
   - TransparentFX

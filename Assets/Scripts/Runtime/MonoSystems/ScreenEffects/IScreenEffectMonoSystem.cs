@@ -1,3 +1,4 @@
+using System;
 using PlazmaGames.Core.MonoSystem;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -11,5 +12,6 @@ namespace HTJ21
         public void SetStaticLevel(float scale);
         public void SetChromicOffset(float level);
         public void RestoreDefaults();
+        void FadeToBlack(float time, System.Action then);
     }
 }

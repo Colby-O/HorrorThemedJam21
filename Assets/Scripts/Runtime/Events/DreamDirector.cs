@@ -30,6 +30,7 @@ namespace HTJ21
         [SerializeField] private float _playerApproachSpeed;
         [SerializeField] private float _thunderInterval = 2.3f;
         [SerializeField] private float _thunderLifespan = 0.3f;
+        [SerializeField] private float _fadeToBlackTime = 3;
         
 
         private IWeatherMonoSystem _weather;
@@ -107,7 +108,7 @@ namespace HTJ21
                 _firstCultist.Walk();
                 StartDialogue("DreamSighting");
             }));
-            GameManager.AddEventListener<Events.DreamFoundCult>(Events.NewDreamSighting((from, data) =>
+            GameManager.AddEventListener<Events.DreamFoundCult>(Events.NewDreamFoundCult((from, data) =>
             {
                 _movingMoon = true;
                 _moonStartPosition = _moon.position;
@@ -116,6 +117,14 @@ namespace HTJ21
                 HTJ21GameManager.Player.LookAt(_moon);
                 _captivated = true;
                 HTJ21GameManager.Player.LockMoving = true;
+            }));
+            
+            GameManager.AddEventListener<Events.DreamUnderMoon>(Events.NewDreamUnderMoon((from, data) =>
+            {
+                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(_fadeToBlackTime, () =>
+                {
+                    SceneManager.LoadScene("Act2");
+                });
             }));
 
             GameManager.AddEventListener<Events.HeadlightTutorial>(Events.NewHeadlightTutorial((from, data) =>
