@@ -9,6 +9,9 @@ namespace HTJ21
         public float ViewDistance = 50f;
         public float ComponentViewDistance = 25f;
         public float ComputeViewDistanceInterval = 1;
+        
+        [Header("Lune")]
+        public Color MoonRedColor;
 
         [Header("Dialogue -- Act 1")]
         public string Act1Location;
