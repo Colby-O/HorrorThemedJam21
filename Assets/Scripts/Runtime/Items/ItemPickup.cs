@@ -28,7 +28,11 @@ namespace HTJ21
             if (HTJ21GameManager.PickupManager)
             {
                 HTJ21GameManager.PickupManager.Pickup(_type);
-                if (_type == PickupableItem.FlashLight) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.PickupFlashlightDialogue);
+                if (_type == PickupableItem.FlashLight)
+                {
+                    HTJ21GameManager.PlayerTutorial.ShowTutorial(0);
+                    GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.PickupFlashlightDialogue);
+                }
             }
             Destroy(gameObject);
             return true;

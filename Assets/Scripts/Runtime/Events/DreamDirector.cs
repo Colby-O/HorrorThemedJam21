@@ -55,7 +55,7 @@ namespace HTJ21
 
         private void LoadDialogue(string name)
         {
-            _dialogues.Add(name, Resources.Load<DialogueSO>($"Dialogue/Dream/{name}"));
+            _dialogues.Add(name, Resources.Load<DialogueSO>($"Dialogue/Act1/{name}"));
         }
 
         private void StartDialogue(string name)

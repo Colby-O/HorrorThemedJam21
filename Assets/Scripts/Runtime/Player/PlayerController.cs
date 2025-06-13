@@ -16,6 +16,7 @@ namespace HTJ21
         [SerializeField] private PlayerSettings _settings;
         [SerializeField] private Camera _camera;
         [SerializeField] private PickupManager _pickupManager;
+        [SerializeField] private TutorialController _tutorial;
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
@@ -33,6 +34,8 @@ namespace HTJ21
 
         public void LookAt(Transform t) => _lookAt = t;
         public void StopLookAt() => _lookAt = null;
+
+        public TutorialController GetTutorial() => _tutorial;
 
         public Camera GetCamera() => _camera;
 

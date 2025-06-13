@@ -84,7 +84,8 @@ namespace HTJ21
     public class CarController : MonoBehaviour
     {
         [SerializeField] private PlayerSettings _settings;
-        
+        [SerializeField] private TutorialController _tutorial;
+
         [SerializeField] private CarInfo info;
 
         [SerializeField] private float _steeringAngle = 0;
@@ -132,6 +133,8 @@ namespace HTJ21
 
         private Vector3 _lastVelocity;
 
+        public TutorialController GetTutorial() => _tutorial;
+
         public bool InCar() => _camera.gameObject.activeSelf;
 
         public Camera GetCamera() => _carCamera;
@@ -139,7 +142,6 @@ namespace HTJ21
         private bool _isLocked = false;
 
         public bool IsLocked() => _isLocked;
-
 
         public void Lock()
         {

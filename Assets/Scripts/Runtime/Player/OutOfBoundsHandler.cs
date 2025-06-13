@@ -23,6 +23,11 @@ namespace HTJ21
                 newPos.y += _verticalOffset;
                 transform.position = newPos;
                 transform.rotation = Quaternion.identity;
+
+                if (TryGetComponent(out Rigidbody rb))
+                {
+                    rb.linearVelocity = Vector3.zero;
+                }
             }
         }
     }
