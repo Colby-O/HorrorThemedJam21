@@ -86,6 +86,23 @@ namespace HTJ21
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
             RestoreDefaults();
+            GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
+            _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
+        }
+
+        private void Update()
+        {
+            if (_fadeToBlack)
+            {
+                float t = (Time.time - _fadeToBlackStartTime) / _fadeToBlackLength;
+                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(Mathf.Clamp01(t));
+                if (t >= 1)
+                {
+                    _fadeToBlack = false;
+                    _fadeToBlackCallback();
+                    _fadeToBlackCallback = null;
+                }
+            }
         }
 
 
