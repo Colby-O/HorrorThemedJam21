@@ -11,6 +11,7 @@ namespace HTJ21
 {
     public class DreamDirector : MonoBehaviour
     {
+        private static readonly int MatBaseColorId = Shader.PropertyToID("_BaseColor");
         [SerializeField] private Transform _targetAfterLog;
         [SerializeField] private TreeFall _sightingTree;
         [SerializeField] private Transform _sightingLightningHit;
@@ -31,6 +32,8 @@ namespace HTJ21
         [SerializeField] private float _thunderInterval = 2.3f;
         [SerializeField] private float _thunderLifespan = 0.3f;
         [SerializeField] private float _fadeToBlackTime = 3;
+        
+        private Material _moonMaterial;
         
 
         private IWeatherMonoSystem _weather;
@@ -74,6 +77,8 @@ namespace HTJ21
 
         private void Start()
         {
+            _moonMaterial = _moon.GetComponent<MeshRenderer>().material;
+            
             _weather = GameManager.GetMonoSystem<IWeatherMonoSystem>();
             _initialThunderLifespan = _weather.GetThunderHitter().main.startLifetime.constant;
             
@@ -110,6 +115,7 @@ namespace HTJ21
             }));
             GameManager.AddEventListener<Events.DreamFoundCult>(Events.NewDreamFoundCult((from, data) =>
             {
+                _moon.Find("Light").gameObject.SetActive(true);
                 _movingMoon = true;
                 _moonStartPosition = _moon.position;
                 _moonStartScale = _moon.localScale;
@@ -155,9 +161,10 @@ namespace HTJ21
             if (_movingMoon)
             {
                 float t = (Time.time - _moveMoveStartTime) / _moonApproachSpeed;
-                t = 1 + Mathf.Pow(t - 1, _moonLerpExp);
-                _moon.transform.position = Vector3.Lerp(_moonStartPosition, _moonTarget.position, t);
-                _moon.transform.localScale = Vector3.Lerp(_moonStartScale, _moonTarget.localScale, t);
+                float expT = 1 + Mathf.Pow(t - 1, _moonLerpExp);
+                _moon.transform.position = Vector3.Lerp(_moonStartPosition, _moonTarget.position, expT);
+                _moon.transform.localScale = Vector3.Lerp(_moonStartScale, _moonTarget.localScale, expT);
+                _moonMaterial.SetColor(MatBaseColorId, Color.Lerp(Color.white, HTJ21GameManager.Preferences.MoonRedColor, t));
 
                 if (t >= 1)
                 {
