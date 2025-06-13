@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dd51747ac39cce418dd22c824df531a, type: 3}
   m_Name: EnableVerboseCommand
   m_EditorClassIdentifier: 
-  id: -1
+  id: 4
   includeInDatabase: 1
-  _command: Verbose
+  _command: verbose
   _description: Sets verbose level

@@ -48,7 +48,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8172736645975031397
 Transform:
   m_ObjectHideFlags: 0
@@ -262,7 +262,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -306,6 +306,7 @@ GameObject:
   - component: {fileID: 395365650849582277}
   - component: {fileID: 5671014847207815499}
   - component: {fileID: 7279299204589610972}
+  - component: {fileID: 7336613880335867845}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -483,6 +484,8 @@ MonoBehaviour:
   _velY: 0
   _lookAt: {fileID: 0}
   _lookAtSpeed: 4
+  LockMoving: 0
+  UncontrollableApproach: 0
 --- !u!114 &5671014847207815499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -517,6 +520,20 @@ MonoBehaviour:
   _items:
     list: []
     keyCollision: 0
+--- !u!114 &7336613880335867845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5150105805117102395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92c54628dabc81a4783d66f14e682317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _verticalOffset: 0
+  _verticalBounds: {fileID: 0}
 --- !u!1 &7684018280675919263
 GameObject:
   m_ObjectHideFlags: 0
@@ -535,7 +552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8557482328879248548
 Transform:
   m_ObjectHideFlags: 0

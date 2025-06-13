@@ -74,12 +74,11 @@ namespace HTJ21
             }
         }
 
-        private void ResetDialogue()
+        public void ResetDialogue()
         {
             _isDialogueInProgress = false;
             _currentDialogueEvent = null;
             _currentDialogue = null;
-
         }
 
         private void Awake()

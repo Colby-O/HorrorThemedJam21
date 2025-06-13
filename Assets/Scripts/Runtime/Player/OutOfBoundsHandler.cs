@@ -17,7 +17,7 @@ namespace HTJ21
 
         private void LateUpdate()
         {
-            if (transform.position.y < _verticalBounds.transform.position.y)
+            if (_verticalBounds && transform.position.y < _verticalBounds.transform.position.y)
             {
                 Vector3 newPos = GameManager.GetMonoSystem<IGPSMonoSystem>().GetClosestNodePositionToPoint(RoadwayHelper.GetRoadways(), transform.position);
                 newPos.y += _verticalOffset;

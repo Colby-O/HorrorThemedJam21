@@ -277,14 +277,28 @@ namespace HTJ21
                     DontDestroyOnLoad(path);
                 }
 
-                GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame(
-                    (from, data) =>
-                    {
-                        TurnOn();
-                    }
-                ));
-
                 _hasInitialized = true;
+            }
+            else
+            {
+                GameObject[] gpsPaths = GameObject.FindGameObjectsWithTag("GPSPath");
+                foreach (GameObject gpsPath in gpsPaths) 
+                { 
+                    if (gpsPath && gpsPath.scene.name != "DontDestroyOnLoad")
+                    {
+                        Destroy(gpsPath);
+                    }
+                }
+
+                if (SceneManager.GetActiveScene().name == "Act1")
+                {
+                    GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame(
+                        (from, data) =>
+                        {
+                            TurnOn();
+                        }
+                    ));
+                }
             }
 
             _roadways = RoadwayHelper.GetRoadways();
