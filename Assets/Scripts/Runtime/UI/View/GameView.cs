@@ -134,6 +134,16 @@ namespace HTJ21
             }
         }
 
+
+        public void SkipLocation()
+        {
+            if (_isWritingLocation)
+            {
+                StopAllCoroutines();
+                HideLocation();
+            }
+        }
+
         public void ShowLocation(string location, UnityAction onFinished = null)
         {
             _location.transform.parent.gameObject.SetActive(true);

@@ -1,9 +1,9 @@
+using System;
 using PlazmaGames.Core.Debugging;
 using PlazmaGames.Rendering.CRT;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UIElements;
-using Debug = UnityEngine.Debug;
+using UnityEngine.SceneManagement;
 
 namespace HTJ21
 {
@@ -77,13 +77,40 @@ namespace HTJ21
             SetStaticLevel(_defaultNoiseScale);
             SetChromicOffset(_defaultChromicOffset);
             ToggleRendererFeature("Blur", false);
+            _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
         }
+        
+        private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoad;
+        private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoad;
 
-        public void Start()
+        private void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
             RestoreDefaults();
             GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
             _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
+        }
+
+        private void Update()
+        {
+            if (_fadeToBlack)
+            {
+                float t = (Time.time - _fadeToBlackStartTime) / _fadeToBlackLength;
+                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(Mathf.Clamp01(t));
+                if (t >= 1)
+                {
+                    _fadeToBlack = false;
+                    _fadeToBlackCallback();
+                    _fadeToBlackCallback = null;
+                }
+            }
+        }
+
+
+        public void Start()
+        {
+            GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
+            _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
+            RestoreDefaults();
         }
 
         private void Update()

@@ -7,5 +7,6 @@ namespace HTJ21
     {
         public void CloseDialogue();
         public void Load(DialogueSO dialogueEvent);
+        public void ResetDialogue();
     }
 }

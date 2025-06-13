@@ -1,4 +1,5 @@
 using PlazmaGames.Core;
+using PlazmaGames.UI;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -80,6 +81,21 @@ namespace HTJ21
             LoadDialogue("HeadlightTutorial");
             LoadDialogue("DreamSighting");
             _gpsMs = GameManager.GetMonoSystem<IGPSMonoSystem>();
+
+            if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>())
+            {
+                GameManager.GetMonoSystem<IUIMonoSystem>().ClearHistory();
+                GameManager.GetMonoSystem<IUIMonoSystem>().Show<MainMenuView>();
+                HTJ21GameManager.IsPaused = false;
+            }
+
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
+
+            GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame((from, data) =>
+            {
+                if (HTJ21GameManager.Player) HTJ21GameManager.Player.DisablePlayer();
+            }));
             GameManager.AddEventListener<Events.DreamFallenLog>(Events.NewDreamFallenLog((from, data) =>
             {
                 //_gpsMs.MoveTarget(_targetAfterLog.position);

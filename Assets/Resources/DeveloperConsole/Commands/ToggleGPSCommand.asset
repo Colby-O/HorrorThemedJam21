@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b2ebfe353d1d934bb087e2b80934c7e, type: 3}
-  m_Name: ClearCommand
+  m_Script: {fileID: 11500000, guid: b9bf2496013e49048983c03fb74c1bc3, type: 3}
+  m_Name: ToggleGPSCommand
   m_EditorClassIdentifier: 
-  id: 0
+  id: -1
   includeInDatabase: 1
-  _command: clear
-  _description: Clear the console's log
+  _command: gps
+  _description: Toggle the GPS
