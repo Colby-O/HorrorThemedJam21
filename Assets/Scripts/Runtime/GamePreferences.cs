@@ -13,7 +13,6 @@ namespace HTJ21
         [Header("Dialogue -- Act 1")]
         public string Act1Location;
         public DialogueSO IntroDialogue;
-        public DialogueSO DriveTutorialDialogue;
         public DialogueSO PickupFlashlightDialogue;
     }
 }

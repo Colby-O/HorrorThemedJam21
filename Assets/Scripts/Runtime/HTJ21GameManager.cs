@@ -30,6 +30,8 @@ namespace HTJ21
         public static PickupManager PickupManager { get; set; }
         public static CarController Car { get; set; }
         public static CinematicCarController CinematicCar { get; set; }
+        public static TutorialController PlayerTutorial { get; set; }
+        public static TutorialController CarTutorial { get; set; }
 
         public static bool IsPaused { get; set; }
 
@@ -77,8 +79,10 @@ namespace HTJ21
             Player = FindAnyObjectByType<PlayerController>();
             Car = FindAnyObjectByType<CarController>();
             if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
+            if (Car) CarTutorial = Car.GetTutorial();
             if (Player) PickupManager = Player.GetComponent<PickupManager>();
             if (Player) Inspector = Player.GetComponent<Inspector>();
+            if (Player) PlayerTutorial = Player.GetTutorial();
         }
 
         private void OnSceneUnload(Scene scene)

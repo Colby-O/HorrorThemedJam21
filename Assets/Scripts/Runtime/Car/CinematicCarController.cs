@@ -93,7 +93,7 @@ namespace HTJ21
                     HTJ21GameManager.Car.SetDisableState(false); 
                     Disable();
 
-                    GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.DriveTutorialDialogue);
+                    HTJ21GameManager.CarTutorial.ShowTutorial(0);
                 }
             );
         }
