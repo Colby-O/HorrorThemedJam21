@@ -10,8 +10,6 @@ namespace HTJ21
 
         public bool IsInteractable();
 
-        public void OnPickup(Interactor interactor);
-
         public bool Interact(Interactor interactor);
 
         public void EndInteraction();

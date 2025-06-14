@@ -41,7 +41,7 @@ namespace HTJ21
             )
             {
                 IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-                if (interactable != null) StartInteraction(interactable);
+                if (interactable != null && interactable.IsInteractable()) StartInteraction(interactable);
             }
         }
 

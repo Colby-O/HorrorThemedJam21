@@ -43,11 +43,6 @@ namespace HTJ21
             return true;
         }
 
-        public void OnPickup(Interactor interactor)
-        {
-
-        }
-
         public void RemoveOutline()
         {
             _hasOutline = false;
