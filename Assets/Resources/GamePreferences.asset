@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GamePreferences
   m_EditorClassIdentifier: 
   SelectedLanguage: 0
-  ViewDistance: 45
-  ComponentViewDistance: 30
+  ViewDistance: 50
+  ComponentViewDistance: 50
   ComputeViewDistanceInterval: 1
   MoonRedColor: {r: 1, g: 0.56078434, b: 0.56078434, a: 0}
   Act1Location: Snoqualmie, Washington\n11:00pm
