@@ -57,6 +57,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: cea9a17b6805ba54cb51a1e2c30dcad3, type: 3}
   - {fileID: 8300000, guid: 071b3f01e5a003b4d82d308ee52b8251, type: 3}
   _isLightingOn: 1
+  _isRainOn: 1
 --- !u!1 &1151677369100752972
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debug: 1
-  _verbose: 2
+  _verbose: 1
   _monoSystemHolder: {fileID: 7202734959094077488}
   _uiSystem: {fileID: 2999991884575964212}
   _animSystem: {fileID: 8189270598657297784}
@@ -280,6 +281,7 @@ MonoBehaviour:
   _rendererData: {fileID: 11400000, guid: f288ae1f4751b564a96ac7587541f7a2, type: 2}
   _defaultNoiseScale: 0
   _defaultChromicOffset: 0
+  _defaultScreenBend: 10000
 --- !u!1 &6741302488116188014
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,6 +504,7 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
   _roadways: []
   _currentPath: []
+  _hasInitialized: 0
 --- !u!1 &7269651998341747520
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,6 +745,7 @@ MonoBehaviour:
   _ambientSource: {fileID: 4362962532019312449}
   _sfxMainSource: {fileID: 6612727545592042322}
   _audioSources: []
+  _hasInitialized: 0
 --- !u!1 &7630338113596959618
 GameObject:
   m_ObjectHideFlags: 0
