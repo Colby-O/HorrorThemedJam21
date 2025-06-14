@@ -1,13 +1,24 @@
+using PlazmaGames.Attribute;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HTJ21
 {
     public class CarEnterInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] private GameObject _outline;
+        [Header("Outline")]
+        [SerializeField] private MeshRenderer _outlineMR;
+        [SerializeField, ReadOnly] private bool _hasOutline = false;
+
         public void AddOutline()
         {
-            _outline.SetActive(true);
+            _hasOutline = true;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 0);
+            }
+            _outlineMR.materials = mats;
         }
 
         public void EndInteraction()
@@ -39,17 +50,13 @@ namespace HTJ21
 
         public void RemoveOutline()
         {
-            _outline.SetActive(false);
-        }
-
-        private void Awake()
-        {
-            RemoveOutline();
-        }
-
-        private void LateUpdate()
-        {
-            RemoveOutline();
+            _hasOutline = false;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 1);
+            }
+            _outlineMR.materials = mats;
         }
     }
 }

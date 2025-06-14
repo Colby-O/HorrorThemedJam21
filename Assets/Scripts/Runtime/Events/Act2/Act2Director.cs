@@ -1,3 +1,4 @@
+using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace HTJ21
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
 
+            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
             GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogue();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
