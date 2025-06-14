@@ -1,17 +1,32 @@
+using PlazmaGames.Attribute;
 using PlazmaGames.Core;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HTJ21
 {
     public class ItemPickup : MonoBehaviour, IInteractable
     {
-        [SerializeField] private GameObject _outline;
         [SerializeField] private PickupableItem _type;
+
+        [Header("Outline")]
+        [SerializeField] private MeshRenderer _outlineMR;
+
+        [SerializeField, ReadOnly] private bool _hasOutline = false;
 
         public void AddOutline()
         {
-            _outline.SetActive(true);
+            if (!_outlineMR) return;
+
+            _hasOutline = true;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 0);
+            }
+            _outlineMR.materials = mats;
         }
+
 
         public void EndInteraction()
         {
@@ -51,12 +66,15 @@ namespace HTJ21
 
         public void RemoveOutline()
         {
-            _outline.SetActive(false);
-        }
+            if (!_outlineMR) return;
 
-        private void Awake()
-        {
-            RemoveOutline();
+            _hasOutline = false;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 1);
+            }
+            _outlineMR.materials = mats;
         }
     }
 }
