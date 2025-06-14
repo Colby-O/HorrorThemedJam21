@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1221165659320413547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2457737782143026998}
+  - component: {fileID: 4385833760271427540}
+  m_Layer: 0
+  m_Name: RoadMaker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2457737782143026998
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221165659320413547}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -236.04057, y: -18.18969, z: 267.19376}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4385833760271427540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221165659320413547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58b085b1bc4367479390b0fac32065b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _regenerate: 0
+  _removeAllIntersections: 0
+  _destroy: 0
+  _debugMode: 0
+  _resolution: 0.01
+  _roadways:
+  - container: {fileID: 0}
+    splineIndex: 0
+    segments: []
+  - container: {fileID: 0}
+    splineIndex: 1
+    segments: []
+  - container: {fileID: 0}
+    splineIndex: 2
+    segments: []
+  - container: {fileID: 0}
+    splineIndex: 3
+    segments: []
+  _intersections:
+  - _junctions:
+    - splineIndex: 0
+      knotIndex: 0
+      splineContainer: {fileID: 0}
+    - splineIndex: 0
+      knotIndex: 4
+      splineContainer: {fileID: 0}
+    - splineIndex: 2
+      knotIndex: 3
+      splineContainer: {fileID: 0}
+    curveWeights:
+    - 0.64
+    - 0.59
+    - 0.27
+  - _junctions:
+    - splineIndex: 1
+      knotIndex: 0
+      splineContainer: {fileID: 0}
+    - splineIndex: 2
+      knotIndex: 0
+      splineContainer: {fileID: 0}
+    - splineIndex: 3
+      knotIndex: 0
+      splineContainer: {fileID: 0}
+    curveWeights:
+    - 0.59
+    - 0.5
+    - 0.68
+  _roadWidth: 3.5
+  _curveWidth: 1
+  _curveHeight: 0.1
+  _roadMat: {fileID: 2100000, guid: dcd5b6732d6209a84a85c844166f06b8, type: 2}
+  _intersectionMat: {fileID: 2100000, guid: 2d58ce02b6889a44caf4eb9569576be9, type: 2}
+  _curbMat: {fileID: 2100000, guid: 733cd026d49b7984786770a19fee372e, type: 2}
