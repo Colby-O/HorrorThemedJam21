@@ -16,7 +16,7 @@ MonoBehaviour:
   _shader: {fileID: 4800000, guid: 22c8e59f6a328e04f81d588008473cb8, type: 3}
   _injectionPoint: 550
   _screenResolution: {x: 256, y: 256}
-  _screenBend: 1000000
+  _screenBend: 100000
   _screenRoundness: 0
   _vignetteOpacity: 1
   _scanLineVerticalOpacity: 0.16
