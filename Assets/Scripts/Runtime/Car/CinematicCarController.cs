@@ -27,7 +27,7 @@ namespace HTJ21
     public class CinematicCarController : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] SplineContainer _path;
+        [SerializeField] SplineContainer _path = null;
         [SerializeField] Camera _camera;
         [SerializeField] Camera _cameraMain;
         [SerializeField] Transform _cameraTarget;
@@ -115,6 +115,7 @@ namespace HTJ21
 
         private void SnapCarToClosestKnot()
         {
+            if (_path == null) return;
             float minDst = float.MaxValue;
             Vector3 minPos = Vector3.zero;
             int minIndex = -1;
@@ -199,7 +200,7 @@ namespace HTJ21
 
         private void Update()
         {
-            if (_enabled) Move();
+            if (_enabled && _path != null) Move();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace HTJ21
 
         public static Camera GetActiveCamera()
         {
-            if (GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentView<MainMenuView>()) return CinematicCar.GetCamera();
+            if (GameManager.HasMonoSystem<IUIMonoSystem>() && GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentView<MainMenuView>()) return CinematicCar.GetCamera();
             if (Player && Car && Player.IsInCar()) return Car.GetCamera();
             if (Player) return Player.GetCamera();
             return null;

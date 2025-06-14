@@ -5,8 +5,10 @@ using UnityEngine;
 using UnityEngine.Splines;
 
 #if UNITY_EDITOR
+using System.ComponentModel;
 using UnityEditor.Callbacks;
 using UnityEditor.Splines;
+using UnityEditor.Timeline;
 #endif
 
 namespace HTJ21
@@ -20,7 +22,7 @@ namespace HTJ21
         [SerializeField, InspectorButton("ClearRoadways")] private bool _destroy = false;
         [SerializeField] private bool _debugMode = false;
         [SerializeField] private float _resolution = 1;
-        [SerializeField, ReadOnly] private List<Roadway> _roadways;
+        [SerializeField, PlazmaGames.Attribute.ReadOnly] private List<Roadway> _roadways;
         [SerializeField] private List<RoadwayIntersection> _intersections;
 
         [Header("Road Parameters")]
@@ -137,7 +139,7 @@ namespace HTJ21
         private void OnSplineChanged(Spline _, int __, SplineModification ___)
         {
             GenerateRoadway();
-            if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
+            //if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
 
@@ -185,7 +187,7 @@ namespace HTJ21
         private static void OnScriptsReloaded()
         {
             if (Instance != null) Instance.GenerateRoadway();
-            if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
+            //if (TerrainRoadwayConformer.Instance != null && TerrainRoadwayConformer.Instance.enabled) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
         public float RoadWidth() => _roadWidth;
