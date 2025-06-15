@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Act3.unity
     guid: 7dc20e9d62800e1c89ab48104ee9ce75
+  - enabled: 1
+    path: Assets/Scenes/PortalTest.unity
+    guid: 79a0160b9c07fa14fa032cf037f5953e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
