@@ -34,6 +34,11 @@ namespace HTJ21
             _nextDialogue = true;
         }
 
+        public bool IsLoaded(DialogueSO dialogueEvent)
+        {
+            return _dialogueEvents.Contains(dialogueEvent) || (_currentDialogueEvent != null && _currentDialogueEvent.Equals(dialogueEvent));
+        }
+
         public void Load(DialogueSO dialogueEvent)
         {
             _dialogueEvents.Enqueue(dialogueEvent);

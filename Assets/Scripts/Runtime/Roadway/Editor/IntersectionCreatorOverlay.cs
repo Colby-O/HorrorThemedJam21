@@ -127,7 +127,7 @@ namespace HTJ21
         {
             if (currentIntersection != null)
             {
-                Button removeButton = new Button(() => RemoveIntersection(intersection))
+                Button removeButton = new UnityEngine.UIElements.Button(() => RemoveIntersection(intersection))
                 {
                     text = "Remove"
                 };
@@ -135,7 +135,7 @@ namespace HTJ21
 
                 if (_selectedKnots != null && newKnots != null && newKnots.Count > 1)
                 {
-                    Button recreateButton = new Button(() => RecreateIntersection(currentIntersection))
+                    Button recreateButton = new UnityEngine.UIElements.Button(() => RecreateIntersection(currentIntersection))
                     {
                         text = "Recreate"
                     };
@@ -146,7 +146,7 @@ namespace HTJ21
             {
                 if (_selectedKnots != null && _selectedKnots.Count > 1)
                 {
-                    Button createButton = new Button(() => CreateIntersection(intersection))
+                    Button createButton = new UnityEngine.UIElements.Button(() => CreateIntersection(intersection))
                     {
                         text = "Create"
                     };

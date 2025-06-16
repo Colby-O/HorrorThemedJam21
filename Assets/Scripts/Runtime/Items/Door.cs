@@ -18,6 +18,11 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _onFirstTryLockedDialogue;
+        [SerializeField] private DialogueSO _onLockedDialogue;
+        [SerializeField, ReadOnly] private bool _hasAttemptedToUnlock = false;
+
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _openSound;
@@ -62,6 +67,28 @@ namespace HTJ21
         {
             if (_isOpen) return;
             if (_inProgress) return;
+
+            if (_isLocked)
+            {
+                if 
+                (
+                    !GameManager.GetMonoSystem<IDialogueMonoSystem>().IsLoaded(_onLockedDialogue) && 
+                    !GameManager.GetMonoSystem<IDialogueMonoSystem>().IsLoaded(_onFirstTryLockedDialogue)
+                )
+                {
+                    if (!_hasAttemptedToUnlock)
+                    {
+
+                        if (_onFirstTryLockedDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onFirstTryLockedDialogue);
+                        _hasAttemptedToUnlock = true;
+                    }
+                    else
+                    {
+                        if (_onLockedDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onLockedDialogue);
+                    }
+                }
+                return;
+            }
 
             if (_audioSource) _audioSource.PlayOneShot(_openSound);
 
@@ -135,7 +162,7 @@ namespace HTJ21
 
         public bool IsInteractable()
         {
-            return !_isLocked;
+            return true;
         }
     }
 }

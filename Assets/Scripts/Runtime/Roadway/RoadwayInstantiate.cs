@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEngine.Splines;
 using UnityEngine.UI;
 using Random = Unity.Mathematics.Random;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor.Splines;
@@ -119,6 +121,8 @@ namespace HTJ21
 				this.go = go;
 			}
 		}
+
+        [SerializeField, ReadOnly] List<GameObject> _generateNearObjects;
 
 		private List<MeshComponent> _components;
         private List<DrawnSection> _drawnSections = new();
@@ -370,14 +374,53 @@ namespace HTJ21
 		{
 			Generate();
             _hasRanFirstTime = false;
+
+            _generateNearObjects = GameObject.FindGameObjectsWithTag("GenerateNear").ToList();
+        }
+
+        private bool CheckFoOverlap(DrawnSection s)
+        {
+            List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
+            if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
+            float d = GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000;
+            foreach (GameObject obj in toCheck)
+            {
+                if (s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(obj.transform.position, new float3(d, d, d))))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool GetClosestObject(Vector3 pos, out float distanceSq)
+        {
+            float minDst = float.MaxValue;
+            GameObject nearbyObj = null;
+
+            List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
+            if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
+
+            foreach (GameObject obj in toCheck)
+            {
+                float dst = (obj.transform.position - pos).sqrMagnitude;
+               if (dst < minDst)
+                {
+                    nearbyObj = obj;
+                    minDst = dst;
+                }
+            }
+
+            distanceSq = minDst;
+            return nearbyObj != null;
         }
 
         private void MarkInViewDistance()
         {
             foreach (DrawnSection s in _drawnSections)
             {
-                float d = GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000;
-                if (HTJ21GameManager.CurrentControllable && !s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(HTJ21GameManager.CurrentControllable.transform.position, new float3(d, d, d))))
+                if (!CheckFoOverlap(s))
                 {
                     s.inViewDistance = false;
                     continue;
@@ -391,9 +434,8 @@ namespace HTJ21
                         foreach (Matrix4x4 matrix in inst.matrices)
                         {
                             Vector3 pos = matrix.GetColumn(3);
-                            if (HTJ21GameManager.CurrentControllable)
+                            if (GetClosestObject(pos, out float distanceSq))
                             {
-                                float distanceSq = (HTJ21GameManager.CurrentControllable.transform.position - pos).sqrMagnitude;
                                 if (distanceSq >= MathExt.Square(HTJ21GameManager.Preferences.ViewDistance)) continue;
                             }
                             part.matrices.Add(matrix * part.localMatrix);

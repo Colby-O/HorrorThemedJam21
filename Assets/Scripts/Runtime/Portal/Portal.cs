@@ -13,6 +13,10 @@ namespace HTJ21
         [SerializeField] private Camera _playerCamera;
         [SerializeField, ReadOnly] private RenderTexture _viewTex;
 
+        [SerializeField] private bool _enableTranslation = true;
+        [SerializeField] private bool _enableRotation = true;
+        [SerializeField] private bool _enableNearClipCorrection = true;
+
         [SerializeField] private float nearClipOffset = 0.05f;
         [SerializeField] private float nearClipLimit = 0.2f;
 
@@ -99,9 +103,9 @@ namespace HTJ21
             CreateRenderTexture();
 
             Matrix4x4 matrix = transform.localToWorldMatrix * _linkedPortal.transform.worldToLocalMatrix * _playerCamera.transform.localToWorldMatrix;
-            _portalCamera.transform.SetPositionAndRotation(matrix.GetColumn(3), matrix.rotation);
+            _portalCamera.transform.SetPositionAndRotation((_enableTranslation ? matrix.GetColumn(3) : _portalCamera.transform.position), (_enableRotation ? matrix.rotation : _portalCamera.transform.rotation));
 
-            SetNearClipPlane();
+            if (_enableNearClipCorrection) SetNearClipPlane();
             SetThickness(_playerCamera.transform.position);
             _portalCamera.Render();
 

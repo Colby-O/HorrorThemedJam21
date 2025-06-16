@@ -34,6 +34,8 @@ namespace HTJ21
 
         private void CheckForInteractionInteract()
         {
+            if (HTJ21GameManager.Inspector.IsInspecting()) return;
+
             if
             (
                 Physics.Raycast(_head.position, (_interactionPoint.position - _head.position).normalized, out RaycastHit hit, _interactionRadius, _interactionLayer) ||
@@ -47,6 +49,8 @@ namespace HTJ21
 
         private void CheckForPossibleInteractionInteract()
         {
+            if (HTJ21GameManager.Inspector.IsInspecting()) return;
+
             List<IInteractable> possibleInteractable = new List<IInteractable>();
 
             if

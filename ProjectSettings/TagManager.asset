@@ -12,6 +12,7 @@ TagManager:
   - TeleportTarget
   - LightingSystem
   - FadeToBlackScreen
+  - GenerateNear
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Roadway
   - Interactable
   - Player
-  - 
+  - Clock
   - 
   - 
   - 

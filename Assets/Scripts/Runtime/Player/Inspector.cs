@@ -38,7 +38,7 @@ namespace HTJ21
         private Dictionary<Transform, Vector3> _origPositions;
         private Dictionary<Transform, Quaternion> _origRotations;
 
-        public bool IsInspecting() => _isInspecting;
+        public bool IsInspecting() => _isInspecting || _isMovingBack;
 
         private void DisablePlayer()
         {
