@@ -1,3 +1,4 @@
+using PlazmaGames.Attribute;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -15,10 +16,11 @@ namespace HTJ21
         [SerializeField] InspectType _inspectType;
         [SerializeField] Transform _offset;
 
-        public void AddOutline()
-        {
+        [Header("Outline")]
+        [SerializeField] private MeshRenderer _outlineMR;
+        [SerializeField, ReadOnly] private bool _hasOutline = false;
 
-        }
+        public bool CanInteract { get; set; }
 
         public void EndInteraction()
         {
@@ -28,7 +30,7 @@ namespace HTJ21
         public string GetHint()
         {
 
-            return $"Click 'E' to {((_inspectType == InspectType.Moveable) ? "pickup" : "inspect")}";
+            return $"Click 'E' to {(HTJ21GameManager.Inspector.IsInspecting() ? "stop" : "")} {((_inspectType == InspectType.Moveable) ? "pickup" : "inspect")}{(HTJ21GameManager.Inspector.IsInspecting() ? "ing" : "")}";
         }
 
         public bool Interact(Interactor interactor)
@@ -39,17 +41,41 @@ namespace HTJ21
 
         public bool IsInteractable()
         {
-            return true;
+            return CanInteract;
         }
 
-        public void OnPickup(Interactor interactor)
+        public void AddOutline()
         {
-
+            _hasOutline = true;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 0);
+            }
+            _outlineMR.materials = mats;
         }
 
         public void RemoveOutline()
         {
+            if (!_outlineMR) return;
 
+            _hasOutline = false;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 1);
+            }
+            _outlineMR.materials = mats;
+        }
+
+        private void Awake()
+        {
+            CanInteract = true;
+        }
+
+        private void LateUpdate()
+        {
+            if (HTJ21GameManager.Inspector.IsInspecting() && _hasOutline) RemoveOutline();
         }
     }
 }

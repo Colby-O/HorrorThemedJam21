@@ -11,7 +11,6 @@ namespace HTJ21
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
-
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
         public void AddOutline()
@@ -26,7 +25,6 @@ namespace HTJ21
             }
             _outlineMR.materials = mats;
         }
-
 
         public void EndInteraction()
         {
