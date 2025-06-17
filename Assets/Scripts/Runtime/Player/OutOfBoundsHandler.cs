@@ -19,7 +19,7 @@ namespace HTJ21
         {
             if (_verticalBounds && transform.position.y < _verticalBounds.transform.position.y)
             {
-                Vector3 newPos = GameManager.GetMonoSystem<IGPSMonoSystem>().GetClosestNodePositionToPoint(RoadwayHelper.GetRoadways(), transform.position);
+                Vector3 newPos = GameManager.GetMonoSystem<IGPSMonoSystem>().GetClosestNodePositionToPoint(RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer()), transform.position);
                 newPos.y += _verticalOffset;
                 transform.position = newPos;
                 transform.rotation = Quaternion.identity;

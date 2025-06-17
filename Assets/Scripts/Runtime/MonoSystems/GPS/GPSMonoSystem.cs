@@ -54,7 +54,6 @@ namespace HTJ21
         [SerializeField, ReadOnly] private List<GPSNode> _currentPath;
         [SerializeField, ReadOnly] private bool _hasInitialized = false;
 
-
         private LineRenderer _renderer;
 
         public Transform GetTarget() => _target;
@@ -75,16 +74,16 @@ namespace HTJ21
 
             foreach (Roadway road in roadways)
             {
-                Spline spline = road.container.Splines[road.splineIndex];
+                Spline spline = RoadwayCreator.Instance.GetContainer().Splines[road.splineIndex];
                 for (int i = 0; i < spline.Count; i++)
                 {
                     BezierKnot knot = spline[i];
-                    Vector3 position = road.container.transform.TransformPoint(knot.Position);
+                    Vector3 position = RoadwayCreator.Instance.GetContainer().transform.TransformPoint(knot.Position);
                     float dst = Vector3.Distance(target, position);
 
                     if (dst < minDst)
                     {
-                        minNode = new GPSNode(road.container, road.splineIndex, i, position);
+                        minNode = new GPSNode(RoadwayCreator.Instance.GetContainer(), road.splineIndex, i, position);
                         minDst = dst;
                     }
                 }
@@ -108,14 +107,14 @@ namespace HTJ21
 
             foreach (RoadwayIntersection intersection in intersections)
             {
-                JunctionInfo thisJunction = new JunctionInfo(node.splineIndex, node.knotIndex, node.container);
+                JunctionInfo thisJunction = new JunctionInfo(node.splineIndex, node.knotIndex);
                 if (intersection.HasJunction(thisJunction))
                 {
                     foreach (JunctionInfo junction in intersection.GetJunctions())
                     {
                         if (!junction.Equals(thisJunction))
                         {
-                            neighbors.Add(new GPSNode(junction.splineContainer, junction.splineIndex, junction.knotIndex, junction.splineContainer.transform.TransformPoint(junction.splineContainer[junction.splineIndex][junction.knotIndex].Position)));
+                            neighbors.Add(new GPSNode(RoadwayCreator.Instance.GetContainer(), junction.splineIndex, junction.knotIndex, RoadwayCreator.Instance.GetContainer().transform.TransformPoint(RoadwayCreator.Instance.GetContainer()[junction.splineIndex][junction.knotIndex].Position)));
                         }
                     }
                 }
@@ -308,7 +307,7 @@ namespace HTJ21
                 }
             }
 
-            _roadways = RoadwayHelper.GetRoadways();
+            _roadways = RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer());
             _target = GameObject.FindWithTag("GPSTarget")?.transform;
             SyncTarget();
             TurnOff();

@@ -45,7 +45,7 @@ namespace HTJ21
             {
                 float t = junction.knotIndex == 0 ? 0f : 1f;
 
-                RoadwayHelper.GetRoadwayWidthAt(junction.splineContainer, junction.splineIndex, t, roadWidth, out Vector3 rightPT, out Vector3 leftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), junction.splineIndex, t, roadWidth, out Vector3 rightPT, out Vector3 leftPT);
 
                 edges.Add(junction.knotIndex == 0 ? new Edge(leftPT, rightPT) : new Edge(rightPT, leftPT));
                 center += rightPT;
@@ -99,7 +99,7 @@ namespace HTJ21
             {
                 float t = junction.knotIndex == 0 ? 0f : 1f;
 
-                RoadwayHelper.GetRoadwayWidthAt(junction.splineContainer, junction.splineIndex, t, roadWidth + curveWidth, out Vector3 rightPT, out Vector3 leftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), junction.splineIndex, t, roadWidth + curveWidth, out Vector3 rightPT, out Vector3 leftPT);
 
                 edges.Add(junction.knotIndex == 0 ? new Edge(leftPT, rightPT) : new Edge(rightPT, leftPT));
                 center += rightPT;
@@ -346,7 +346,7 @@ namespace HTJ21
 
             for (int i = 0; i < roadway.segments.Count; i++)
             {
-                RoadwayHelper.GetRoadwayWidthAt(roadway.container, roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
                 vertices.Add(rightPT);
                 vertices.Add(leftPT);
             }
@@ -375,7 +375,7 @@ namespace HTJ21
 
             uvs.AddRange(new List<Vector2> { new Vector2(uvOffset, 0), new Vector2(uvOffset, 1) });
 
-            if (roadway.container.Splines[roadway.splineIndex].Closed)
+            if (RoadwayCreator.Instance.GetContainer().Splines[roadway.splineIndex].Closed)
             {
                 idx = (roadway.segments.Count - 1) * 2;
 
@@ -399,8 +399,8 @@ namespace HTJ21
 
             for (int i = 0; i < roadway.segments.Count; i++)
             {
-                RoadwayHelper.GetRoadwayWidthAt(roadway.container, roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
-                RoadwayHelper.GetRoadwayWidthAt(roadway.container, roadway.splineIndex, roadway.segments[i], roadWidth + curveWidth, out Vector3 curbRightPT, out Vector3 curbLeftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth + curveWidth, out Vector3 curbRightPT, out Vector3 curbLeftPT);
 
                 Vector3[] points = new Vector3[]
                 {

@@ -55,7 +55,7 @@ namespace HTJ21
                     _selectedKnots = new List<SelectableKnot>();
                     foreach (JunctionInfo info in currentIntersection.GetJunctions())
                     {
-                        _selectedKnots.Add(new SelectableKnot(new SplineInfo(info.splineContainer, info.splineIndex), info.knotIndex));
+                        _selectedKnots.Add(new SelectableKnot(new SplineInfo(RoadwayCreator.Instance.GetContainer(), info.splineIndex), info.knotIndex));
                     }
 
                     foreach (SelectableKnot knot in newKnots)
@@ -181,7 +181,6 @@ namespace HTJ21
                     intersection.AddJunction(
                         knot.SplineInfo.Index,
                         knot.KnotIndex,
-                        knot.SplineInfo.Container as SplineContainer,
                         _selectedCurveWeights
                     );
                 }
