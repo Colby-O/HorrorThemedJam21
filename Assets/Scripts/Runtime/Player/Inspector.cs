@@ -36,6 +36,10 @@ namespace HTJ21
         [SerializeField, ReadOnly] private Transform _objectOffset;
         [SerializeField, ReadOnly] private string _currentText;
         [SerializeField, ReadOnly] private bool _isReading;
+        [SerializeField, ReadOnly] private Transform _currentTargetOverride;
+
+        [SerializeField, ReadOnly] private float _yaw = 0f;
+        [SerializeField, ReadOnly] private float _pitch = 0f;
 
         private Dictionary<Transform, Vector3> _origPositions;
         private Dictionary<Transform, Quaternion> _origRotations;
@@ -56,7 +60,7 @@ namespace HTJ21
             _playerController.LockMovement = false;
         }
 
-        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, string text = "")
+        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, Transform targetOverride = null, string text = "")
         {
             if (obj == null || _isInspecting || _isMovingBack) return;
 
@@ -68,6 +72,7 @@ namespace HTJ21
             _objectOffset = offset;
             _currentInsectType = inspectType;
             _currentText = text;
+            _currentTargetOverride = targetOverride;
 
             if (_currentInsectType != InspectType.Moveable) DisablePlayer();
 
@@ -88,6 +93,7 @@ namespace HTJ21
             if (_isReading) ToggleRead();
             _isInspecting = false;
             _isMovingBack = true;
+            _currentTargetOverride = null;
             _currentText = string.Empty;
             if (_currentInsectType != InspectType.Goto) EnablePlayer();
         }
@@ -102,8 +108,12 @@ namespace HTJ21
                 _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _offset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
 
                 Vector2 deltaMouse = GameManager.GetMonoSystem<IInputMonoSystem>().RawLook;
-                _inspectingTarget.Rotate(Vector3.up * (deltaMouse.x * _rotationSpeed * UnityEngine.Time.deltaTime), Space.World);
-                _inspectingTarget.Rotate(Vector3.left * (deltaMouse.y * _rotationSpeed * UnityEngine.Time.deltaTime), Space.World);
+
+                _yaw += deltaMouse.x * _rotationSpeed * UnityEngine.Time.deltaTime;
+                _pitch -= deltaMouse.y * _rotationSpeed * UnityEngine.Time.deltaTime;
+
+                Quaternion targetRotation = Quaternion.Euler(_pitch, _yaw, 0);
+                _inspectingTarget.rotation = targetRotation;
             }
             else if (_currentInsectType == InspectType.Moveable)
             {
@@ -123,7 +133,7 @@ namespace HTJ21
             }
             else if (_currentInsectType == InspectType.Goto)
             {
-                _head.transform.rotation = Quaternion.LookRotation((_inspectingObject.transform.position - _objectOffset.transform.position).normalized);
+                _head.transform.rotation = Quaternion.LookRotation(((_currentTargetOverride ? _currentTargetOverride.position : _inspectingObject.transform.position) - _objectOffset.transform.position).normalized);
                 _head.transform.position = Vector3.Lerp(_head.transform.position, _objectOffset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
             }
         }

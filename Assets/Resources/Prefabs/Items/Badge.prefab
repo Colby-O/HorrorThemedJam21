@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inspectType: 1
   _offset: {fileID: 0}
+  text: 
   _outlineMR: {fileID: 2985690401906400620}
   _hasOutline: 0
 --- !u!65 &7019515964434911684
@@ -191,6 +192,22 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c4bf0b3982df4d94bb26d3495b615abb, type: 2}
+    - target: {fileID: 6462023439894114556, guid: a5ef351f6157fea41ad32adc3b066649, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1414960052b10b74498dc40bd9f8bd06, type: 2}
+    - target: {fileID: 6462023439894114556, guid: a5ef351f6157fea41ad32adc3b066649, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8b4e36a659bc349499d2bcac16c34ddc, type: 2}
+    - target: {fileID: 6462023439894114556, guid: a5ef351f6157fea41ad32adc3b066649, type: 3}
+      propertyPath: 'm_Materials.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0d196b27804dbb843b5261d2429d872c, type: 2}
+    - target: {fileID: 6462023439894114556, guid: a5ef351f6157fea41ad32adc3b066649, type: 3}
+      propertyPath: 'm_Materials.Array.data[5]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5d4856e3245c9b04ebf8ee1d0db30eb9, type: 2}
     - target: {fileID: 7267398418362850307, guid: a5ef351f6157fea41ad32adc3b066649, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

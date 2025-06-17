@@ -13,6 +13,7 @@ namespace HTJ21
 
         [Header("Settings")]
         [SerializeField] private float _openSpeed = 1.5f;
+        [SerializeField] private int _directionOverride = 0;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
@@ -95,7 +96,7 @@ namespace HTJ21
             _isOpen = true;
             _inProgress = true;
             float start = CurrentAngle();
-            float target = (Vector3.Dot(_center.right, (_center.position - from.position).normalized) < 0) ? -90 : 90;
+            float target = ((_directionOverride == 0 && Vector3.Dot(_center.right, (_center.position - from.position).normalized) < 0) || _directionOverride < 0) ? -90 : 90;
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                 this,
                 _openSpeed,
