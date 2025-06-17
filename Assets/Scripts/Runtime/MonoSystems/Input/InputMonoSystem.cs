@@ -29,6 +29,8 @@ namespace HTJ21
         public UnityEvent SkipCallback { get; private set; }
         public UnityEvent LightCallback { get; private set; }
 
+        public UnityEvent RCallback { get; private set; }
+
         private void HandleMoveAction(InputAction.CallbackContext e)
         {
             RawMovement = e.ReadValue<Vector2>();
@@ -57,12 +59,19 @@ namespace HTJ21
             SkipCallback.Invoke();
         }
 
+        private void HandleRAction(InputAction.CallbackContext e)
+        {
+            if (HTJ21GameManager.IsPaused) return;
+            RCallback.Invoke();
+        }
+
         private void Awake()
         {
             if (_input == null) _input = GetComponent<PlayerInput>();
             InteractionCallback = new UnityEvent();
             SkipCallback = new UnityEvent();
             LightCallback = new UnityEvent();
+            RCallback = new UnityEvent();
 
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
@@ -76,6 +85,7 @@ namespace HTJ21
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
             _lightAction.performed += HandleLightAction;
+            _reverseAction.performed += HandleRAction;
         }
 
         private void Update()

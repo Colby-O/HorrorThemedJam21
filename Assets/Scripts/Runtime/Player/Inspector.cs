@@ -1,6 +1,7 @@
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.Core.Utils;
+using PlazmaGames.UI;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private Transform _inspectingTarget;
         [SerializeField, ReadOnly] private Transform _inspectingObject;
         [SerializeField, ReadOnly] private Transform _objectOffset;
+        [SerializeField, ReadOnly] private string _currentText;
+        [SerializeField, ReadOnly] private bool _isReading;
 
         private Dictionary<Transform, Vector3> _origPositions;
         private Dictionary<Transform, Quaternion> _origRotations;
@@ -54,16 +57,18 @@ namespace HTJ21
             _playerController.LockMovement = false;
         }
 
-        public void StartInspect(Transform obj, InspectType inspectType, Transform offset)
+        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, string text = "")
         {
             if (obj == null || _isInspecting || _isMovingBack) return;
 
             _isInspecting = true;
+            _isReading = false;
             _staredInspectThisFrame = true;
             _inspectingObject = obj;
             _inspectingTarget = (inspectType == InspectType.Goto) ? _head : obj;
             _objectOffset = offset;
             _currentInsectType = inspectType;
+            _currentText = text;
 
             if (_currentInsectType != InspectType.Moveable) DisablePlayer();
 
@@ -81,8 +86,10 @@ namespace HTJ21
         public void EndInspect()
         {
             if (!_isInspecting) return;
+            if (_isReading) ToggleRead();
             _isInspecting = false;
             _isMovingBack = true;
+            _currentText = string.Empty;
             if (_currentInsectType != InspectType.Goto) EnablePlayer();
         }
 
@@ -90,8 +97,9 @@ namespace HTJ21
         {
             if (!_inspectingTarget) return;
 
-            if (_currentInsectType == InspectType.ComeTo)
+            if (_currentInsectType == InspectType.ComeTo || _currentInsectType == InspectType.Readable)
             {
+                if (_isReading && _currentInsectType == InspectType.Readable) return;
                 _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _offset.transform.position, _moveRate);
 
                 Vector2 deltaMouse = GameManager.GetMonoSystem<IInputMonoSystem>().RawLook;
@@ -159,14 +167,32 @@ namespace HTJ21
             }
         }
 
+        private void ToggleRead()
+        {
+            if (_isMovingBack || !_isInspecting || _currentInsectType != InspectType.Readable) return;
+
+            _isReading = !_isReading;
+
+            if (_isReading)
+            {
+                GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowText(_currentText);
+            }
+            else
+            {
+                GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().HideText();
+            }
+        }
+
         private void OnEnable()
         {
             GameManager.GetMonoSystem<IInputMonoSystem>().InteractionCallback.AddListener(EndInspect);
+            GameManager.GetMonoSystem<IInputMonoSystem>().RCallback.AddListener(ToggleRead);
         }
 
         private void OnDisable()
         {
             GameManager.GetMonoSystem<IInputMonoSystem>().InteractionCallback.RemoveListener(EndInspect);
+            GameManager.GetMonoSystem<IInputMonoSystem>().RCallback.RemoveListener(ToggleRead);
         }
 
         private void Awake()
@@ -179,6 +205,8 @@ namespace HTJ21
         private void OnDestroy()
         {
             GameManager.GetMonoSystem<IInputMonoSystem>().InteractionCallback.RemoveListener(EndInspect);
+            GameManager.GetMonoSystem<IInputMonoSystem>().RCallback.RemoveListener(ToggleRead);
+
         }
 
         private void Update()
@@ -187,6 +215,7 @@ namespace HTJ21
 
             if(_isInspecting) Inspect();
             if (_isMovingBack && !_isInspecting) CancelInspect();
+            if (_isInspecting && _currentInsectType == InspectType.Readable && !_isReading && !_isMovingBack) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SetHint("Click 'R' to read");
         }
 
         private void LateUpdate()
