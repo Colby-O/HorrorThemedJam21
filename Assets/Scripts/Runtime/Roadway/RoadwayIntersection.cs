@@ -15,12 +15,11 @@ namespace HTJ21
     {
         public int splineIndex;
         public int knotIndex;
-        public SplineContainer splineContainer;
-        public JunctionInfo(int splineIndex, int knotIndex, SplineContainer splineContainer) 
+
+        public JunctionInfo(int splineIndex, int knotIndex) 
         { 
             this.splineIndex = splineIndex;
             this.knotIndex = knotIndex;
-            this.splineContainer = splineContainer;
         }
 
         public override bool Equals(object other)
@@ -28,7 +27,7 @@ namespace HTJ21
             if (other == null) return false;
             if (other is JunctionInfo otherJunction)
             {
-                return otherJunction.splineContainer == this.splineContainer && otherJunction.splineIndex == this.splineIndex && otherJunction.knotIndex == this.knotIndex;
+                return otherJunction.splineIndex == this.splineIndex && otherJunction.knotIndex == this.knotIndex;
             }
             return false;
         }
@@ -40,11 +39,11 @@ namespace HTJ21
         [SerializeField, ReadOnly] private List<JunctionInfo> _junctions;
         [SerializeField] public List<float> curveWeights;
 
-        public void AddJunction(int splineIndex, int knotIndex, SplineContainer splineContainer, List<float> curveWeights)
+        public void AddJunction(int splineIndex, int knotIndex, List<float> curveWeights)
         {
             this.curveWeights = curveWeights;
             _junctions ??= new List<JunctionInfo>();
-            _junctions.Add(new JunctionInfo(splineIndex, knotIndex, splineContainer));
+            _junctions.Add(new JunctionInfo(splineIndex, knotIndex));
         }
 
         public List<JunctionInfo> GetJunctions()
@@ -58,7 +57,7 @@ namespace HTJ21
             {
                 float t = junction.knotIndex == 0 ? 0f : 1f;
 
-                RoadwayHelper.GetRoadwayWidthAt(junction.splineContainer, junction.splineIndex, t, roadWidth, out Vector3 p1, out Vector3 p2);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), junction.splineIndex, t, roadWidth, out Vector3 p1, out Vector3 p2);
 
                 if ((p1 == leftPT && p2 == rightPT) || (p1 == rightPT && p2 == leftPT)) return true;
             }
@@ -71,8 +70,7 @@ namespace HTJ21
         {
             return HasJunction(new JunctionInfo(
                     knot.SplineInfo.Index,
-                    knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer
+                    knot.KnotIndex
             ));
         }
 #endif
@@ -97,8 +95,7 @@ namespace HTJ21
             {
                 junctions.Add(new JunctionInfo(
                     knot.SplineInfo.Index,
-                    knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer
+                    knot.KnotIndex
                 ));
             }
 
@@ -130,8 +127,7 @@ namespace HTJ21
             {
                 junctions.Add(new JunctionInfo(
                     knot.SplineInfo.Index,
-                    knot.KnotIndex,
-                    knot.SplineInfo.Container as SplineContainer
+                    knot.KnotIndex
                 ));
             }
 

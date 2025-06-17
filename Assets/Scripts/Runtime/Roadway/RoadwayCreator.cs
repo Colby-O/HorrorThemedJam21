@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
+using UnityEngine.SceneManagement;
+
 
 #if UNITY_EDITOR
-using System.ComponentModel;
 using UnityEditor.Callbacks;
 using UnityEditor.Splines;
 using UnityEditor.Timeline;
@@ -20,10 +21,11 @@ namespace HTJ21
         [SerializeField, InspectorButton("GenerateRoadway")] private bool _regenerate = false;
         [SerializeField, InspectorButton("ClearIntersections")] private bool _removeAllIntersections = false;
         [SerializeField, InspectorButton("ClearRoadways")] private bool _destroy = false;
+        [SerializeField] private SplineContainer _splineContainer;
         [SerializeField] private bool _debugMode = false;
         [SerializeField] private float _resolution = 1;
-        [SerializeField, PlazmaGames.Attribute.ReadOnly] private List<Roadway> _roadways;
-        [SerializeField] private List<RoadwayIntersection> _intersections;
+        [SerializeField, ReadOnly] private List<Roadway> _roadways;
+        [SerializeField] private RoadwaySO _data;
 
         [Header("Road Parameters")]
         [SerializeField] private float _roadWidth;
@@ -37,10 +39,19 @@ namespace HTJ21
 
         public static RoadwayCreator Instance { get; private set; }
 
+
+        public SplineContainer GetContainer() => _splineContainer; 
+
         private GameObject _roadwayHolder;
 
         public List<Roadway> GetRoadways() => _roadways;
-        public List<RoadwayIntersection> GetIntersections() => _intersections;
+
+        public List<RoadwayIntersection> GetIntersections()
+        {
+            if (!_data.intersections.ContainsKey(gameObject.scene.name)) _data.intersections.Add(gameObject.scene.name, new List<RoadwayIntersection>());
+
+            return _data.intersections[gameObject.scene.name];
+        }
 
         public Transform GetRoadwayHolder() 
         {
@@ -52,7 +63,7 @@ namespace HTJ21
 #if UNITY_EDITOR
         public RoadwayIntersection HasIntersectionWithAtLeastOneJunction(List<SelectableKnot> knots)
         {
-            foreach (RoadwayIntersection intersection in _intersections)
+            foreach (RoadwayIntersection intersection in GetIntersections())
             {
                 if (intersection.HasAtLeastOneJunction(knots)) return intersection;
             }
@@ -61,7 +72,7 @@ namespace HTJ21
 
         public RoadwayIntersection HasIntersectionWithAtLeastOneJunction(List<JunctionInfo> junctions)
         {
-            foreach (RoadwayIntersection intersection in _intersections)
+            foreach (RoadwayIntersection intersection in GetIntersections())
             {
                 if (intersection.HasAtLeastOneJunction(junctions)) return intersection;
             }
@@ -70,7 +81,7 @@ namespace HTJ21
 
         public RoadwayIntersection HasIntersectionWithJunctions(List<JunctionInfo> junctions, bool checkIfSame = true)
         {
-            foreach (RoadwayIntersection intersection in _intersections)
+            foreach (RoadwayIntersection intersection in GetIntersections())
             {
                 if (intersection.HasJunctions(junctions, checkIfSame)) return intersection;
             }
@@ -79,7 +90,7 @@ namespace HTJ21
 
         public RoadwayIntersection HasIntersectionWithJunctions(List<SelectableKnot> knots, bool checkIfSame = true)
         {
-            foreach (RoadwayIntersection intersection in _intersections)
+            foreach (RoadwayIntersection intersection in GetIntersections())
             {
                 if (intersection.HasJunctions(knots, checkIfSame)) return intersection;
             }
@@ -89,15 +100,13 @@ namespace HTJ21
 
         public void AddIntersection(RoadwayIntersection intersection)
         {
-            if (_intersections == null) _intersections = new List<RoadwayIntersection>();
             RemoveIntersection(intersection);
-           _intersections.Add(intersection);
+            GetIntersections().Add(intersection);
         }
 
         public void RemoveIntersection(RoadwayIntersection intersection)
         {
-            if (_intersections == null) return;
-            if (_intersections.Contains(intersection)) _intersections.Remove(intersection);
+            if (GetIntersections().Contains(intersection)) GetIntersections().Remove(intersection);
         }
 
         public void ClearRoadways()
@@ -115,24 +124,24 @@ namespace HTJ21
         {
             ClearRoadways();
 
-            _roadways = RoadwayHelper.GetRoadways();
+            _roadways = RoadwayHelper.GetRoadways(_splineContainer);
 
             for (int i = 0; i < _roadways.Count; i++)
             {
                 Roadway roadway = _roadways[i];
                 roadway.segments = new List<float>();
-                float length = roadway.container.Splines[roadway.splineIndex].GetLength();
+                float length = _splineContainer.Splines[roadway.splineIndex].GetLength();
                 int numberOfSegments = Mathf.CeilToInt(length / _resolution);
                 for (float j = 0.0f; j <= numberOfSegments; j++) roadway.segments.Add(j / numberOfSegments);
                 RoadwayMeshGenerator.GenerateRoadMesh(roadway, _roadWidth, _curveWidth, _curveHeight);
             }
 
-            foreach (RoadwayIntersection intersection in _intersections) RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, _roadWidth, _curveWidth, _curveHeight);
+            foreach (RoadwayIntersection intersection in GetIntersections()) RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, _roadWidth, _curveWidth, _curveHeight);
         }
 
         public void ClearIntersections()
         {
-            _intersections.Clear();
+            GetIntersections().Clear();
             GenerateRoadway();
         }
 
@@ -142,19 +151,6 @@ namespace HTJ21
             //if (TerrainRoadwayConformer.Instance != null) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
-
-        private void Awake()
-        {
-#if UNITY_EDITOR
-            RoadwayMeshGenerator.Parent = GetRoadwayHolder();
-            RoadwayMeshGenerator.RoadMat = _roadMat;
-            RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
-            RoadwayMeshGenerator.CurbMat = _curbMat;
-            Spline.Changed += OnSplineChanged;
-#endif
-            Instance = this;
-            Debug.Log(Instance.gameObject.scene.name);
-        }
 
         private void OnEnable()
         {
@@ -169,13 +165,6 @@ namespace HTJ21
         }
 
         private void OnDisable()
-        {
-#if UNITY_EDITOR
-            Spline.Changed -= OnSplineChanged;
-#endif
-            Instance = null;
-        }
-        private void OnDestroy()
         {
 #if UNITY_EDITOR
             Spline.Changed -= OnSplineChanged;

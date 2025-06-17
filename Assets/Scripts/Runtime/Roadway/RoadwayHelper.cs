@@ -12,7 +12,6 @@ namespace HTJ21
     [Serializable]
     public struct Roadway
     {
-        public SplineContainer container;
         public int splineIndex;
         public List<float> segments;
     }
@@ -59,74 +58,78 @@ namespace HTJ21
             return distance;
         }
 
-        public static List<SplineContainer> GetRoadwayContainers()
+        //public static SplineContainer GetRoadwayContainer()
+        //{
+        //    GameObject paths = GameObject.FindWithTag("RoadwayPath");
+        //    if (paths.TryGetComponent(out SplineContainer splineContainer))
+        //    {
+        //        return splineContainer;
+        //    }
+
+        //    return null;
+        //}
+
+        public static List<Roadway> GetRoadways(SplineContainer roadwayContainer)
         {
-            List<SplineContainer> roadwayContainers = new List<SplineContainer>();
+            if (!roadwayContainer) return new List<Roadway>();
 
-            GameObject[] paths = GameObject.FindGameObjectsWithTag("RoadwayPath");
-            for (int i = 0; i < paths.Length; i++)
-            {
-                GameObject go = paths[i];
-                if (go.TryGetComponent(out SplineContainer splineContainer))
-                {
-                    roadwayContainers.Add(splineContainer);
-                }
-            }
-
-            return roadwayContainers;
-        }
-
-        public static List<Roadway> GetRoadways()
-        {
             List<Roadway> roadways = new List<Roadway>();
+            Debug.Log(roadwayContainer);
 
-            List <SplineContainer> roadwayContainers = GetRoadwayContainers();
-
-            foreach (SplineContainer splineContainer in roadwayContainers)
+            for (int i = 0; i < roadwayContainer.Splines.Count; i++)
             {
-                    for (int i = 0; i < splineContainer.Splines.Count; i++)
-                    {
-                        Roadway roadway = new Roadway();
-                        roadway.container = splineContainer;
-                        roadway.splineIndex = i;
-                        roadways.Add(roadway);
-                    }
+                Roadway roadway = new Roadway();
+                roadway.splineIndex = i;
+                roadways.Add(roadway);
             }
 
             return roadways;
         }
 
+        //public static List<Roadway> GetRoadways()
+        //{
+        //    List<Roadway> roadways = new List<Roadway>();
+
+        //    SplineContainer roadwayContainer = GetRoadwayContainer();
+        //    Debug.Log(roadwayContainer);
+
+        //    for (int i = 0; i < roadwayContainer.Splines.Count; i++)
+        //    {
+        //        Roadway roadway = new Roadway();
+        //        roadway.splineIndex = i;
+        //        roadways.Add(roadway);
+        //    }
+
+        //    return roadways;
+        //}
+
 #if UNITY_EDITOR
 
         public static List<SelectableKnot> GetSelectedRoadwayKnots(bool onlyEnds = true)
         {
-            List<SplineContainer> roadwayContainers = GetRoadwayContainers();
+            SplineContainer roadwayContainers = RoadwayCreator.Instance.GetContainer();
             List<SelectableKnot> selectedKnots = new List<SelectableKnot>();
 
             if (SplineSelection.Count > 0)
             {
-                foreach (SplineContainer splineContainer in roadwayContainers)
+                for (int i = 0; i < roadwayContainers.Splines.Count; i++)
                 {
-                    for (int i = 0; i < splineContainer.Splines.Count; i++)
+                    List<SelectableKnot> selected = new List<SelectableKnot>();
+                    SplineInfo info = new SplineInfo(roadwayContainers, i);
+                    SplineSelection.GetElements(info, selected);
+
+                    for (int j = selected.Count - 1; j >= 0; j--)
                     {
-                        List<SelectableKnot> selected = new List<SelectableKnot>();
-                        SplineInfo info = new SplineInfo(splineContainer, i);
-                        SplineSelection.GetElements(info, selected);
-
-                        for (int j = selected.Count - 1; j >= 0; j--)
-                        {
-                            SelectableKnot knot  = selected[j];
-                            if (onlyEnds && knot.KnotIndex != 0 && knot.KnotIndex != knot.SplineInfo.Spline.Count - 1) selected.RemoveAt(j);
-                        }
-
-                        selectedKnots.AddRange(selected);
+                        SelectableKnot knot = selected[j];
+                        if (onlyEnds && knot.KnotIndex != 0 && knot.KnotIndex != knot.SplineInfo.Spline.Count - 1) selected.RemoveAt(j);
                     }
+
+                    selectedKnots.AddRange(selected);
                 }
             }
 
             return selectedKnots;
         }
-
 #endif
     }
 }

@@ -20,7 +20,7 @@ namespace HTJ21
 
         [SerializeField, InspectorButton("ConformTerrainToRoadway")] private bool _conformTerrainToRoadway = false;
         [SerializeField, InspectorButton("ResetTerrainHeight")] private bool _resetTerrain = false;
-        [SerializeField] private bool _autoReset = true; 
+        [SerializeField] private bool _autoReset = true;
 
         public static TerrainRoadwayConformer Instance { get; private set; }
 
@@ -62,18 +62,18 @@ namespace HTJ21
             float terrainHeight = tData.size.y;
             float terrainLength = tData.size.z;
 
-            List<Roadway> roadways = RoadwayHelper.GetRoadways();
+            List<Roadway> roadways = RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer());
             float width = RoadwayCreator.Instance.RoadWidth() + _shoulderWidth;
 
             foreach (Roadway roadway in roadways)
             {
-                Spline spline = roadway.container.Splines[roadway.splineIndex];
+                Spline spline = RoadwayCreator.Instance.GetContainer().Splines[roadway.splineIndex];
                 int numSamples = Mathf.CeilToInt(spline.GetLength() / _resolution);
 
                 for (int i = 0; i <= numSamples; i++)
                 {
                     float t = i / (float)numSamples;
-                    roadway.container.Evaluate(roadway.splineIndex, t, out float3 worldPos, out float3 tangent, out float3 upVector);
+                    RoadwayCreator.Instance.GetContainer().Evaluate(roadway.splineIndex, t, out float3 worldPos, out float3 tangent, out float3 upVector);
                     float3 normal = Vector3.Normalize(tangent);
                     float3 up = Vector3.Normalize(upVector);
                     float3 right = Vector3.Cross(up, normal);
