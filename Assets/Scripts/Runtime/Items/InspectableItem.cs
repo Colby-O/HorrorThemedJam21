@@ -8,13 +8,16 @@ namespace HTJ21
     {
         Goto,
         ComeTo,
-        Moveable
+        Moveable,
+        Readable
     }
 
     public class InspectableItem : MonoBehaviour, IInteractable
     {
         [SerializeField] InspectType _inspectType;
         [SerializeField] Transform _offset;
+
+        [SerializeField] string text;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
@@ -30,12 +33,13 @@ namespace HTJ21
         public string GetHint()
         {
 
-            return $"Click 'E' to {(HTJ21GameManager.Inspector.IsInspecting() ? "stop" : "")} {((_inspectType == InspectType.Moveable) ? "pickup" : "inspect")}{(HTJ21GameManager.Inspector.IsInspecting() ? "ing" : "")}";
+            return
+                $"Click 'E' to {(HTJ21GameManager.Inspector.IsInspecting() ? "stop" : "")} {((_inspectType == InspectType.Moveable) ? "pickup" : "inspect")}{(HTJ21GameManager.Inspector.IsInspecting() ? "ing" : "")}";
         }
 
         public bool Interact(Interactor interactor)
         {
-            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset);
+            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset, text);
             return true;
         }
 

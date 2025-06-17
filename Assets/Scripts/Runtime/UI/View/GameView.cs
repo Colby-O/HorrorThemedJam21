@@ -33,6 +33,10 @@ namespace HTJ21
         [SerializeField] private TMP_Text _location;
         private UnityAction _currentLocationCallback = null;
 
+        [Header("Text")]
+        [SerializeField] private GameObject _readHolder;
+        [SerializeField] private TMP_Text _readText;
+
         [SerializeField, ReadOnly] private bool _isWriting = false;
         [SerializeField, ReadOnly] private bool _isWritingDialogue = false;
         [SerializeField, ReadOnly] private bool _isWritingLocation = false;
@@ -157,11 +161,24 @@ namespace HTJ21
             _location.transform.parent.gameObject.SetActive(false);
         }
 
+        public void ShowText(string text)
+        {
+            _readText.text = text;
+            _readHolder.SetActive(true);
+        }
+
+        public void HideText()
+        {
+            _readText.text = string.Empty;
+            _readHolder.SetActive(false);
+        }
+
         public override void Init()
         {
             HideHint();
             HideDialogue();
             HideLocation();
+            HideText();
         }
 
         public override void Show()

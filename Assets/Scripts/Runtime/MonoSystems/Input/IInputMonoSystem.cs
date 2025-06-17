@@ -15,5 +15,6 @@ namespace HTJ21
         public UnityEvent InteractionCallback { get; }
         public UnityEvent SkipCallback { get; }
         public UnityEvent LightCallback { get; }
+        public UnityEvent RCallback { get; }
     }
 }
