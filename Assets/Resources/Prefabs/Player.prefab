@@ -729,9 +729,9 @@ MonoBehaviour:
   _offset: {fileID: 7557379325610196590}
   _playerController: {fileID: 395365650849582277}
   _head: {fileID: 8557482328879248548}
-  _rotationSpeed: 1
-  _moveRate: 0.01
-  _headMoveRate: 1
+  _rotationSpeed: 70
+  _moveRate: 7
+  _headMoveRate: 10000000
   _isInspecting: 0
   _isMovingBack: 0
   _staredInspectThisFrame: 0

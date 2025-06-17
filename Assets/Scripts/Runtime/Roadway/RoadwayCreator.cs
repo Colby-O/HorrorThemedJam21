@@ -153,6 +153,7 @@ namespace HTJ21
             Spline.Changed += OnSplineChanged;
 #endif
             Instance = this;
+            Debug.Log(Instance.gameObject.scene.name);
         }
 
         private void OnEnable()
@@ -186,7 +187,7 @@ namespace HTJ21
         [DidReloadScripts]
         private static void OnScriptsReloaded()
         {
-            if (Instance != null) Instance.GenerateRoadway();
+            //if (Instance != null) Instance.GenerateRoadway();
             //if (TerrainRoadwayConformer.Instance != null && TerrainRoadwayConformer.Instance.enabled) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
