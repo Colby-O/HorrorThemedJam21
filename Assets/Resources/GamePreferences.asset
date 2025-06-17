@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedLanguage: 0
   ViewDistance: 50
-  ComponentViewDistance: 50
-  ComputeViewDistanceInterval: 0
+  ComponentViewDistance: 35
+  ComputeViewDistanceInterval: 1
   MoonRedColor: {r: 1, g: 0.56078434, b: 0.56078434, a: 0}
   Act1Location: Snoqualmie, Washington\n11:00pm
   IntroDialogue: {fileID: 11400000, guid: 8c56af6cab36a6d4e8a1c6a40ac96368, type: 2}
