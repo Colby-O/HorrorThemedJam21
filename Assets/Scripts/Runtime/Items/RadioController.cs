@@ -1,4 +1,5 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Core.Debugging;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -37,6 +38,7 @@ namespace HTJ21
 
         private void PlayStation(RadioStation station)
         {
+            PlazmaDebug.Log("Playing Radio Audio", "Radio", Color.hotPink, 2);
             _audioSource.Stop();
             _audioSource.clip = _currentStation.audioClip;
             _audioSource.Play();
@@ -45,6 +47,7 @@ namespace HTJ21
 
         private void UpdateInfo(RadioStation station)
         {
+            PlazmaDebug.Log("Updating Info", "Radio", Color.hotPink, 2);
             _stationInfo = _scroll.GetFirst();
             _stationInfo.text = $" {station.stationName} -- {station.songName} ";
             _scroll.OnTextUpdate();
@@ -52,6 +55,7 @@ namespace HTJ21
 
         private void NextStation()
         {
+            PlazmaDebug.Log("Loading Next Station", "Radio", Color.hotPink, 2);
             int next =(_currentID + 1) % _stations.Count;
             _currentID = next;
             _currentStation = _stations[next];
@@ -59,7 +63,7 @@ namespace HTJ21
             UpdateInfo(_currentStation);
         }
 
-        private void Awake()
+        private void Start()
         {
             _currentTime = 0;
             _camera.enabled = false;
@@ -78,6 +82,7 @@ namespace HTJ21
 
             if (_currentTime >= _renderTime)
             {
+                PlazmaDebug.Log("Rendering radio camera.", "Radio", Color.hotPink, 3);
                 _camera.Render();
                 _currentTime = 0;
             }

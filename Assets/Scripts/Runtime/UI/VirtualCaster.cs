@@ -16,7 +16,6 @@ namespace HTJ21
 
         public void CheckForHit(Vector3 pos)
         {
-            Debug.Log(pos);
             Ray ray = _screenCamera.ScreenPointToRay(pos);
             RaycastHit hit;
 
@@ -54,7 +53,6 @@ namespace HTJ21
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("Ray Caster hit!");
                 if (hit.collider.transform == transform)
                 {
                     Vector3 virtualPos = new Vector3(hit.textureCoord.x, hit.textureCoord.y);

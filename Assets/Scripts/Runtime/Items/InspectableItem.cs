@@ -14,10 +14,11 @@ namespace HTJ21
 
     public class InspectableItem : MonoBehaviour, IInteractable
     {
-        [SerializeField] InspectType _inspectType;
-        [SerializeField] Transform _offset;
+        [SerializeField] private InspectType _inspectType;
+        [SerializeField] private Transform _offset;
+        [SerializeField] private Transform _targetOverride;
 
-        [SerializeField] string text;
+        [SerializeField] private string _text;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
@@ -39,7 +40,7 @@ namespace HTJ21
 
         public bool Interact(Interactor interactor)
         {
-            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset, text);
+            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset, _targetOverride, _text);
             return true;
         }
 
