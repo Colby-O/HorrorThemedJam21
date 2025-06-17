@@ -2,7 +2,6 @@ using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.Core.Utils;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -92,11 +91,11 @@ namespace HTJ21
 
             if (_currentInsectType == InspectType.ComeTo)
             {
-                _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _offset.transform.position, _moveRate);
+                _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _offset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
 
                 Vector2 deltaMouse = GameManager.GetMonoSystem<IInputMonoSystem>().RawLook;
-                _inspectingTarget.Rotate(deltaMouse.x * _rotationSpeed * Vector3.up, Space.World);
-                _inspectingTarget.Rotate(deltaMouse.y * _rotationSpeed * Vector3.left, Space.World);
+                _inspectingTarget.Rotate(Vector3.up * (deltaMouse.x * _rotationSpeed * UnityEngine.Time.deltaTime), Space.World);
+                _inspectingTarget.Rotate(Vector3.left * (deltaMouse.y * _rotationSpeed * UnityEngine.Time.deltaTime), Space.World);
             }
             else if (_currentInsectType == InspectType.Moveable)
             {
@@ -117,7 +116,7 @@ namespace HTJ21
             else if (_currentInsectType == InspectType.Goto)
             {
                 _head.transform.rotation = Quaternion.LookRotation((_inspectingObject.transform.position - _objectOffset.transform.position).normalized);
-                _head.transform.position = Vector3.Lerp(_head.transform.position, _objectOffset.transform.position, _moveRate);
+                _head.transform.position = Vector3.Lerp(_head.transform.position, _objectOffset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
             }
         }
 
@@ -138,8 +137,8 @@ namespace HTJ21
             {
                 float moveRate = (_currentInsectType == InspectType.ComeTo) ? _moveRate : _headMoveRate;
 
-                if (_origPositions.ContainsKey(_inspectingTarget)) _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _origPositions[_inspectingTarget], moveRate);
-                if (_origRotations.ContainsKey(_inspectingTarget)) _inspectingTarget.rotation = Quaternion.Lerp(_inspectingTarget.rotation, _origRotations[_inspectingTarget], moveRate);
+                if (_origPositions.ContainsKey(_inspectingTarget)) _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _origPositions[_inspectingTarget], moveRate * UnityEngine.Time.deltaTime);
+                if (_origRotations.ContainsKey(_inspectingTarget)) _inspectingTarget.rotation = Quaternion.Lerp(_inspectingTarget.rotation, _origRotations[_inspectingTarget], moveRate * UnityEngine.Time.deltaTime);
 
                 if ((_inspectingTarget.position - _origPositions[_inspectingTarget]).magnitude < 0.01)
                 {

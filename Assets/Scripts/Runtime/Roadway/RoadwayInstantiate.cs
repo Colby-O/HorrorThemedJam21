@@ -391,7 +391,7 @@ namespace HTJ21
                 }
             }
 
-            return false;
+            return toCheck.Count == 0;
         }
 
         private bool GetClosestObject(Vector3 pos, out float distanceSq)
@@ -405,19 +405,21 @@ namespace HTJ21
             foreach (GameObject obj in toCheck)
             {
                 float dst = (obj.transform.position - pos).sqrMagnitude;
-               if (dst < minDst)
+                if (dst < minDst)
                 {
                     nearbyObj = obj;
                     minDst = dst;
                 }
             }
 
-            distanceSq = minDst;
-            return nearbyObj != null;
+            if (!nearbyObj) distanceSq = 0;
+            else distanceSq = minDst;
+            return true;
         }
 
         private void MarkInViewDistance()
         {
+            float viewDistSq = MathExt.Square(GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000);
             foreach (DrawnSection s in _drawnSections)
             {
                 if (!CheckFoOverlap(s))
@@ -436,7 +438,7 @@ namespace HTJ21
                             Vector3 pos = matrix.GetColumn(3);
                             if (GetClosestObject(pos, out float distanceSq))
                             {
-                                if (distanceSq >= MathExt.Square(HTJ21GameManager.Preferences.ViewDistance)) continue;
+                                if (distanceSq >= viewDistSq) continue;
                             }
                             part.matrices.Add(matrix * part.localMatrix);
                         }
