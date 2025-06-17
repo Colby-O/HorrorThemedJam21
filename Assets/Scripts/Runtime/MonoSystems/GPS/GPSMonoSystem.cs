@@ -307,7 +307,7 @@ namespace HTJ21
                 }
             }
 
-            _roadways = RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer());
+            _roadways = (RoadwayCreator.Instance) ? RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer()) : new List<Roadway>();
             _target = GameObject.FindWithTag("GPSTarget")?.transform;
             SyncTarget();
             TurnOff();
