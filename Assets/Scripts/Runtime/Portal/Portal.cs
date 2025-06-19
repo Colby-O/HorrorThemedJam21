@@ -57,6 +57,15 @@ namespace HTJ21
 
         private void CreateRenderTexture()
         {
+            if (_enableRotation == false)
+            {
+                _linkedPortal?._screen?.material.EnableKeyword("_USEOBJECTMODE");
+            }
+            else
+            {
+                _linkedPortal?._screen?.material.DisableKeyword("_USEOBJECTMODE");
+            }
+
             if (_viewTex == null || _viewTex.width != Screen.width || _viewTex.height != Screen.height)
             {
                 if (_viewTex != null) _viewTex.Release();

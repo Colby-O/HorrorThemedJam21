@@ -14,6 +14,11 @@ namespace HTJ21
         
         void Start()
         {
+            PlayerController player = FindFirstObjectByType<PlayerController>();
+            if (player) player.EnablePlayer();
+            HTJ21GameManager.IsPaused = false;
+            HTJ21GameManager.CinematicCar?.Disable();
+            
             GameManager.AddEventListener<Events.TreeFall>(Events.NewTreeFall((from, data) =>
             {
                 _cultistAtTree.Walk();
