@@ -38,8 +38,7 @@ namespace HTJ21
         [SerializeField] private SafePad _safe;
 
         [SerializeField] private AudioSource _audioSource;
-
-
+        
         private void EnableMoonEvent()
         {
             _moonLookTrigger.gameObject.SetActive(true);
@@ -157,16 +156,16 @@ namespace HTJ21
                                                     HTJ21GameManager.Player.LockMoving = false;
                                                     HTJ21GameManager.Player.StopLookAt();
                                                 }, false);
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        );
-                    });
-                }
-            );
-        }
+                                                     }
+                                                 );
+                                             }
+                                         );
+                                     }
+                                 );
+                             });
+                         }
+                     );
+                 }
 
         private void Setup()
         {
@@ -205,8 +204,20 @@ namespace HTJ21
 
         public override void OnActStart()
         {
+            Debug.Log(":JLKSFDLJK:FDSJLK:FSDJL:KSDFJKL:FSD:JOKLDSFJKL:SDF:KLJDFS");
             Setup();
             WakeUpCutsceneLogic();
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
+        }
+
+        private void OnPortalEnter(Portal p1, Portal p2)
+        {
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
+            p1.gameObject.SetActive(false);
+            p2.gameObject.SetActive(false);
+            HTJ21GameManager.CinematicCar.Disable();
+            HTJ21GameManager.Car.SuperDuperEnterCarForReal();
+            GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
         }
 
         public override void OnActUpdate()
