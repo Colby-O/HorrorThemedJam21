@@ -20,6 +20,7 @@ namespace HTJ21
         [SerializeField] private InputMonoSystem _inputSystem;
         [SerializeField] private DialogueMonoSystem _dialogueSystem;
         [SerializeField] private ScreenEffectMonoSystem _screenEffectSystem;
+        [SerializeField] private DirectorMonoSystem _directorSystem;
 
         [Header("Settings")]
         [SerializeField] private GamePreferences preferences;
@@ -55,6 +56,7 @@ namespace HTJ21
             AddMonoSystem<InputMonoSystem, IInputMonoSystem>(_inputSystem);
             AddMonoSystem<DialogueMonoSystem, IDialogueMonoSystem>(_dialogueSystem);
             AddMonoSystem<ScreenEffectMonoSystem, IScreenEffectMonoSystem>(_screenEffectSystem);
+            AddMonoSystem<DirectorMonoSystem, IDirectorMonoSystem>(_directorSystem);
         }
 
         public override string GetApplicationName()

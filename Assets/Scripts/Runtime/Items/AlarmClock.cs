@@ -26,7 +26,7 @@ namespace HTJ21
             int minute = _date.Minute;
             string amOrPm = (hour > 12 && hour < 24) ? "PM" : "AM";
 
-            _timeDisplay.text = $"{hour}:{minute.ToString("D2")}";
+            _timeDisplay.text = $"{((hour == 12 || hour == 24) ? 12 : hour % 12)}:{minute.ToString("D2")}";
             _nightDayDisplay.text = amOrPm;
 
             if (minute != _lastMinute) _camera.Render();
