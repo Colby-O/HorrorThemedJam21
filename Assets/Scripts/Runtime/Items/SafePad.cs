@@ -29,7 +29,7 @@ namespace HTJ21
 
         private void OnButtonClicked(int id)
         {
-            _entered.Add(id + 1);
+            _entered.Add(id);
             if (_entered.Count <= 3) _lights[_entered.Count - 1].material.SetColor("_BaseColor", Color.red);
         }
 
@@ -51,7 +51,7 @@ namespace HTJ21
         {
             _isSolved = false;
             OnSolved = new UnityEvent();
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < _buttons.Count; i++)
             {
                 int id = i;
                 _buttons[i].OnClick += () => OnButtonClicked(id);

@@ -41,6 +41,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private float _yaw = 0f;
         [SerializeField, ReadOnly] private float _pitch = 0f;
 
+        [SerializeField, ReadOnly] private float _currentComeToOffsetOverride;
+
         private Dictionary<Transform, Vector3> _origPositions;
         private Dictionary<Transform, Quaternion> _origRotations;
 
@@ -60,7 +62,7 @@ namespace HTJ21
             _playerController.LockMovement = false;
         }
 
-        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, Transform targetOverride = null, string text = "")
+        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, Transform targetOverride = null, string text = "", float comeToOffsetOverride = 0f)
         {
             if (obj == null || _isInspecting || _isMovingBack) return;
 
@@ -73,6 +75,7 @@ namespace HTJ21
             _currentInsectType = inspectType;
             _currentText = text;
             _currentTargetOverride = targetOverride;
+            _currentComeToOffsetOverride = comeToOffsetOverride;
 
             if (_currentInsectType != InspectType.Moveable) DisablePlayer();
 
@@ -105,7 +108,12 @@ namespace HTJ21
             if (_currentInsectType == InspectType.ComeTo || _currentInsectType == InspectType.Readable)
             {
                 if (_isReading && _currentInsectType == InspectType.Readable) return;
-                _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _offset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
+
+                Vector3 offsetPosLoc = _offset.transform.localPosition;
+                offsetPosLoc.z += _currentComeToOffsetOverride;
+                Vector3 offsetPos = _offset.transform.TransformPoint(offsetPosLoc);
+
+                _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, offsetPos, _moveRate * UnityEngine.Time.deltaTime);
 
                 Vector2 deltaMouse = GameManager.GetMonoSystem<IInputMonoSystem>().RawLook;
 
@@ -117,8 +125,12 @@ namespace HTJ21
             }
             else if (_currentInsectType == InspectType.Moveable)
             {
-                float dst = Vector3.Distance(transform.position, _offset.transform.position);
-                Vector3 dir = (_offset.transform.position - transform.position).normalized;
+                Vector3 offsetPosLoc = _offset.transform.localPosition;
+                offsetPosLoc.z += _currentComeToOffsetOverride;
+                Vector3 offsetPos = _offset.transform.TransformPoint(offsetPosLoc);
+
+                float dst = Vector3.Distance(transform.position, offsetPos);
+                Vector3 dir = (offsetPos - transform.position).normalized;
                 RaycastHit[] hits = Physics.RaycastAll(transform.position, dir, dst);
                 if (hits.Any(hit => hit.transform != _inspectingTarget && hit.transform != transform))
                 {
@@ -127,9 +139,8 @@ namespace HTJ21
                 }
                 else
                 {
-                    _inspectingTarget.position = _offset.transform.position;
+                    _inspectingTarget.position = offsetPos;
                 }
-                
             }
             else if (_currentInsectType == InspectType.Goto)
             {
