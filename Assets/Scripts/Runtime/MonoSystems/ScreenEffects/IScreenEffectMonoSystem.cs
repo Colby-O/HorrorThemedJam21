@@ -15,6 +15,6 @@ namespace HTJ21
         public void SetScreenBend(float bend);
         public void RestoreDefaults();
         void FadeToBlack(float time, System.Action then);
-        public void TriggerBlink(float duration, int numBlinks, UnityAction onFinish);
+        public void TriggerBlink(float duration, float numBlinks, UnityAction onFinish = null, bool startFromOpen = true);
     }
 }

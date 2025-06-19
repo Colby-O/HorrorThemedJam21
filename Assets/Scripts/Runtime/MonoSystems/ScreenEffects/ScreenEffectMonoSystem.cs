@@ -26,6 +26,7 @@ namespace HTJ21
         private UnityEngine.UI.Image _fadeToBlackImage;
 
         // Blink parameters
+        private bool _startFromOpen = true;
         private bool _blink = false;
         private float _blinkStartTime;
         private float _blinkDuration;
@@ -41,11 +42,12 @@ namespace HTJ21
             _fadeToBlackStartTime = Time.time;
         }
 
-        public void TriggerBlink(float duration, int numBlinks, UnityAction onFinish)
+        public void TriggerBlink(float duration, float numBlinks, UnityAction onFinish = null, bool startFromOpen = true)
         {
             _blink = true;
+            _startFromOpen = startFromOpen;
             _blinkDuration = duration;
-            _numBlinks = numBlinks * 2;
+            _numBlinks = Mathf.RoundToInt(numBlinks * 2);
             _blinkCallback = onFinish;
             _blinkStartTime = Time.time;
         }
@@ -143,14 +145,15 @@ namespace HTJ21
             else if (_blink)
             {
                 float t = ((Time.time - _blinkStartTime) / _blinkDuration);
-                float bend = 1f - Mathf.PingPong(t * _numBlinks, 1f);
+                float bend = (_startFromOpen) ? 1f - Mathf.PingPong(t * _numBlinks, 1f) : Mathf.PingPong(t * _numBlinks, 1f);
                 SetScreenBend(bend);
                 if (t >= 1f)
                 {
                     _blink = false;
+                    _startFromOpen = true;
                     _blinkCallback?.Invoke();
                     _blinkCallback = null;
-                    SetScreenBend(_defaultScreenBend);
+                    //SetScreenBend(_defaultScreenBend);
                 }
             }
         }
