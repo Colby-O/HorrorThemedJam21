@@ -40,6 +40,7 @@ namespace HTJ21
 
         private void Solve()
         {
+            _isSolved = true;
             OnSolved?.Invoke();
             if (TryGetComponent(out InspectableItem item)) item.CanInteract = false;
             foreach (KeypadButton button in _buttons) button.Disable();
@@ -58,7 +59,11 @@ namespace HTJ21
             if (_linkedDoor)
             {
                 _linkedDoor.Lock();
-                OnSolved.AddListener(_linkedDoor.Unlock);
+                OnSolved.AddListener(() => {
+                    _linkedDoor.Unlock();
+                    _linkedDoor.Open(HTJ21GameManager.Player.transform);
+                    HTJ21GameManager.Inspector.EndInspect();
+                });
             }
 
             Failed();

@@ -30,6 +30,7 @@ namespace HTJ21
         public bool LockMovement { get; set; }
 
         public bool LockMoving = false;
+
         public float UncontrollableApproach = 0;
 
         public void LookAt(Transform t) => _lookAt = t;

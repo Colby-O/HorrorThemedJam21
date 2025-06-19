@@ -24,5 +24,10 @@ namespace HTJ21
         public static EventResponse NewTreeReroute1(UnityAction<Component, TreeReroute1> func) => new EventResponse((comp, data) => func.Invoke(comp, data as TreeReroute1));
         public record TreeReroute2();
         public static EventResponse NewTreeReroute2(UnityAction<Component, TreeReroute2> func) => new EventResponse((comp, data) => func.Invoke(comp, data as TreeReroute2));
+
+        // Prologue
+        public record PrologueLookAtMoon();
+        public static EventResponse NewPrologueLookAtMoon(UnityAction<Component, PrologueLookAtMoon> func) => new EventResponse((comp, data) => func.Invoke(comp, data as PrologueLookAtMoon));
+
     }
 }

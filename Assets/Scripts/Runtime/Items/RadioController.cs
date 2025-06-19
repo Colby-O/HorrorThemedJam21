@@ -34,7 +34,21 @@ namespace HTJ21
         [SerializeField, ReadOnly] private List<RadioStation> _stations;
         [SerializeField, ReadOnly] private RadioStation _currentStation;
         [SerializeField, ReadOnly] private int _currentID;
+        [SerializeField, ReadOnly] private int _historyID = -1;
         [SerializeField, ReadOnly] private float _currentTime; 
+
+        public void TurnOff()
+        {
+            _historyID = _currentID;
+            _currentID = -1;
+            NextStation();
+        }
+
+        public void TurnOn()
+        {
+            _currentID = _historyID - 1;
+            NextStation();
+        }
 
         private void PlayStation(RadioStation station)
         {
@@ -70,9 +84,8 @@ namespace HTJ21
             _audioSource.loop = true;
             _stations = new List<RadioStation>() { new RadioStation(string.Empty, string.Empty, null) };
             _stations.AddRange(_stationInput);
-            
-            _currentID = -1;
-            NextStation();
+
+            TurnOff();
             _button.OnClick += NextStation;
         }
 
