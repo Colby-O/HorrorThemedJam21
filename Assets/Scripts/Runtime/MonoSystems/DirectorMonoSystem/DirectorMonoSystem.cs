@@ -48,9 +48,17 @@ namespace HTJ21
 
         public void StartAct(Act act)
         {
-            PlazmaDebug.LogWarning($"Starting Act {act} from {_currentDirector.GetAct()}.", "Director", 2, Color.purple);
-            if (_currentDirector != null) _currentDirector.OnActEnd();
+            if (_currentDirector != null)
+            {
+                PlazmaDebug.LogWarning($"Ending Act {_currentDirector.GetAct()}.", "Director", 2, Color.purple);
+                _currentDirector.OnActEnd();
+                _currentDirector.gameObject.SetActive(false);
+            }
+
+            PlazmaDebug.LogWarning($"Starting Act {act}.", "Director", 2, Color.purple);
             _currentDirector = _directors[act];
+            _currentDirector.gameObject.SetActive(true);
+
             _currentDirector.OnActStart();
         }
 
@@ -67,6 +75,9 @@ namespace HTJ21
                     PlazmaDebug.LogWarning($"Trying to add {act} more than once. Ignoring duplicates.", "Director", 1, Color.yellow);
                     continue;
                 }
+
+                director.gameObject.SetActive(false);
+
                 _directors.Add(act, director);
             }
 
