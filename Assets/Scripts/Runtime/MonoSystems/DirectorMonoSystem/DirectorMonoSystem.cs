@@ -2,6 +2,7 @@ using NUnit.Framework;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core.Debugging;
 using PlazmaGames.Runtime.DataStructures;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -18,12 +19,32 @@ namespace HTJ21
         Epilogue
     }
 
+    public static class ActExtension
+    {
+        public static Act Next(this Act act)
+        {
+            Act[] acts = (Act[])Enum.GetValues(typeof(Act));
+            int index = Array.IndexOf(acts, act);
+            return acts[(index + 1) % acts.Length];
+        }
+    }
+
     public class DirectorMonoSystem : MonoBehaviour, IDirectorMonoSystem
     {
         [SerializeField] private Act _startAct;
 
         [SerializeField, ReadOnly] SerializableDictionary<Act, Director> _directors;
         [SerializeField, ReadOnly] private Director _currentDirector;
+
+        public void NextAct()
+        {
+            StartAct(_currentDirector.GetAct().Next());
+        }
+
+        public Director GetCurrentDirector()
+        {
+            return _currentDirector;
+        }
 
         public void StartAct(Act act)
         {
