@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace HTJ21
 {
+    /*
     [InitializeOnLoad]
     public static class PlayModeStartupScene
     {
@@ -66,5 +67,6 @@ namespace HTJ21
             }
         }
     }
+    */
 }
 #endif

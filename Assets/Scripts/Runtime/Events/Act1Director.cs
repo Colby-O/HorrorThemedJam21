@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace HTJ21
 {
-    public class Act1Director : MonoBehaviour
+    public class Act1Director : Director
     {
         [SerializeField] private Transform _gpsTarget;
         [SerializeField] private Transform _gpsTargetReroute1;
@@ -11,8 +11,8 @@ namespace HTJ21
         [SerializeField] private Transform _gpsTargetHome;
         [SerializeField] private TreeFall _tree;
         [SerializeField] private WalkAndDie _cultistAtTree;
-        
-        void Start()
+
+        private void Start()
         {
             GameManager.AddEventListener<Events.TreeFall>(Events.NewTreeFall((from, data) =>
             {
@@ -28,6 +28,23 @@ namespace HTJ21
             {
                 _gpsTarget.position = _gpsTargetHome.position;
             }));
+        }
+        
+        public override void OnActStart()
+        {
+            PlayerController player = FindFirstObjectByType<PlayerController>();
+            if (player) player.EnablePlayer();
+            HTJ21GameManager.IsPaused = false;
+            HTJ21GameManager.CinematicCar?.Disable();
+            
+        }
+
+        public override void OnActUpdate()
+        {
+        }
+
+        public override void OnActEnd()
+        {
         }
     }
 }
