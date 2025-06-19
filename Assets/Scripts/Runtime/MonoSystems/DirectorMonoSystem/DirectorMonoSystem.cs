@@ -33,7 +33,10 @@ namespace HTJ21
     {
         [SerializeField] private Act _startAct;
 
-        [SerializeField, ReadOnly] SerializableDictionary<Act, Director> _directors;
+        [Header("Map")]
+        [SerializeField, ReadOnly] private HouseController _houseController;
+
+        [SerializeField, ReadOnly] private SerializableDictionary<Act, Director> _directors;
         [SerializeField, ReadOnly] private Director _currentDirector;
 
         public void NextAct()
@@ -46,8 +49,15 @@ namespace HTJ21
             return _currentDirector;
         }
 
+        public Act GetCurrentAct()
+        {
+            return _currentDirector?.GetAct() ?? _startAct;
+        }
+
         public void StartAct(Act act)
         {
+            if (!_directors.ContainsKey(act)) return;
+
             if (_currentDirector != null)
             {
                 PlazmaDebug.LogWarning($"Ending Act {_currentDirector.GetAct()}.", "Director", 2, Color.purple);
@@ -58,12 +68,15 @@ namespace HTJ21
             PlazmaDebug.LogWarning($"Starting Act {act}.", "Director", 2, Color.purple);
             _currentDirector = _directors[act];
             _currentDirector.gameObject.SetActive(true);
-
             _currentDirector.OnActStart();
+
+            if (_houseController) _houseController.OnActChange();
         }
 
         private void Start()
         {
+            _houseController = FindAnyObjectByType<HouseController>();
+
             _directors = new SerializableDictionary<Act, Director>();
             Director[] directors = FindObjectsByType<Director>(FindObjectsSortMode.None);
 
@@ -86,7 +99,7 @@ namespace HTJ21
 
         private void Update()
         {
-            _currentDirector.OnActUpdate();
+            if (_currentDirector) _currentDirector.OnActUpdate();
         }
     }
 }

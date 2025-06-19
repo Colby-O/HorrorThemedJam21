@@ -7,6 +7,7 @@ namespace HTJ21
     {
         public void NextAct();
         public Director GetCurrentDirector();
+        public Act GetCurrentAct();
         public void StartAct(Act act);
     }
 }
