@@ -56,15 +56,15 @@ namespace HTJ21
         public void Enable()
         {
             SnapCarToClosestKnot();
-            _camera.gameObject.SetActive(true);
-            _cameraMain.gameObject.SetActive(false);
+            //_camera.gameObject.SetActive(true);
+            //_cameraMain.gameObject.SetActive(false);
             _enabled = true;
         }
 
         public void Disable()
         {
-            _camera.gameObject.SetActive(false);
-            _cameraMain.gameObject.SetActive(true);
+            //_camera.gameObject.SetActive(false);
+            //_cameraMain.gameObject.SetActive(true);
            _enabled = false;
         }
 
@@ -79,8 +79,9 @@ namespace HTJ21
 
         public void StopCinematic()
         {
-            _cameraMain.gameObject.SetActive(true);
-            HTJ21GameManager.Car.SetDisableState(true);
+            //_cameraMain.gameObject.SetActive(true);
+            //HTJ21GameManager.Car.SetDisableState(true);
+            /*
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                 this, 
                 _exitTime, 
@@ -96,6 +97,7 @@ namespace HTJ21
                     HTJ21GameManager.CarTutorial.ShowTutorial(0);
                 }
             );
+            */
         }
 
         private int GetNextKnot(int currentIndex)
@@ -193,8 +195,8 @@ namespace HTJ21
         private void Start()
         {
             if (!_rb) _rb = GetComponent<Rigidbody>();
-            _currentTransform = new CinematicTransform(_camera.transform.localPosition, _camera.transform.localRotation.eulerAngles);
-            _endTransform = new CinematicTransform(_cameraTarget.localPosition, _cameraTarget.localRotation.eulerAngles);
+            //_currentTransform = new CinematicTransform(_camera.transform.localPosition, _camera.transform.localRotation.eulerAngles);
+            //_endTransform = new CinematicTransform(_cameraTarget.localPosition, _cameraTarget.localRotation.eulerAngles);
             Enable();
         }
 

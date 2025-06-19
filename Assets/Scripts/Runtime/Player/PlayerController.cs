@@ -62,7 +62,7 @@ namespace HTJ21
             if (HTJ21GameManager.Car) HTJ21GameManager.Car.EnterCar();
             gameObject.SetActive(false);
         }
-
+        
         public void EnablePlayer()
         {
             gameObject.SetActive(true);

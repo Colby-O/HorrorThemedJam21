@@ -217,7 +217,6 @@ namespace HTJ21
             _inputHandler.LightCallback.AddListener(ToggleHeadLight);
             DisableSiren();
             Lock();
-            _headLight.gameObject.SetActive(false);
         }
 
         private void ProcessLook()
@@ -242,6 +241,14 @@ namespace HTJ21
             _wasEnteredThisFrame = true;
             EnableMirrors();
             _camera.gameObject.SetActive(true);
+        }
+        
+        public void SuperDuperEnterCarForReal()
+        {
+            _wasEnteredThisFrame = true;
+            EnableMirrors();
+            _camera.gameObject.SetActive(true);
+            HTJ21GameManager.Player.DisablePlayer();
         }
         
         private void ExitCar()
