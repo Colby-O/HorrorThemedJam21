@@ -209,6 +209,7 @@ namespace HTJ21
             Setup();
             WakeUpCutsceneLogic();
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
+            HTJ21GameManager.Car.DisableMirrors();
         }
 
         private void OnPortalEnter(Portal p1, Portal p2)
@@ -229,6 +230,7 @@ namespace HTJ21
             HTJ21GameManager.CinematicCar.TransferCurrentSpeedToCar();
             HTJ21GameManager.CinematicCar.Disable();
             HTJ21GameManager.Car.SuperDuperEnterCarForReal();
+            HTJ21GameManager.Car.EnableMirrors();
 
             _moon.gameObject.SetActive(false);
         }
