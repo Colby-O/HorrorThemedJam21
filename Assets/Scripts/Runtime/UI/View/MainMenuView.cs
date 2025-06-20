@@ -12,20 +12,28 @@ namespace HTJ21
         [SerializeField] private EventButton _settings;
         [SerializeField] private EventButton _exit;
 
+        [SerializeField] private MainMenuCameraController _cameraController;
+
+        public MainMenuCameraController GetCamera()
+        {
+            return _cameraController;
+        }
+
         private void Play()
         {
             HTJ21GameManager.IsPaused = false;
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
-            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(1, PlazmaGames.Audio.AudioType.Music, true);
+            //GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(1, PlazmaGames.Audio.AudioType.Music, true);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
-            HTJ21GameManager.IsPaused = false;
-            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
-                HTJ21GameManager.Preferences.Act1Location, 
-                () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.IntroDialogue)
-            );
-            GameManager.EmitEvent(new Events.StartGame());
+            _cameraController.GoToPlayer();
+            //HTJ21GameManager.IsPaused = false;
+            //GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
+            //    HTJ21GameManager.Preferences.Act1Location, 
+            //    () => GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.IntroDialogue)
+            //);
+
         }
 
         private void Settings()

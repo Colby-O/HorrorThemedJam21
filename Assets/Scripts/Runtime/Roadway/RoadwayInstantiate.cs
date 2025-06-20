@@ -333,13 +333,26 @@ namespace HTJ21
 
         private void HideUnusedComponents()
 		{
-			if (HTJ21GameManager.CurrentControllable == null) return;
+            List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
+            if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
 
             foreach (MeshComponent component in _components)
             {
-                float distanceSq = (HTJ21GameManager.CurrentControllable.transform.position - component.go.transform.position).sqrMagnitude;
-				component.go.SetActive(distanceSq < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance));
-			}
+                float minDst = float.MaxValue;
+
+                foreach (GameObject obj in toCheck)
+                {
+                    if (!obj.activeSelf) continue;
+
+                    float distanceSq = (obj.transform.position - component.go.transform.position).sqrMagnitude;
+                    if (minDst > distanceSq)
+                    {
+                        minDst = distanceSq;
+                        if (minDst < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance)) break;
+                    }
+                }
+                component.go.SetActive(minDst < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance));
+            }
 		}
 
         private void LoadDrawnParts(InstanceInfo inst, DrawnInstance di)
@@ -378,13 +391,14 @@ namespace HTJ21
             _generateNearObjects = GameObject.FindGameObjectsWithTag("GenerateNear").ToList();
         }
 
-        private bool CheckFoOverlap(DrawnSection s)
+        private bool CheckForOverlap(DrawnSection s)
         {
             List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
             if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
             float d = GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000;
             foreach (GameObject obj in toCheck)
             {
+                if (!obj.activeSelf) continue;
                 if (s.bounds.Overlaps(MinMaxAABB.CreateFromCenterAndHalfExtents(obj.transform.position, new float3(d, d, d))))
                 {
                     return true;
@@ -404,6 +418,7 @@ namespace HTJ21
 
             foreach (GameObject obj in toCheck)
             {
+                if (!obj.activeSelf) continue;
                 float dst = (obj.transform.position - pos).sqrMagnitude;
                 if (dst < minDst)
                 {
@@ -422,7 +437,7 @@ namespace HTJ21
             float viewDistSq = MathExt.Square(GameManager.Instance ? HTJ21GameManager.Preferences.ViewDistance : 100000);
             foreach (DrawnSection s in _drawnSections)
             {
-                if (!CheckFoOverlap(s))
+                if (!CheckForOverlap(s))
                 {
                     s.inViewDistance = false;
                     continue;

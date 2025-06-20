@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2504032199249442749
 RectTransform:
   m_ObjectHideFlags: 0
@@ -547,7 +547,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1609902215546079496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -965,7 +965,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9172125531567703308
 Transform:
   m_ObjectHideFlags: 0
@@ -1094,7 +1094,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7484253613084914097}
   - component: {fileID: 2591269577919644114}
-  - component: {fileID: 4158154017660486706}
   - component: {fileID: 5453409794575735846}
   m_Layer: 0
   m_Name: 'CinematicCamera '
@@ -1102,7 +1101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7484253613084914097
 Transform:
   m_ObjectHideFlags: 0
@@ -1170,14 +1169,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4158154017660486706
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443106709517361614}
-  m_Enabled: 1
 --- !u!114 &5453409794575735846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1467,7 +1458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.27, y: -1.76}
+  m_AnchoredPosition: {x: 5, y: -1.76}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &7409722779159676761
@@ -1537,7 +1528,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: '''W'' to Accelerate
 
-    ''S'' to Brake
+    ''S'' to Brake/Reverse
 
     ''A/D'' to Steer'
   m_isRightToLeft: 0
@@ -1604,7 +1595,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 3.2154412, y: -1.7365942, z: 9.845266, w: 2.963875}
+  m_margin: {x: 1.8107476, y: -1.7365942, z: 9.845266, w: 2.963875}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -2421,7 +2412,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4964364776895430881}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70710665, z: -0, w: 0.70710695}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -417.78888, y: 3.8, z: -187.11038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3902,6 +3893,10 @@ PrefabInstance:
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_Name
       value: Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
+      propertyPath: m_TagString
+      value: GenerateNear
       objectReference: {fileID: 0}
     - target: {fileID: 3454982221396344254, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_LocalScale.x

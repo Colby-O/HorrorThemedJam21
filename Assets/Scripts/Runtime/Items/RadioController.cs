@@ -95,7 +95,6 @@ namespace HTJ21
 
             if (_currentTime >= _renderTime)
             {
-                PlazmaDebug.Log("Rendering radio camera.", "Radio", Color.hotPink, 3);
                 _camera.Render();
                 _currentTime = 0;
             }

@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d424600ab889dc147a4e37bce74d2280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startAct: 0
+  _startAct: 1
   _houseController: {fileID: 0}
   _directors:
     list: []
@@ -843,7 +843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _preserveUIAcrossScenes: 1
-  _startingView: HTJ21.GameView, Assembly-CSharp
+  _startingView: HTJ21.MainMenuView, Assembly-CSharp
   _views: []
   _currentView: {fileID: 0}
   _hasInitialized: 0
