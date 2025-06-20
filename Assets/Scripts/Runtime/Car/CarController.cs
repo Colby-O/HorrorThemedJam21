@@ -264,12 +264,6 @@ namespace HTJ21
         {
             if (!InCar() || HTJ21GameManager.IsPaused) return;
             ProcessLook();
-            if (_inputHandler.ReversePressed())
-            {
-                if (_gear == -1) _gear = 1;
-                else if (_gear == 1) _gear = -1;
-            }
-
             if (_inputHandler.InteractPressed()) ExitCar();
         }
 
@@ -285,8 +279,11 @@ namespace HTJ21
 
             if (InCar() && !_isDisabled && !HTJ21GameManager.IsPaused)
             {
-                _throttle = Mathf.Max(0, _inputHandler.RawMovement.y) * DrivingProfile.MaxThrottle;
-                _brake = Mathf.Max(0, -_inputHandler.RawMovement.y);
+                if (Speed() < 0 || (IsParked() && _gear == 1 && _inputHandler.RawMovement.y < 0)) _gear = -1;
+                else if (_gear == -1) _gear = 1;
+                float throttleInput = _inputHandler.RawMovement.y * Mathf.Sign(_gear);
+                _throttle = Mathf.Max(0, throttleInput) * DrivingProfile.MaxThrottle;
+                _brake = Mathf.Max(0, -throttleInput);
                 _steeringAngle = Mathf.Lerp(_steeringAngle, _inputHandler.RawMovement.x * MaxTurnAngle(), Time.deltaTime * _settings.WheelTurnSpeed);
             }
             else
@@ -320,7 +317,7 @@ namespace HTJ21
                 _rig.isKinematic = true;
                 return;
             }
-            if (_brake > 0.7 && Mathf.Abs(Speed()) < _settings.ParkingSpeed)
+            if (IsParked())
             {
                 if (!_rig.isKinematic) _lastVelocity = _rig.linearVelocity;
                 _rig.isKinematic = true;
@@ -395,6 +392,11 @@ namespace HTJ21
                     _rig.AddForceAtPosition(force, wheelPosition);
                 }
             }
+        }
+
+        private bool IsParked()
+        {
+            return _brake > 0.7 && Mathf.Abs(Speed()) < _settings.ParkingSpeed;
         }
 
         private float Speed()
