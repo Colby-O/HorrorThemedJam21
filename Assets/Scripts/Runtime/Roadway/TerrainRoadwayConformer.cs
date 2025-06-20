@@ -106,7 +106,7 @@ namespace HTJ21
         private void Awake()
         {
             Instance = this;
-            ConformTerrainToRoadway();
+            //ConformTerrainToRoadway();
         }
         private void OnEnable()
         {

@@ -155,9 +155,8 @@ namespace HTJ21
 
         public bool CheckIfInDoors()
         {
-            if (GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<MainMenuView>()) return false;
-            bool isIndoors = IsInCar();
-            return isIndoors;
+            bool isIndoors = IsInCar() || GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors();
+            return isIndoors && HTJ21GameManager.HasStarted;
         }
 
         private void Awake()

@@ -1,6 +1,7 @@
 using PlazmaGames.Attribute;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -146,7 +147,13 @@ namespace HTJ21
 
         private void Update()
         {
-            if (HTJ21GameManager.CurrentControllable != null && _weatherGameObject != null)
+            if (!HTJ21GameManager.HasStarted && _weatherGameObject != null)
+            {
+                Vector3 playerPos = GameManager.GetMonoSystem<IUIMonoSystem>().GetView<MainMenuView>().GetCamera().transform.position;
+                playerPos.y += _height;
+                _weatherGameObject.transform.position = playerPos;
+            }
+            else if (HTJ21GameManager.CurrentControllable && _weatherGameObject != null)
             {
                 Vector3 playerPos = HTJ21GameManager.CurrentControllable.transform.position;
                 playerPos.y += _height;

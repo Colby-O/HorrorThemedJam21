@@ -138,6 +138,9 @@ MonoBehaviour:
   _portalCamera: {fileID: 5133997377679190531}
   _playerCamera: {fileID: 0}
   _viewTex: {fileID: 0}
+  _enableTranslation: 1
+  _enableRotation: 1
+  _enableNearClipCorrection: 1
   nearClipOffset: 0.05
   nearClipLimit: 0.2
   _nearbyObjects: []
@@ -173,7 +176,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7598488899232663379}
   - component: {fileID: 5133997377679190531}
-  - component: {fileID: 383340076127802274}
   - component: {fileID: 1349906864788221826}
   m_Layer: 0
   m_Name: Camera
@@ -248,14 +250,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &383340076127802274
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8611034200232790308}
-  m_Enabled: 1
 --- !u!114 &1349906864788221826
 MonoBehaviour:
   m_ObjectHideFlags: 0

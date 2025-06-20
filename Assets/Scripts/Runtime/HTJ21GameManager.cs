@@ -34,6 +34,7 @@ namespace HTJ21
         public static TutorialController PlayerTutorial { get; set; }
         public static TutorialController CarTutorial { get; set; }
 
+        public static bool HasStarted { get; set; }
         public static bool IsPaused { get; set; }
 
         public static GameObject CurrentControllable => Player ? (((Player.IsInCar()) ? (Car ? Car.gameObject : null) : Player.gameObject)) : null;
@@ -95,8 +96,12 @@ namespace HTJ21
         private void Start()
         {
             HTJ21GameManager.IsPaused = true;
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = false;
+            HTJ21GameManager.HasStarted = false;
+
+            GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame((from, data) =>
+            {
+                HTJ21GameManager.HasStarted = true;
+            }));
         }
 
         private void OnEnable()
@@ -109,13 +114,6 @@ namespace HTJ21
         {
             SceneManager.sceneLoaded -= OnSceneLoad;
             SceneManager.sceneUnloaded -= OnSceneUnload;
-        }
-
-        protected override void Update()
-        {
-            // TODO: Remove me testing code.
-            base.Update();
-            //if (Keyboard.current.escapeKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

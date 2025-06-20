@@ -110,6 +110,8 @@ namespace HTJ21
                         HTJ21GameManager.Player.LockMoving = true;
                         HTJ21GameManager.Player.LookAt(_moon.transform);
                         _radio.TurnOff();
+                        GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableRain();
+                        GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
                         GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0);
                         GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                             this,
@@ -150,6 +152,8 @@ namespace HTJ21
 
                                                 GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () =>
                                                 {
+                                                    GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+                                                    GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
                                                     _radio.TurnOn();
                                                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
                                                     _audioSource.pitch = 1f;
@@ -182,8 +186,6 @@ namespace HTJ21
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
             GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogue();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
-            GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
-            GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableRain();
 
             _moonLookTrigger.gameObject.SetActive(false);
             _safe.OnSolved.AddListener(EnableMoonEvent);
@@ -204,7 +206,6 @@ namespace HTJ21
 
         public override void OnActStart()
         {
-            Debug.Log(":JLKSFDLJK:FDSJLK:FSDJL:KSDFJKL:FSD:JOKLDSFJKL:SDF:KLJDFS");
             Setup();
             WakeUpCutsceneLogic();
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
@@ -215,8 +216,6 @@ namespace HTJ21
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
             p1.gameObject.SetActive(false);
             p2.gameObject.SetActive(false);
-            HTJ21GameManager.CinematicCar.Disable();
-            HTJ21GameManager.Car.SuperDuperEnterCarForReal();
             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
         }
 
@@ -227,7 +226,11 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+            HTJ21GameManager.CinematicCar.TransferCurrentSpeedToCar();
+            HTJ21GameManager.CinematicCar.Disable();
+            HTJ21GameManager.Car.SuperDuperEnterCarForReal();
 
+            _moon.gameObject.SetActive(false);
         }
     }
 }

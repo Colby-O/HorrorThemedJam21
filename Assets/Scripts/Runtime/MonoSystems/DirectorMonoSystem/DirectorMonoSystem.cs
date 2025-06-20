@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using PlazmaGames.Core.Debugging;
 using PlazmaGames.Runtime.DataStructures;
 using System;
@@ -10,6 +11,7 @@ namespace HTJ21
 {
     public enum Act
     {
+        MainMenu,
         Prologue,
         Act1,
         Home1,
@@ -38,6 +40,16 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private SerializableDictionary<Act, Director> _directors;
         [SerializeField, ReadOnly] private Director _currentDirector;
+
+        public bool IsCurrentActIndoors()
+        {
+            return _currentDirector.GetAct() == Act.Prologue || _currentDirector.GetAct() == Act.Home1 || _currentDirector.GetAct() == Act.Home2 || _currentDirector.GetAct() == Act.Act2;
+        }
+
+        public void Begin()
+        {
+            StartAct(_startAct);
+        }
 
         public void NextAct()
         {
@@ -94,7 +106,12 @@ namespace HTJ21
                 _directors.Add(act, director);
             }
 
-            StartAct(_startAct);
+            GameManager.AddEventListener<Events.StartGame>(Events.NewStartGame((from, data) =>
+            {
+                Begin();
+            }));
+
+            if (_houseController) _houseController.OnActChange();
         }
 
         private void Update()

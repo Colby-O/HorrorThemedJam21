@@ -77,6 +77,14 @@ namespace HTJ21
             _camera.transform.localRotation = Quaternion.Lerp(startRot, endRot, t);
         }
 
+        public void TransferCurrentSpeedToCar()
+        {
+            HTJ21GameManager.Car.SetDisableState(true);
+            _rb.isKinematic = false;
+            _rb.linearVelocity = _stopSpeed * transform.forward;
+            HTJ21GameManager.Car.SetDisableState(false);
+        }
+
         public void StopCinematic()
         {
             //_cameraMain.gameObject.SetActive(true);

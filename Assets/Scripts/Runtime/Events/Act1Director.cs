@@ -19,6 +19,7 @@ namespace HTJ21
             _gpsMs = GameManager.GetMonoSystem<IGPSMonoSystem>();
             GameManager.AddEventListener<Events.TreeFall>(Events.NewTreeFall((from, data) =>
             {
+                GameManager.GetMonoSystem<IWeatherMonoSystem>().SpawnLightingAt(_tree.transform.position);
                 _cultistAtTree.Walk();
                 _tree.Fall();
                 _gpsMs.MoveTarget(_gpsTargetReroute1.position);
@@ -39,6 +40,7 @@ namespace HTJ21
             if (player) player.EnablePlayer();
             HTJ21GameManager.IsPaused = false;
             HTJ21GameManager.CinematicCar?.Disable();
+            HTJ21GameManager.CarTutorial.ShowTutorial(0);
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOn();
         }
 
