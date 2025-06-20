@@ -210,6 +210,7 @@ namespace HTJ21
             _cameraTarget = transform.Find("CameraTarget");
             info.NormalizeTorqueCurve();
             _rig = GetComponent<Rigidbody>();
+            Debug.Log(_rig.inertiaTensor);
             _steeringWheel = transform.Find("Model").Find("SteeringWheel");
             Transform wheels = transform.Find("Wheels");
             for (int i = 0; i < wheels.childCount; i++) _wheels[i] = wheels.GetChild(i);

@@ -87,12 +87,15 @@ namespace HTJ21
                 rb.isKinematic = true;
             }
 
-            _inspectingTarget.GetComponents<Collider>().ForEach(c => c.enabled = false);
+            _inspectingTarget.GetComponents<Collider>().ForEach(c =>
+            {
+                if (!c.isTrigger) c.enabled = false;
+            });
         }
 
         public void EndInspect()
         {
-            if (!_isInspecting) return;
+            if (!_isInspecting || _staredInspectThisFrame) return;
             if (_isReading) ToggleRead();
             _isInspecting = false;
             _isMovingBack = true;

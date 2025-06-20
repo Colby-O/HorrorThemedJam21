@@ -333,6 +333,7 @@ namespace HTJ21
 
         private void HideUnusedComponents()
 		{
+            float viewDistSq = MathExt.Square(GameManager.Instance ? HTJ21GameManager.Preferences.ComponentViewDistance: 100000);
             List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
             if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
 
@@ -348,10 +349,10 @@ namespace HTJ21
                     if (minDst > distanceSq)
                     {
                         minDst = distanceSq;
-                        if (minDst < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance)) break;
+                        if (minDst < viewDistSq) break;
                     }
                 }
-                component.go.SetActive(minDst < MathExt.Square(HTJ21GameManager.Preferences.ComponentViewDistance));
+                component.go.SetActive(minDst < viewDistSq);
             }
 		}
 
