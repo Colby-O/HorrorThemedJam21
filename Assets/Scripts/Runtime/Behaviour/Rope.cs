@@ -34,6 +34,13 @@ namespace HTJ21
         
 		[InspectorButton("Start")] public bool reset = false;
 
+        public void Attach(Transform t1, Transform t2)
+        {
+            _attachment1 = t1;
+            _attachment2 = t2;
+
+            Start();
+        }
 
         void Start()
         {
@@ -43,6 +50,7 @@ namespace HTJ21
             Vector3 dir = (_attachment2.position - _attachment1.position).normalized;
             float seglen = SegmentLength;
 
+            _segments.Clear();
             for (int i = 0; i < _segmentCount; i++)
             {
                 _segments.Add(new Segment(ropeStartPoint));
@@ -62,22 +70,13 @@ namespace HTJ21
             for (int i = 1; i < _segmentCount - 1; i++)
             {
                 Segment seg = _segments[i];
-                Collider[] hits = Physics.OverlapSphere(seg.cur, _ropeRadius);
 
-                foreach (Collider hit in hits)
+                Vector3 dir = (seg.cur - seg.prev).normalized;
+                float dist = (seg.cur - seg.prev).magnitude + _ropeRadius;
+                if (Physics.Raycast(seg.prev, dir, out RaycastHit hit, dist, LayerMask.GetMask("Roadway")))
                 {
-                    if (hit.transform == _attachment1 || hit.transform == _attachment2)
-                        continue;
-
-                    Vector3 closest = hit.ClosestPoint(seg.cur);
-                    Vector3 offset = seg.cur - closest;
-                    float penetration = _ropeRadius - offset.magnitude;
-
-                    if (penetration > 0f)
-                    {
-                        seg.cur += offset.normalized * penetration;
-                        Debug.Log(penetration);
-                    }
+                    seg.cur = hit.point + hit.normal * (_ropeRadius * 2.0f);
+                    seg.prev = seg.cur;
                 }
 
                 _segments[i] = seg;

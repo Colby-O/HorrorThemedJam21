@@ -6,7 +6,16 @@ namespace HTJ21
 {
     public class RopeAttach : MonoBehaviour
     {
-        [SerializeField, ReadOnly] private Rigidbody _attachedTo;
+        [SerializeField, ReadOnly] private Rigidbody _attachedTo = null;
+
+        private GameObject _ropePrefab;
+        
+        private Rope _rope = null;
+
+        private void Start()
+        {
+            _ropePrefab = Resources.Load<GameObject>("Prefabs/Rope");
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -18,12 +27,15 @@ namespace HTJ21
                     {
                         if (_attachedTo == rig)
                         {
+                            Destroy(_rope.gameObject);
                             _attachedTo = null;
                         }
                     }
                     else
                     {
                         _attachedTo = rig;
+                        _rope = GameObject.Instantiate(_ropePrefab).GetComponent<Rope>();
+                        _rope.Attach(transform, _attachedTo.transform);
                     }
                 }
             }
@@ -31,15 +43,11 @@ namespace HTJ21
             {
                 if (_attachedTo)
                 {
-                    Debug.Log("HITCH TO CAR");
-                    other.gameObject.GetComponent<HitchInteractable>().AttachRope(gameObject, _attachedTo);
+                    other.gameObject.GetComponent<HitchInteractable>().AttachRope(_rope, gameObject, _attachedTo);
+                    _rope = null;
                     _attachedTo = null;
                 }
             }
-        }
-        
-        private void OnCollisionEnter(Collision other)
-        {
         }
     }
 
