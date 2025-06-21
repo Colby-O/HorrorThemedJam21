@@ -8,7 +8,6 @@ namespace HTJ21
     {
         public Vector2 RawMovement { get; }
         public Vector2 RawLook { get; }
-        public bool ReversePressed();
         public bool InteractPressed();
         public bool LightPressed();
 
