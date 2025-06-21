@@ -33,6 +33,7 @@ namespace HTJ21
         public static CinematicCarController CinematicCar { get; set; }
         public static TutorialController PlayerTutorial { get; set; }
         public static TutorialController CarTutorial { get; set; }
+        public static HouseController HouseController { get; set; }
 
         public static bool HasStarted { get; set; }
         public static bool IsPaused { get; set; }
@@ -83,6 +84,7 @@ namespace HTJ21
             Car = FindAnyObjectByType<CarController>();
             if (Car) CinematicCar = Car.GetComponent<CinematicCarController>();
             if (Car) CarTutorial = Car.GetTutorial();
+            HouseController = FindAnyObjectByType<HouseController>();
             if (Player) PickupManager = Player.GetComponent<PickupManager>();
             if (Player) Inspector = Player.GetComponent<Inspector>();
             if (Player) PlayerTutorial = Player.GetTutorial();

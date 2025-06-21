@@ -8,6 +8,7 @@ namespace HTJ21
 
         public Act GetAct() => _act;
 
+        public abstract void OnActInit();
         public abstract void OnActStart();
         public abstract void OnActUpdate();
         public abstract void OnActEnd();

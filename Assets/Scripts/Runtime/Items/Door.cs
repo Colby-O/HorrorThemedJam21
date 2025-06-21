@@ -2,6 +2,7 @@ using PlazmaGames.Animation;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HTJ21
 {
@@ -33,6 +34,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _inProgress = false;
 
         [SerializeField] private bool _isLocked = false;
+
+        public UnityEvent OnOpen = new();
 
         private float CurrentAngle()
         {
@@ -92,6 +95,7 @@ namespace HTJ21
             }
 
             if (_audioSource) _audioSource.PlayOneShot(_openSound);
+            OnOpen.Invoke();
 
             _isOpen = true;
             _inProgress = true;

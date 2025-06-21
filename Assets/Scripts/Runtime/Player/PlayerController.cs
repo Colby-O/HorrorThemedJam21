@@ -26,6 +26,8 @@ namespace HTJ21
         [SerializeField] private float _lookAtSpeed = 4;
 
         private float gravity = -9.81f;
+        
+        private float _defaultHeight;
 
         public bool LockMovement { get; set; }
 
@@ -170,7 +172,7 @@ namespace HTJ21
 
         private void Start()
         {
-
+            _defaultHeight = _head.localPosition.y;
         }
 
         private void Update()
@@ -180,6 +182,20 @@ namespace HTJ21
             ProcessLook();
             ProcessMovement();
             ProcessGravity();
+            if (_inputHandler.JustCrouched())
+            {
+                _head.localPosition = _head.localPosition.SetY(_settings.CrouchHeight);
+                _controller.height = _settings.CrouchHeight + 0.3f;
+                _controller.center = _controller.center.SetY(_controller.height / 2);
+            }
+
+            if (_inputHandler.JustUncrouched())
+            {
+                _head.localPosition = _head.localPosition.SetY(_defaultHeight);
+                _controller.height = _defaultHeight + 0.3f;
+                _controller.center = _controller.center.SetY(_controller.height / 2);
+            }
+
             _controller.Move(transform.TransformDirection(_movementSpeed));
 
             if (!IsInCar() && _inputHandler.LightPressed()) ToggleLight();

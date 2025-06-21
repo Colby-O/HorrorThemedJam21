@@ -59,7 +59,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.39, y: 0.76, z: 0.0492401}
-  m_Center: {x: 0.37, y: 0.64, z: -0.9006145}
+  m_Center: {x: 0.25, y: 0.64, z: -0.9006145}
 --- !u!65 &3194681875270671172
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -79,8 +79,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.10130141, y: 1.5279732, z: 0.0492401}
-  m_Center: {x: 1.0768741, y: 0.07235336, z: -0.9006145}
+  m_Size: {x: 0.08581525, y: 1.5279732, z: 0.049240112}
+  m_Center: {x: 0.9077418, y: 0.07235336, z: -0.90061426}
 --- !u!65 &1311094888726907845
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -100,8 +100,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.104155, y: 1.5279732, z: 0.0492401}
-  m_Center: {x: -0.91684586, y: 0.07235336, z: 0.92}
+  m_Size: {x: 2.7565866, y: 1.5279732, z: 0.049240112}
+  m_Center: {x: -0.39059043, y: 0.07235336, z: 0.92000014}
 --- !u!65 &6297148792421216229
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -122,7 +122,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.059999928, y: 1.5279732, z: 0.56225574}
-  m_Center: {x: -2.93, y: 0.07235336, z: 0.61797786}
+  m_Center: {x: -1.78, y: 0.07235336, z: 0.61797786}
 --- !u!65 &1957203127248206492
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -143,7 +143,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.059999928, y: 1.5279732, z: 1.7835993}
-  m_Center: {x: 1.12, y: 0.07235336, z: 0.00730592}
+  m_Center: {x: 0.96, y: 0.07235336, z: 0.00730592}
 --- !u!65 &2952454462843948941
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -164,7 +164,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.059999928, y: 1.5279732, z: 0.57299787}
-  m_Center: {x: -2.93, y: 0.07235336, z: -0.5979949}
+  m_Center: {x: -1.78, y: 0.07235336, z: -0.5979949}
 --- !u!65 &2387804871063723011
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -184,8 +184,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.895049, y: 1.5279732, z: 0.0492401}
-  m_Center: {x: -1.5213989, y: 0.07235336, z: -0.9006145}
+  m_Size: {x: 2.050836, y: 1.5279732, z: 0.049240112}
+  m_Center: {x: -0.7803596, y: 0.07235336, z: -0.90061367}
 --- !u!1001 &4843016005300894924
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -204,6 +204,10 @@ namespace HTJ21
             AddEvents();
         }
 
+        public override void OnActInit()
+        {
+        }
+
         public override void OnActStart()
         {
             Setup();

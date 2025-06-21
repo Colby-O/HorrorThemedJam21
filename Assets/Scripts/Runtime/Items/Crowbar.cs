@@ -4,16 +4,15 @@ namespace HTJ21
 {
     public class Crowbar : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private void OnTriggerEnter(Collider other)
         {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            if (other.gameObject.CompareTag("Board"))
+            {
+                if (other.gameObject.TryGetComponent(out Rigidbody rig))
+                {
+                    rig.isKinematic = false;
+                }
+            }
         }
     }
 }

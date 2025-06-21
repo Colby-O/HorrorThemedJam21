@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5895949522866250171}
   - component: {fileID: 8323886248572435254}
   - component: {fileID: 2528796489298976453}
+  - component: {fileID: 6343801951686956778}
   m_Layer: 7
   m_Name: Crowbar
   m_TagString: Untagged
@@ -53,7 +54,7 @@ MonoBehaviour:
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 2
   _text: 
-  _outlineMR: {fileID: 0}
+  _outlineMR: {fileID: 9163552074485082951}
   _hasOutline: 0
 --- !u!54 &5895949522866250171
 Rigidbody:
@@ -124,6 +125,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0230734, y: 0.09191963, z: 0.06219888}
   m_Center: {x: 0.00017296169, y: 0.0014598919, z: 0.0018691813}
+--- !u!114 &6343801951686956778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4575069182017149191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a0823a11c96e53f94793bb2fd0084d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7962889179311125636
 GameObject:
   m_ObjectHideFlags: 0

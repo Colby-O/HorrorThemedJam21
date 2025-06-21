@@ -100,6 +100,8 @@ namespace HTJ21
                     PlazmaDebug.LogWarning($"Trying to add {act} more than once. Ignoring duplicates.", "Director", 1, Color.yellow);
                     continue;
                 }
+                
+                director.OnActInit();
 
                 director.gameObject.SetActive(false);
 

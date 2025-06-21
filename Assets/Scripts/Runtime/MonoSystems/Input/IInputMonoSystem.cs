@@ -10,6 +10,9 @@ namespace HTJ21
         public Vector2 RawLook { get; }
         public bool InteractPressed();
         public bool LightPressed();
+        public bool Crouched();
+        public bool JustCrouched();
+        public bool JustUncrouched();
 
         public UnityEvent InteractionCallback { get; }
         public UnityEvent SkipCallback { get; }

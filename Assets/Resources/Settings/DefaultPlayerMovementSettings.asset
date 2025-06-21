@@ -18,6 +18,7 @@ MonoBehaviour:
   WalkingStrideSpeed: 1
   MovementSmoothing: 0.1
   GravityMultiplier: 0.01
+  CrouchHeight: 1
   Sensitivity: {x: 10, y: 10}
   YLookLimit: {x: -80, y: 80}
   InvertLookY: 0
