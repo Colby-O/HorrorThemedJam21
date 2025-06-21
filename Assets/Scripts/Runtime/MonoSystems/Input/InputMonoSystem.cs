@@ -18,11 +18,15 @@ namespace HTJ21
         private InputAction _rAction;
         private InputAction _lightAction;
         private InputAction _skipAction;
+        private InputAction _crouchAction;
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
         public bool InteractPressed() => _interactAction.WasPerformedThisFrame();
         public bool LightPressed() => _lightAction.WasPerformedThisFrame();
+        public bool Crouched() => _crouchAction.IsPressed();
+        public bool JustCrouched() => _crouchAction.WasPressedThisFrame();
+        public bool JustUncrouched() => _crouchAction.WasReleasedThisFrame();
 
         public UnityEvent InteractionCallback { get; private set; }
         public UnityEvent SkipCallback { get; private set; }
@@ -77,6 +81,7 @@ namespace HTJ21
             _interactAction = _input.actions["Interact"];
             _skipAction = _input.actions["Skip"];
             _rAction = _input.actions["RAction"];
+            _crouchAction = _input.actions["Crouch"];
 
             _interactAction.performed += HandleInteractAction;
             _skipAction.performed += HandleSkipAction;
@@ -84,6 +89,7 @@ namespace HTJ21
             _lookAction.performed += HandleLookAction;
             _lightAction.performed += HandleLightAction;
             _rAction.performed += HandleRAction;
+            _crouchAction.performed += HandleRAction;
         }
 
         private void Update()

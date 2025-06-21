@@ -22,7 +22,7 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private List<PortalObject> _nearbyObjects;
         [SerializeField, ReadOnly] private bool _isEnabled = true;
-
+        
         public Renderer GetScreen()
         {
             return _screen;
@@ -34,7 +34,6 @@ namespace HTJ21
             {
                 obj.PreviousOffsetFromPortal = obj.transform.position - transform.position;
                 _nearbyObjects.Add(obj);
-                obj.OnPortalEnter?.Invoke(this, _linkedPortal);
             }
         }
 
@@ -163,6 +162,7 @@ namespace HTJ21
                 {
                     Matrix4x4 matrix = _linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * _nearbyObjects[i].transform.localToWorldMatrix;
                     _nearbyObjects[i].Teleport(matrix.GetColumn(3), matrix.rotation);
+                    obj.OnPortalEnter?.Invoke(this, _linkedPortal);
                     _linkedPortal.OnObjectEnter(_nearbyObjects[i]);
                     OnObjectExit(_nearbyObjects[i]);
                 }

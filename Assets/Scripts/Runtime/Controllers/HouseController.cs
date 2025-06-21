@@ -21,6 +21,14 @@ namespace HTJ21
             }
         }
 
+        public void EnableHouse()
+        {
+            foreach (GameObject section in _sections.Keys)
+            {
+                section.SetActive(true);
+            }
+        }
+
         private void Start()
         {
             OnActChange();

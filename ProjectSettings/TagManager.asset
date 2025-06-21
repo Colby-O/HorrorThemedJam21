@@ -15,6 +15,7 @@ TagManager:
   - GenerateNear
   - RopeAttachable
   - CarHitch
+  - Board
   layers:
   - Default
   - TransparentFX

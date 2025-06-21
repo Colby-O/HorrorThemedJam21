@@ -140,9 +140,9 @@ namespace HTJ21
                 offsetPosLoc.z += _currentComeToOffsetOverride;
                 Vector3 offsetPos = _offset.transform.TransformPoint(offsetPosLoc);
 
-                float dst = Vector3.Distance(transform.position, offsetPos);
-                Vector3 dir = (offsetPos - transform.position).normalized;
-                RaycastHit[] hits = Physics.RaycastAll(transform.position, dir, dst);
+                float dst = Vector3.Distance(_head.position, offsetPos);
+                Vector3 dir = (offsetPos - _head.position).normalized;
+                RaycastHit[] hits = Physics.RaycastAll(_head.position, dir, dst);
                 if (hits.Any(hit => hit.transform != _inspectingTarget && hit.transform != transform))
                 {
                     RaycastHit hit = hits.First(hit => hit.transform != _inspectingTarget && hit.transform != transform);
