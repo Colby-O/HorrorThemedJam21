@@ -343,7 +343,7 @@ namespace HTJ21
 
                 foreach (GameObject obj in toCheck)
                 {
-                    if (!obj.activeSelf) continue;
+                    if (obj && !obj.activeSelf) continue;
 
                     float distanceSq = (obj.transform.position - component.go.transform.position).sqrMagnitude;
                     if (minDst > distanceSq)

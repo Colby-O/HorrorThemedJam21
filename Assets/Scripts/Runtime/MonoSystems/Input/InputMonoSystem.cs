@@ -14,21 +14,19 @@ namespace HTJ21
 
         private InputAction _moveAction;
         private InputAction _lookAction;
-        private InputAction _reverseAction;
         private InputAction _interactAction;
+        private InputAction _rAction;
         private InputAction _lightAction;
         private InputAction _skipAction;
 
         public Vector2 RawMovement { get; private set; }
         public Vector2 RawLook { get; private set; }
-        public bool ReversePressed() => _reverseAction.WasPerformedThisFrame();
         public bool InteractPressed() => _interactAction.WasPerformedThisFrame();
         public bool LightPressed() => _lightAction.WasPerformedThisFrame();
 
         public UnityEvent InteractionCallback { get; private set; }
         public UnityEvent SkipCallback { get; private set; }
         public UnityEvent LightCallback { get; private set; }
-
         public UnityEvent RCallback { get; private set; }
 
         private void HandleMoveAction(InputAction.CallbackContext e)
@@ -75,17 +73,17 @@ namespace HTJ21
 
             _moveAction = _input.actions["Move"];
             _lookAction = _input.actions["Look"];
-            _reverseAction = _input.actions["Reverse"];
             _lightAction = _input.actions["Light"];
             _interactAction = _input.actions["Interact"];
             _skipAction = _input.actions["Skip"];
+            _rAction = _input.actions["RAction"];
 
             _interactAction.performed += HandleInteractAction;
             _skipAction.performed += HandleSkipAction;
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
             _lightAction.performed += HandleLightAction;
-            _reverseAction.performed += HandleRAction;
+            _rAction.performed += HandleRAction;
         }
 
         private void Update()

@@ -45,7 +45,7 @@
                     "name": "Crouch",
                     "type": "Button",
                     "id": "27c5f898-bc57-4ee1-8800-db469aca5fe3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -82,15 +82,6 @@
                     "type": "Button",
                     "id": "641cd816-40e6-41b4-8c3d-04687c349290",
                     "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Reverse",
-                    "type": "Button",
-                    "id": "45a5dfb3-9196-4eb6-b460-e11816d461a0",
-                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -135,6 +126,15 @@
                     "name": "HistoryNext",
                     "type": "Button",
                     "id": "6b6e465c-ee0f-4d59-98d8-a678277cf970",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RAction",
+                    "type": "Button",
+                    "id": "7f238d4f-3fef-4017-9369-8291b78ea6cf",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -529,39 +529,6 @@
                 },
                 {
                     "name": "",
-                    "id": "b3de0076-ad64-40d5-9a7c-6958ffd98e34",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Reverse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "19670f5e-8d65-4002-9b2b-22f805960e0e",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Reverse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "583525fa-b29c-413c-aa18-3fb6aeb8b333",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Reverse",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "966a6352-b6bc-4d62-a9a1-5c1c3bc4859e",
                     "path": "<Gamepad>/buttonWest",
                     "interactions": "",
@@ -623,6 +590,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HistoryNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6248f11-feb6-4851-b7de-760a6561e4a0",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RAction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

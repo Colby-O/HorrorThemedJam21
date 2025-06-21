@@ -10,17 +10,6 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
-        public void AddOutline()
-        {
-            _hasOutline = true;
-            Material[] mats = _outlineMR.materials;
-            for (int i = 0; i < mats.Length; i++)
-            {
-                mats[i].SetInt("Boolean_8BBF99CD", 0);
-            }
-            _outlineMR.materials = mats;
-        }
-
         public void EndInteraction()
         {
 
@@ -41,6 +30,17 @@ namespace HTJ21
         public bool IsInteractable()
         {
             return true;
+        }
+
+        public void AddOutline()
+        {
+            _hasOutline = true;
+            Material[] mats = _outlineMR.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i].SetInt("Boolean_8BBF99CD", 0);
+            }
+            _outlineMR.materials = mats;
         }
 
         public void RemoveOutline()
