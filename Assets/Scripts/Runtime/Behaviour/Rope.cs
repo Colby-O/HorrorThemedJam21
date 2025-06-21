@@ -73,7 +73,11 @@ namespace HTJ21
 
                 Vector3 dir = (seg.cur - seg.prev).normalized;
                 float dist = (seg.cur - seg.prev).magnitude + _ropeRadius;
-                if (Physics.Raycast(seg.prev, dir, out RaycastHit hit, dist, LayerMask.GetMask("Roadway")))
+
+                int roadLayer = LayerMask.NameToLayer("Roadway");
+                int terrianLayer = LayerMask.NameToLayer("Terrain");
+                int layerMask = (1 << roadLayer) | (1 << terrianLayer);
+                if (Physics.Raycast(seg.prev, dir, out RaycastHit hit, dist, layerMask))
                 {
                     seg.cur = hit.point + hit.normal * (_ropeRadius * 2.0f);
                     seg.prev = seg.cur;

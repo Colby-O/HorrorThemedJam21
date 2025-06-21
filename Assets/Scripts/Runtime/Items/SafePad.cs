@@ -1,4 +1,6 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
+using PlazmaGames.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +17,18 @@ namespace HTJ21
 
         [SerializeField] private List<int> _passcode;
 
+        [SerializeField] private AudioClip _wrongClip;
+
         [SerializeField, ReadOnly] List<int> _entered;
         [SerializeField, ReadOnly] private bool _isSolved;
 
         public UnityEvent OnSolved {  get; set; }
 
-        private void Failed()
+        private void Failed(bool overrideAudio = false)
         {
             _entered.Clear();
+
+            if (!overrideAudio && _wrongClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_wrongClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
 
             foreach (MeshRenderer mr in  _lights) mr.material.SetColor("_BaseColor", Color.black);
         }
@@ -30,7 +36,7 @@ namespace HTJ21
         private void OnButtonClicked(int id)
         {
             _entered.Add(id);
-            if (_entered.Count <= 3) _lights[_entered.Count - 1].material.SetColor("_BaseColor", Color.red);
+            if (_entered.Count <= 4) _lights[_entered.Count - 1].material.SetColor("_BaseColor", Color.red);
         }
 
         private bool IsSolved()
@@ -66,7 +72,7 @@ namespace HTJ21
                 });
             }
 
-            Failed();
+            Failed(true);
         }
 
         private void Update()
@@ -75,7 +81,7 @@ namespace HTJ21
             {
                 Solve();
             }
-            else if (_entered.Count >= 3) Failed();
+            else if (_entered.Count >= 4 && (!_isSolved || !IsSolved())) Failed();
         }
     }
 }

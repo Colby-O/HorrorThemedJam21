@@ -28,6 +28,7 @@ namespace HTJ21
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _openSound;
         [SerializeField] private AudioClip _closeSound;
+        [SerializeField] private AudioClip _lockedSound;
 
         [SerializeField, ReadOnly] private bool _isOpen = false;
         [SerializeField, ReadOnly] private bool _inProgress = false;
@@ -71,6 +72,8 @@ namespace HTJ21
 
             if (_isLocked)
             {
+                if (_audioSource) _audioSource.PlayOneShot(_lockedSound);
+
                 if 
                 (
                     !GameManager.GetMonoSystem<IDialogueMonoSystem>().IsLoaded(_onLockedDialogue) && 

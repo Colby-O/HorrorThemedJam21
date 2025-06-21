@@ -57,6 +57,7 @@ namespace HTJ21
         public override void Show()
         {
             base.Show();
+            HTJ21GameManager.Player.LockMovement = true;
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }

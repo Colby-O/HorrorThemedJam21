@@ -1,4 +1,6 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
+using PlazmaGames.Core;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,14 +8,17 @@ namespace HTJ21
 {
     public class KeypadButton : MonoBehaviour, IClickable
     {
-        public bool CanClick { get; set; }
-        public UnityAction OnClick { get; set; }
-        public UnityAction OnHoverEnter { get; set; }
-        public UnityAction OnHoverExit { get; set; }
+        [Header("Audio")]
+        [SerializeField] private AudioClip _clickClip;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
+
+        public bool CanClick { get; set; }
+        public UnityAction OnClick { get; set; }
+        public UnityAction OnHoverEnter { get; set; }
+        public UnityAction OnHoverExit { get; set; }
 
         public void Disable()
         {
@@ -51,9 +56,15 @@ namespace HTJ21
             _outlineMR.materials = mats;
         }
 
+        private void PlayClick()
+        {
+            if (_clickClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_clickClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
+        }
+
         private void Awake()
         {
             CanClick = true;
+            OnClick += PlayClick;
             OnHoverEnter += AddOutline;
             OnHoverExit += RemoveOutline;
         }

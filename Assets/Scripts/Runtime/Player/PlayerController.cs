@@ -18,6 +18,14 @@ namespace HTJ21
         [SerializeField] private PickupManager _pickupManager;
         [SerializeField] private TutorialController _tutorial;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource _as;
+        [SerializeField] private AudioClip _indoorsWalkClip;
+        [SerializeField] private float _indoorsPitch = 1.25f;
+        [SerializeField] private float _outdoorsPitch = 1f;
+        [SerializeField] private AudioClip _outdoorsWalkClip;
+
+
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
         [SerializeField, ReadOnly] private float _velY;
@@ -164,6 +172,7 @@ namespace HTJ21
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
             if (!_controller) _controller = GetComponent<CharacterController>();
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
+            if (!_as) _as = GetComponent<AudioSource>();
 
             _light.SetActive(false);
         }
@@ -175,11 +184,28 @@ namespace HTJ21
 
         private void Update()
         {
-            if (LockMovement || HTJ21GameManager.IsPaused) return;
+            if (LockMovement || HTJ21GameManager.IsPaused)
+            {
+                if (_as && _as.isPlaying) _as.Stop();
+                return;
+            }
+
             CheckIfInDoors();
             ProcessLook();
             ProcessMovement();
             ProcessGravity();
+
+            if (_as && new Vector3(_movementSpeed.x, 0, _movementSpeed.z).magnitude > 0.01f) 
+            {
+                _as.clip = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsWalkClip : _outdoorsWalkClip;
+                _as.pitch = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsPitch : _outdoorsPitch;
+                if (!_as.isPlaying) _as.Play();
+            }
+            else
+            {
+                if (_as) _as.Stop();
+            }
+
             _controller.Move(transform.TransformDirection(_movementSpeed));
 
             if (!IsInCar() && _inputHandler.LightPressed()) ToggleLight();

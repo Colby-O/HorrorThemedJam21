@@ -18,6 +18,10 @@ namespace HTJ21
         [SerializeField] private float _showerFadeoutDuration;
         [SerializeField, ReadOnly] private bool _isShowering = false;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource _as;
+        [SerializeField] private AudioClip _showerClip;
+
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
@@ -78,6 +82,8 @@ namespace HTJ21
 
         private void SpookyShower()
         {
+            if (_as) _as.Play();
+
             _isShowering = true;
             _waterPS.gameObject.SetActive(true);
 
@@ -103,6 +109,7 @@ namespace HTJ21
                         _showerFadeoutDuration,
                         () =>
                         {
+                            if (_as) _as.Stop();
                             RestoreToDefaults(true);
                             GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
                             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
@@ -114,6 +121,8 @@ namespace HTJ21
 
         private void StartShower()
         {
+            if (_as) _as.Play();
+
             _isShowering = true;
             _waterPS.gameObject.SetActive(true);
 
@@ -133,6 +142,7 @@ namespace HTJ21
                         _showerFadeoutDuration, 
                         () => 
                         {
+                            if (_as) _as.Stop();
                             RestoreToDefaults();
                             GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
                             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
@@ -145,6 +155,15 @@ namespace HTJ21
         private void Awake()
         {
             RestoreToDefaults();
+
+            if (!_as) _as = GetComponent<AudioSource>();
+
+            if (_as)
+            {
+                _as.clip = _showerClip;
+                _as.loop = true;
+                _as.Stop();
+            }
         }
     }
 }

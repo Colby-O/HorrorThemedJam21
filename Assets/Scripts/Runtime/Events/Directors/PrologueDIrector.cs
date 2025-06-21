@@ -32,10 +32,15 @@ namespace HTJ21
         [SerializeField, ReadOnly] private Vector3 _cameraEndPos;
         [SerializeField, ReadOnly] private Quaternion _cameraEndRot;
 
+        [Header("Dialogues")]
+        [SerializeField] private DialogueSO _introDialogue;
+
         [Header("Object References")]
         [SerializeField] private MeshRenderer _moon;
         [SerializeField] private RadioController _radio;
         [SerializeField] private SafePad _safe;
+        [SerializeField] private LampController _deskLamp;
+        [SerializeField] private AlarmClock _clock;
 
         [SerializeField] private AudioSource _audioSource;
         
@@ -109,7 +114,8 @@ namespace HTJ21
                         HTJ21GameManager.Player.LockMovement = false;
                         HTJ21GameManager.Player.LockMoving = true;
                         HTJ21GameManager.Player.LookAt(_moon.transform);
-                        _radio.TurnOff();
+                        if (_radio) _radio.TurnOff();
+                        if (_deskLamp) _deskLamp.TurnOff(true);
                         GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableRain();
                         GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
                         GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0);
@@ -154,7 +160,8 @@ namespace HTJ21
                                                 {
                                                     GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
                                                     GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
-                                                    _radio.TurnOn();
+                                                    if (_radio) _radio.TurnOn();
+                                                    if (_deskLamp) _deskLamp.TurnOn(true);
                                                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
                                                     _audioSource.pitch = 1f;
                                                     HTJ21GameManager.Player.LockMoving = false;
@@ -191,6 +198,17 @@ namespace HTJ21
             _safe.OnSolved.AddListener(EnableMoonEvent);
         }
 
+        private void IntroMonologue()
+        {
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
+                $"Officer's Graves House\nSnoqualmie, Washington\n{_clock.GetTime()}",
+                () =>
+                {
+                    GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_introDialogue);
+                }
+            );
+        }
+
         private void AddEvents()
         {
             GameManager.AddEventListener<Events.PrologueLookAtMoon>(Events.NewPrologueLookAtMoon((from, data) =>
@@ -207,9 +225,15 @@ namespace HTJ21
         public override void OnActStart()
         {
             Setup();
-            WakeUpCutsceneLogic();
+            HTJ21GameManager.Player.LockMovement = true;
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
             HTJ21GameManager.Car.DisableMirrors();
+
+            //HTJ21GameManager.Player.GetCamera().transform.position = _cameraStart.position;
+            //HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
+
+            //IntroMonologue();
+            WakeUpCutsceneLogic();
         }
 
         private void OnPortalEnter(Portal p1, Portal p2)

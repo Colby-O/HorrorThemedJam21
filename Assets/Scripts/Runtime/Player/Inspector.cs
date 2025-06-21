@@ -1,4 +1,5 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.Core.Utils;
 using PlazmaGames.UI;
@@ -19,10 +20,14 @@ namespace HTJ21
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private Transform _head;
 
-        [Header("settings")]
+        [Header("Settings")]
         [SerializeField] private float _rotationSpeed = 1f;
         [SerializeField] private float _moveRate = 0.1f;
         [SerializeField] private float _headMoveRate = 0.1f;
+
+        [Header("Audio")]
+        [SerializeField] private AudioClip _pickup;
+        [SerializeField] private AudioClip _drop;
 
         [Header("Flags")]
         [SerializeField, ReadOnly] private bool _isInspecting;
@@ -77,6 +82,8 @@ namespace HTJ21
             _currentTargetOverride = targetOverride;
             _currentComeToOffsetOverride = comeToOffsetOverride;
 
+            if (_currentInsectType != InspectType.Goto) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_pickup, PlazmaGames.Audio.AudioType.Sfx, false, true);
+
             if (_currentInsectType != InspectType.Moveable) DisablePlayer();
 
             _origPositions[_inspectingTarget] = _inspectingTarget.position;
@@ -97,6 +104,7 @@ namespace HTJ21
         {
             if (!_isInspecting || _staredInspectThisFrame) return;
             if (_isReading) ToggleRead();
+            if (_currentInsectType != InspectType.Goto) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_drop, PlazmaGames.Audio.AudioType.Sfx, false, true);
             _isInspecting = false;
             _isMovingBack = true;
             _currentTargetOverride = null;
