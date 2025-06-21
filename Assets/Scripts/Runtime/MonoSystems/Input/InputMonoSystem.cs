@@ -15,6 +15,7 @@ namespace HTJ21
         private InputAction _moveAction;
         private InputAction _lookAction;
         private InputAction _interactAction;
+        private InputAction _rAction;
         private InputAction _lightAction;
         private InputAction _skipAction;
 
@@ -26,7 +27,6 @@ namespace HTJ21
         public UnityEvent InteractionCallback { get; private set; }
         public UnityEvent SkipCallback { get; private set; }
         public UnityEvent LightCallback { get; private set; }
-
         public UnityEvent RCallback { get; private set; }
 
         private void HandleMoveAction(InputAction.CallbackContext e)
@@ -76,12 +76,14 @@ namespace HTJ21
             _lightAction = _input.actions["Light"];
             _interactAction = _input.actions["Interact"];
             _skipAction = _input.actions["Skip"];
+            _rAction = _input.actions["RAction"];
 
             _interactAction.performed += HandleInteractAction;
             _skipAction.performed += HandleSkipAction;
             _moveAction.performed += HandleMoveAction;
             _lookAction.performed += HandleLookAction;
             _lightAction.performed += HandleLightAction;
+            _rAction.performed += HandleRAction;
         }
 
         private void Update()

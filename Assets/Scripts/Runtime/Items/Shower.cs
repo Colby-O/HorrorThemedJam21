@@ -29,7 +29,7 @@ namespace HTJ21
 
         public string GetHint()
         {
-            return "Click 'E' to clean yourself";
+            return $"Click 'E' to {((_isSpookyShower) ? "cleanse yourself" : "shower")}";
         }
 
         public bool Interact(Interactor interactor)
