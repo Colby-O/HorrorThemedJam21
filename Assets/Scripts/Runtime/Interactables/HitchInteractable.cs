@@ -10,18 +10,21 @@ namespace HTJ21
         private bool _hasOutline = false;
 
         private SpringJoint _carJoint;
-        private GameObject _rope;
+        private GameObject _ropeItem;
+        private Rope _rope;
 
         private void Start()
         {
             _carJoint = HTJ21GameManager.Car.GetComponent<SpringJoint>();
         }
 
-        public void AttachRope(GameObject rope, Rigidbody to)
+        public void AttachRope(Rope rope, GameObject item, Rigidbody to)
         {
             _rope = rope;
+            _rope.Attach(transform, to.transform);
+            _ropeItem = item;
             HTJ21GameManager.Player.GetComponent<Inspector>().EndInspect();
-            _rope.SetActive(false);
+            _ropeItem.SetActive(false);
             _carJoint.connectedBody = to;
             _carJoint.massScale = 1;
         }
@@ -67,8 +70,9 @@ namespace HTJ21
             {
                 _carJoint.connectedBody = null;
                 _carJoint.massScale = 1e-5f;
-                _rope.SetActive(true);
-                _rope.transform.position = transform.position + -HTJ21GameManager.Car.transform.forward * 0.4f;
+                _ropeItem.SetActive(true);
+                _ropeItem.transform.position = transform.position + -HTJ21GameManager.Car.transform.forward * 0.4f;
+                Destroy(_rope.gameObject);
             }
             return true;
         }
