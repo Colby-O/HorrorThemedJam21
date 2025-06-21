@@ -22,6 +22,7 @@ namespace HTJ21
 
         [Header("Hints")]
         [SerializeField] private TMP_Text _hint;
+        [SerializeField, ReadOnly] private bool _wasSetThisFrame = false;
 
         [Header("Dialogue")]
         [SerializeField] private float _waitDelayDialogue = 1f;
@@ -88,6 +89,7 @@ namespace HTJ21
 
         public void SetHint(string hint)
         {
+            _wasSetThisFrame = true;
             _hint.text = hint;
             _hint.transform.parent.gameObject.SetActive(true);
         }
@@ -243,8 +245,13 @@ namespace HTJ21
 
         private void Update()
         {
-            HideHint();
+            if (!_wasSetThisFrame) HideHint();
             HandleTimeout();
+        }
+
+        private void LateUpdate()
+        {
+            _wasSetThisFrame = false;
         }
     }
 }
