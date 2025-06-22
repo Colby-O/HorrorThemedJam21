@@ -68,10 +68,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 3
+  _rotateWithPlayer: 0
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
-  _text: <b>The Book Of Selene</b>
+  _text: <align=center><b>The Book Of Selene</b></align>
+  _playMoreThanOnce: 0
+  _onInspectDialogue: {fileID: 0}
+  _hasLookedAtOnce: 0
   _outlineMR: {fileID: 278851458388468295}
   _hasOutline: 0
 --- !u!1001 &1449939509893054147

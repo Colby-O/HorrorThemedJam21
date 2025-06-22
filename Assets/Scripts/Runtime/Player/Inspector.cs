@@ -79,14 +79,14 @@ namespace HTJ21
             _inspectingObject = obj;
             _rotateWithPlayer = rotateWithPlayer;
             _startRotation = Quaternion.Inverse(transform.rotation) * obj.rotation;
-            _inspectingTarget = (inspectType == InspectType.Goto) ? _head : obj;
+            _inspectingTarget = (inspectType == InspectType.Goto || inspectType == InspectType.ReadableGoTo) ? _head : obj;
             _objectOffset = offset;
             _currentInsectType = inspectType;
             _currentText = text;
             _currentTargetOverride = targetOverride;
             _currentComeToOffsetOverride = comeToOffsetOverride;
 
-            if (_currentInsectType != InspectType.Goto) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_pickup, PlazmaGames.Audio.AudioType.Sfx, false, true);
+            if (_currentInsectType != InspectType.Goto && _currentInsectType != InspectType.ReadableGoTo) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_pickup, PlazmaGames.Audio.AudioType.Sfx, false, true);
 
             if (_currentInsectType != InspectType.Moveable) DisablePlayer();
 
@@ -108,21 +108,21 @@ namespace HTJ21
         {
             if (!_isInspecting || _staredInspectThisFrame) return;
             if (_isReading) ToggleRead();
-            if (_currentInsectType != InspectType.Goto) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_drop, PlazmaGames.Audio.AudioType.Sfx, false, true);
+            if (_currentInsectType != InspectType.Goto && _currentInsectType != InspectType.ReadableGoTo) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_drop, PlazmaGames.Audio.AudioType.Sfx, false, true);
             _isInspecting = false;
             _isMovingBack = true;
             _currentTargetOverride = null;
             _currentText = string.Empty;
-            if (_currentInsectType != InspectType.Goto) EnablePlayer();
+            if (_currentInsectType != InspectType.Goto && _currentInsectType != InspectType.ReadableGoTo) EnablePlayer();
         }
 
         private void Inspect()
         {
             if (!_inspectingTarget) return;
 
-            if (_currentInsectType == InspectType.ComeTo || _currentInsectType == InspectType.Readable)
+            if (_currentInsectType == InspectType.ComeTo || _currentInsectType == InspectType.ReadableComeTo)
             {
-                if (_isReading && _currentInsectType == InspectType.Readable) return;
+                if (_isReading && _currentInsectType == InspectType.ReadableComeTo) return;
 
                 Vector3 offsetPosLoc = _offset.transform.localPosition;
                 offsetPosLoc.z += _currentComeToOffsetOverride;
@@ -162,7 +162,7 @@ namespace HTJ21
                     _inspectingTarget.position = offsetPos;
                 }
             }
-            else if (_currentInsectType == InspectType.Goto)
+            else if (_currentInsectType == InspectType.Goto || _currentInsectType == InspectType.ReadableGoTo)
             {
                 _head.transform.rotation = Quaternion.LookRotation(((_currentTargetOverride ? _currentTargetOverride.position : _inspectingObject.transform.position) - _objectOffset.transform.position).normalized);
                 _head.transform.position = Vector3.Lerp(_head.transform.position, _objectOffset.transform.position, _moveRate * UnityEngine.Time.deltaTime);
@@ -184,7 +184,7 @@ namespace HTJ21
             }
             else
             {
-                float moveRate = (_currentInsectType == InspectType.ComeTo) ? _moveRate : _headMoveRate;
+                float moveRate = (_currentInsectType == InspectType.ComeTo || _currentInsectType == InspectType.ReadableComeTo) ? _moveRate : _headMoveRate;
 
                 if (_origPositions.ContainsKey(_inspectingTarget)) _inspectingTarget.position = Vector3.Lerp(_inspectingTarget.position, _origPositions[_inspectingTarget], moveRate * UnityEngine.Time.deltaTime);
                 if (_origRotations.ContainsKey(_inspectingTarget)) _inspectingTarget.rotation = Quaternion.Lerp(_inspectingTarget.rotation, _origRotations[_inspectingTarget], moveRate * UnityEngine.Time.deltaTime);
@@ -201,7 +201,7 @@ namespace HTJ21
 
                     _inspectingTarget.GetComponents<Collider>().ForEach(c => c.enabled = true);
 
-                    if (_currentInsectType == InspectType.Goto) EnablePlayer();
+                    if (_currentInsectType == InspectType.Goto || _currentInsectType == InspectType.ReadableGoTo) EnablePlayer();
                     _isMovingBack = false;
                 }
             }
@@ -209,7 +209,7 @@ namespace HTJ21
 
         private void ToggleRead()
         {
-            if (_isMovingBack || !_isInspecting || _currentInsectType != InspectType.Readable) return;
+            if (_isMovingBack || !_isInspecting || (_currentInsectType != InspectType.ReadableComeTo && _currentInsectType != InspectType.ReadableGoTo)) return;
 
             _isReading = !_isReading;
 
@@ -255,7 +255,7 @@ namespace HTJ21
 
             if(_isInspecting) Inspect();
             if (_isMovingBack && !_isInspecting) CancelInspect();
-            if (_isInspecting && _currentInsectType == InspectType.Readable && !_isReading && !_isMovingBack) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SetHint("Click 'R' to read");
+            if (_isInspecting && (_currentInsectType == InspectType.ReadableComeTo || _currentInsectType == InspectType.ReadableGoTo) && !_isReading && !_isMovingBack) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SetHint("Click 'R' to read");
         }
 
         private void LateUpdate()

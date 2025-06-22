@@ -13,6 +13,7 @@ namespace HTJ21
     {
         [Header("Moon Cutscene")]
         [SerializeField] EventTrigger _moonLookTrigger;
+        [SerializeField] private Transform _lookAtMoonLoc;
         [SerializeField] private AudioClip _moonJumpscareClip;
         [SerializeField] private float _pitch;
         [SerializeField] private float _turnDuration = 1f;
@@ -35,6 +36,8 @@ namespace HTJ21
         [Header("Dialogues")]
         [SerializeField] private DialogueSO _introDialogue;
         [SerializeField] private DialogueSO _onWakeUpDialogue;
+        [SerializeField] private DialogueSO _beforeMoonDialogue;
+        [SerializeField] private DialogueSO _afterMoonDialogue;
 
         [Header("Object References")]
         [SerializeField] private MeshRenderer _moon;
@@ -42,6 +45,9 @@ namespace HTJ21
         [SerializeField] private SafePad _safe;
         [SerializeField] private LampController _deskLamp;
         [SerializeField] private AlarmClock _clock;
+        [SerializeField] private Portal _toAct1;
+        [SerializeField] private Portal _fromHome;
+        [SerializeField] private Keypad _doorKeyPad;
 
         [SerializeField] private AudioSource _audioSource;
         
@@ -89,10 +95,91 @@ namespace HTJ21
             );
         }
 
+        public void MoonJumpscare()
+        {
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, startFromOpen: true, onFinish: () =>
+            {
+                _originalScale = _moon.transform.localScale;
+                Vector3 targetScale = _moon.transform.localScale * _scaleFactor;
+                HTJ21GameManager.Player.LockMovement = false;
+                HTJ21GameManager.Player.LockMoving = true;
+                HTJ21GameManager.Player.LookAt(_moon.transform);
+                if (_radio) _radio.TurnOff();
+                bool isLampOn = false;
+                if (_deskLamp)
+                {
+                    isLampOn = _deskLamp.IsOn();
+                    _deskLamp.TurnOff(true);
+                }
+                GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableRain();
+                GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
+                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0);
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                    this,
+                   _timeBetweenCloseBlinkDuration,
+                    (float t) =>
+                    {
+                        _moon.transform.localScale = Vector3.Lerp(_originalScale, targetScale, t);
+                        _moon.material.SetColor("_BaseColor", Color.Lerp(Color.white, HTJ21GameManager.Preferences.MoonRedColor, t));
+                    },
+                    () =>
+                    {
+                        _audioSource.pitch = _pitch;
+                        _audioSource.PlayOneShot(_moonJumpscareClip);
+                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () => { GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults(); }, false);
+                        _redMoonLight.gameObject.SetActive(true);
+                        GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                            this,
+                            _lookAtMoonDuration,
+                            (float t) =>
+                            {
+                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetStaticLevel(t);
+                            },
+                            () =>
+                            {
+                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () => { GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0); }, true);
+                                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                                    this,
+                                    _timeBetweenOpenBlinkDuration,
+                                    (float t) =>
+                                    {
+
+                                    },
+                                    () =>
+                                    {
+                                        _moon.transform.localScale = _originalScale;
+                                        _moon.material.SetColor("_BaseColor", Color.white);
+                                        _redMoonLight.gameObject.SetActive(false);
+
+                                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () =>
+                                        {
+                                            if (_afterMoonDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_afterMoonDialogue);
+                                            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+                                            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
+                                            if (_radio) _radio.TurnOn();
+                                            if (_deskLamp && isLampOn) _deskLamp.TurnOn(true);
+                                            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+                                            _audioSource.pitch = 1f;
+                                            HTJ21GameManager.Player.LockMoving = false;
+                                            HTJ21GameManager.Player.StopLookAt();
+                                        }, false);
+                                    }
+                                         );
+                            }
+                                 );
+                    }
+                         );
+            });
+        }
+
         private void MoonCutsceneLogic()
         {
             _originalScale = _moon.transform.localScale;
             Vector3 targetScale = _moon.transform.localScale * _scaleFactor;
+
+            Vector3 startPos = HTJ21GameManager.Player.transform.position;
+            Vector3 targetPos = _lookAtMoonLoc.position;
+            targetPos.y = startPos.y;
 
             Quaternion curRot = HTJ21GameManager.Player.transform.rotation;
             Vector3 targetDirection = _moon.transform.position - HTJ21GameManager.Player.transform.position;
@@ -105,78 +192,28 @@ namespace HTJ21
                 _turnDuration,
                 (float t) =>
                 {
+                    HTJ21GameManager.Player.transform.position = Vector3.Lerp(startPos, targetPos, t);
                     HTJ21GameManager.Player.transform.rotation = Quaternion.Lerp(curRot, targetRot, t);
                 },
                 () =>
                 {
-                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, startFromOpen: true, onFinish: () =>
-                    {
-                        HTJ21GameManager.Player.LockMovement = false;
-                        HTJ21GameManager.Player.LockMoving = true;
-                        HTJ21GameManager.Player.LookAt(_moon.transform);
-                        if (_radio) _radio.TurnOff();
-                        if (_deskLamp) _deskLamp.TurnOff(true);
-                        GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableRain();
-                        GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
-                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0);
-                        GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
-                            this,
-                           _timeBetweenCloseBlinkDuration,
-                            (float t) =>
-                            {
-                                _moon.transform.localScale = Vector3.Lerp(_originalScale, targetScale, t);
-                                _moon.material.SetColor("_BaseColor", Color.Lerp(Color.white, HTJ21GameManager.Preferences.MoonRedColor, t));
-                            },
-                            () =>
-                            {
-                                _audioSource.pitch = _pitch;
-                                _audioSource.PlayOneShot(_moonJumpscareClip);
-                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () => { GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults(); }, false);
-                                _redMoonLight.gameObject.SetActive(true);
-                                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
-                                    this,
-                                    _lookAtMoonDuration,
-                                    (float t) =>
-                                    {
-                                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetStaticLevel(t);
-                                    },
-                                    () =>
-                                    {
-                                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () => { GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetScreenBend(0); }, true);
-                                        GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
-                                            this,
-                                            _timeBetweenOpenBlinkDuration,
-                                            (float t) =>
-                                            {
+                    if (_beforeMoonDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_beforeMoonDialogue);
+                    else MoonJumpscare();
+                }
+            );
+        }
 
-                                            },
-                                            () =>
-                                            {
-                                                _moon.transform.localScale = _originalScale;
-                                                _moon.material.SetColor("_BaseColor", Color.white);
-                                                _redMoonLight.gameObject.SetActive(false);
+        private void OpenPortals()
+        {
+            _toAct1.gameObject.SetActive(true);
+            _fromHome.gameObject.SetActive(true);
+        }
 
-                                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, () =>
-                                                {
-                                                    GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
-                                                    GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
-                                                    if (_radio) _radio.TurnOn();
-                                                    if (_deskLamp) _deskLamp.TurnOn(true);
-                                                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
-                                                    _audioSource.pitch = 1f;
-                                                    HTJ21GameManager.Player.LockMoving = false;
-                                                    HTJ21GameManager.Player.StopLookAt();
-                                                }, false);
-                                                     }
-                                                 );
-                                             }
-                                         );
-                                     }
-                                 );
-                             });
-                         }
-                     );
-                 }
+        private void ClosePortals()
+        {
+            _toAct1.gameObject.SetActive(false);
+            _fromHome.gameObject.SetActive(false);
+        }
 
         private void Setup()
         {
@@ -196,6 +233,10 @@ namespace HTJ21
 
             _moonLookTrigger.gameObject.SetActive(false);
             _safe.OnSolved.AddListener(EnableMoonEvent);
+
+            _doorKeyPad.OnSolved.AddListener(OpenPortals);
+
+            ClosePortals();
         }
 
         private void IntroMonologue()

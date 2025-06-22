@@ -16,6 +16,11 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
+        public bool IsOn()
+        {
+            return _lampLight.gameObject.activeSelf;
+        }
+
         public void TurnOn(bool overrideAudio = false)
         {
             if (_as && !overrideAudio) _as.PlayOneShot(_onClip);

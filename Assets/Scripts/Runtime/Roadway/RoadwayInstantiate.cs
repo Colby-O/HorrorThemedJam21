@@ -337,6 +337,8 @@ namespace HTJ21
             List<GameObject> toCheck = new List<GameObject>(_generateNearObjects);
             if (HTJ21GameManager.CurrentControllable) toCheck.Add(HTJ21GameManager.CurrentControllable.gameObject);
 
+            if (_components == null) return;
+
             foreach (MeshComponent component in _components)
             {
                 float minDst = float.MaxValue;

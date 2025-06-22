@@ -893,6 +893,7 @@ Transform:
   - {fileID: 1393950967332484016}
   - {fileID: 4882584575089782086}
   - {fileID: 61463734302229673}
+  - {fileID: 4001035543468627760}
   m_Father: {fileID: 1637903533712145158}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1520579533712903342
@@ -1521,6 +1522,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2081386790414070016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4001035543468627760}
+  m_Layer: 0
+  m_Name: LookAtMoonPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4001035543468627760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081386790414070016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.751, y: 0, z: -1.148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7877328677293633237}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2113025701550962400
 GameObject:
   m_ObjectHideFlags: 0
@@ -3447,6 +3479,8 @@ MonoBehaviour:
   _hasOutline: 0
   _onFirstTryLockedDialogue: {fileID: 11400000, guid: 1e4728509bdddff4ab8fd9a1d76e8a2b, type: 2}
   _onLockedDialogue: {fileID: 11400000, guid: fd5ebd2d11264154988a40b0eaa52240, type: 2}
+  _onFirstOpenDialogue: {fileID: 0}
+  _hasOpenedBefore: 0
   _hasAttemptedToUnlock: 0
   _audioSource: {fileID: 3186098971254912234}
   _openSound: {fileID: 8300000, guid: f0444cf4649e6804982455348d4c2ae3, type: 3}
@@ -7666,7 +7700,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
+  m_RenderPostProcessing: 0
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -11047,7 +11081,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.898
+      value: 2.788
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11055,7 +11089,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.977
+      value: 0.822
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11088,6 +11122,19 @@ PrefabInstance:
     - target: {fileID: 1622681253897530214, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_Name
       value: Note
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
+      propertyPath: _text
+      value: <b>Don't answer the call.\nYou can't stop the World Ender.</b>\n\nYou
+        Hide behind your veil.\nYou opened the gate.\nYou stood silent at the edge
+        of the storm.\nThe veil must break.\n\nThe old moon falters.\nThe false light
+        wanes.\nSelene has shown us what comes next.\n\nHe is the vessel.\nYou are
+        the anchor.\nThe blood will clense the waking sky.\n\nTo deny the ritual
+        is to doom us all.\nLet the veil fall.\n\n<b>---The Children of Selene</b>
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
+      propertyPath: _comeToOffsetOverride
+      value: -0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12383,7 +12430,7 @@ MonoBehaviour:
   _rotateWithPlayer: 0
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
-  _comeToOffsetOverride: 0
+  _comeToOffsetOverride: -0.2
   _text: "<style=\"Title\"><align=\"center\"><b>Moonbeams Times\\n01/07\\n\\n</b></align>
     <align=\"center\"></style><b><u>Cult Ties in Family Tragedy</u></b></align>\\n\\n<align=\"left\"><style=\"Title\"><b>T</b></style>reagdy
     strikes in the small town of Snoqualmie in Washington USA. During the late night
@@ -12392,7 +12439,7 @@ MonoBehaviour:
     an 8-year old boy named Nathan. Police are calling this an organized ritual event
     orchestrated by a local group of fanatics known as the Children of Selene.  The
     Children of Selene believes an extinction event is set to occur on July 1st 2025.
-    The cults aim to cleanse the moon of sin to allow for their ascension to heaven.
+    The cult aims to cleanse the moon of sin to allow for their ascension to heaven.
     Authorities are urging  residents of  Snoqualmie to avoid being out late as the
     cult is known to frequent residential neighborhoods at night. Anyone with knowledge
     of The Children of Selene are asked to contact Washington State Patrol.</align>"
@@ -13672,6 +13719,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3631849148583624021, guid: 4258b399fc2f46240987fc58a3d2cde4, type: 3}
+      propertyPath: _onFirstOpenDialogue
+      value: 
+      objectReference: {fileID: 11400000, guid: 02e85176fa369a54e9a0fc34c49975e6, type: 2}
+    - target: {fileID: 3631849148583624021, guid: 4258b399fc2f46240987fc58a3d2cde4, type: 3}
       propertyPath: _onFirstTryLockedDialogue
       value: 
       objectReference: {fileID: 11400000, guid: c46b2c172121c8a47a7f33b21f474178, type: 2}
@@ -14003,6 +14054,12 @@ PrefabInstance:
     - target: {fileID: 1622681253897530214, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_Name
       value: Note
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
+      propertyPath: _text
+      value: <b>Passwords</b>\n\n\t<b>Internet:</b> sisterintegrity\n\n\t<b>Phone:</b>
+        shareholderam\n\n\t<b>Stellar Moives:</b> kindshipgold\n\n\t<b>Safe:</b>
+        0***
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18724,12 +18781,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4fbaf96c942b074f84402e661f5fcf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inspectType: 0
+  _inspectType: 4
   _rotateWithPlayer: 0
   _offset: {fileID: 4873970915451371423}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
-  _text: 
+  _text: Lucian Graves,\n\nI regret to inform you I am permanently moving you to
+    the nightshift. With all this bullshit going on there are many open calls after
+    dark and not enough boots to cover me.\n\nThere is a backlog of indecent reports
+    you need to clear up too. Especially the stuff from the Smith case, which to
+    say the least you left extremely vague.\n\nAlso, the locker code has been changed
+    to 7319. Use it to access your gear at the station before your next shift.\n\n---Keller,\nWashington
+    State Patrol
   _playMoreThanOnce: 0
   _onInspectDialogue: {fileID: 0}
   _hasLookedAtOnce: 0
@@ -20303,6 +20366,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Book (38)
       objectReference: {fileID: 0}
+    - target: {fileID: 2385753903102221388, guid: 483256c34ddf98f4e8945e90ddde83cb, type: 3}
+      propertyPath: _onInspectDialogue
+      value: 
+      objectReference: {fileID: 11400000, guid: 655bfa7c1719fc843b5023fa58c563d4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20885,55 +20952,67 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[0].songName
-      value: Synthave
+      value: She Sleeps Beneath the Moonlight
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[1].songName
-      value: Keys
+      value: Phase Shift
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[2].songName
-      value: Forestry
+      value: The House With No Windows
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[3].songName
-      value: Nathan
+      value: The Night Devours the Sun
+      objectReference: {fileID: 0}
+    - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
+      propertyPath: _stationInput.Array.data[4].songName
+      value: His blood will cleanse
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[0].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: a77abd10d123d9b4aa6061e71b8fddc3, type: 3}
+      objectReference: {fileID: 8300000, guid: c3f0bb72ba7fdf14681f4eec83bfc09c, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[1].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: b41dc2c61b19c164887e8ee2bc451396, type: 3}
+      objectReference: {fileID: 8300000, guid: a7366830b9fb7884c957a2a678438cd7, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[2].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 70827695dd0998b4e8f31d56a5c0e8b5, type: 3}
+      objectReference: {fileID: 8300000, guid: 3597f2a80324c5d459d143339e45dc03, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[3].audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ea2450d9046299f4ab31523f1612d19c, type: 3}
+    - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
+      propertyPath: _stationInput.Array.data[4].audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 7174dce281f2f384cbada8c82687844c, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[0].stationName
-      value: 00 Moon Rock
+      value: 97.2 Luna FM
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[1].stationName
-      value: 01 The Bounce
+      value: 107.7 The Hollow
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[2].stationName
-      value: 07 The World Ender
+      value: 88.9 Third Eye Broadcast
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[3].stationName
-      value: Why?
+      value: 66.6 The World Ender
+      objectReference: {fileID: 0}
+    - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
+      propertyPath: _stationInput.Array.data[4].stationName
+      value: The Vessel
       objectReference: {fileID: 0}
     - target: {fileID: 8949351798869287746, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: m_Name

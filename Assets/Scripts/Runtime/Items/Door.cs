@@ -23,6 +23,8 @@ namespace HTJ21
         [Header("Dialogue")]
         [SerializeField] private DialogueSO _onFirstTryLockedDialogue;
         [SerializeField] private DialogueSO _onLockedDialogue;
+        [SerializeField] private DialogueSO _onFirstOpenDialogue;
+        [SerializeField, ReadOnly] private bool _hasOpenedBefore = false;
         [SerializeField, ReadOnly] private bool _hasAttemptedToUnlock = false;
 
         [Header("Audio")]
@@ -75,7 +77,7 @@ namespace HTJ21
 
             if (_isLocked)
             {
-                if (_audioSource) _audioSource.PlayOneShot(_lockedSound);
+                if (_audioSource && _lockedSound) _audioSource.PlayOneShot(_lockedSound);
 
                 if 
                 (
@@ -97,7 +99,13 @@ namespace HTJ21
                 return;
             }
 
-            if (_audioSource) _audioSource.PlayOneShot(_openSound);
+            if (!_hasOpenedBefore)
+            {
+                if (_onFirstOpenDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onFirstOpenDialogue);
+                _hasOpenedBefore = true;
+            }
+
+            if (_audioSource && _openSound) _audioSource.PlayOneShot(_openSound);
             OnOpen.Invoke();
 
             _isOpen = true;
@@ -123,7 +131,7 @@ namespace HTJ21
             if (!_isOpen) return;
             if (_inProgress) return;
 
-            if (_audioSource) _audioSource.PlayOneShot(_closeSound);
+            if (_audioSource && _closeSound) _audioSource.PlayOneShot(_closeSound);
 
             _inProgress = true;
             _isOpen = false;
@@ -171,6 +179,12 @@ namespace HTJ21
         public bool IsInteractable()
         {
             return true;
+        }
+
+        private void Awake()
+        {
+            _hasOpenedBefore = false;
+            _hasAttemptedToUnlock = false;
         }
     }
 }

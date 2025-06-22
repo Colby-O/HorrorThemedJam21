@@ -10,7 +10,8 @@ namespace HTJ21
         Goto,
         ComeTo,
         Moveable,
-        Readable
+        ReadableComeTo,
+        ReadableGoTo
     }
 
     public class InspectableItem : MonoBehaviour, IInteractable
