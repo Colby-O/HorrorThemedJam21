@@ -1,6 +1,10 @@
 using System;
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
+using PlazmaGames.Core;
+using UnityEditor;
 using UnityEngine;
+using AudioType = PlazmaGames.Audio.AudioType;
 
 namespace HTJ21
 {
@@ -15,6 +19,20 @@ namespace HTJ21
         private void Start()
         {
             _ropePrefab = Resources.Load<GameObject>("Prefabs/Rope");
+        }
+
+        private void Update()
+        {
+            if (_attachedTo)
+            {
+                float distSq = (transform.position - _attachedTo.transform.position).sqrMagnitude;
+                if (distSq > MathExt.Square(HTJ21GameManager.Preferences.RopeSnapDistance))
+                {
+                    _attachedTo = null;
+                    GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(HTJ21GameManager.Preferences.RopeSnapSound, AudioType.Sfx, false, true);
+                    Destroy(_rope.gameObject);
+                }
+            }
         }
 
         private void OnTriggerEnter(Collider other)

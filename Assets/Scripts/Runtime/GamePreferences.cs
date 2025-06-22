@@ -12,6 +12,10 @@ namespace HTJ21
         
         [Header("Lune")]
         public Color MoonRedColor;
+        
+        [Header("Rope")]
+        public float RopeSnapDistance = 3;
+        public AudioClip RopeSnapSound;
 
         [Header("Dialogue -- Act 1")]
         public string Act1Location;
