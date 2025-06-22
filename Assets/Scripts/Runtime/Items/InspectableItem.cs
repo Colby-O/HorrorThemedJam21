@@ -15,6 +15,7 @@ namespace HTJ21
     public class InspectableItem : MonoBehaviour, IInteractable
     {
         [SerializeField] private InspectType _inspectType;
+        [SerializeField] private bool _rotateWithPlayer = false;
         [SerializeField] private Transform _offset;
         [SerializeField] private Transform _targetOverride;
         [SerializeField] private float _comeToOffsetOverride;
@@ -41,7 +42,7 @@ namespace HTJ21
 
         public bool Interact(Interactor interactor)
         {
-            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset, _targetOverride, _text, _comeToOffsetOverride);
+            if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _rotateWithPlayer, _offset, _targetOverride, _text, _comeToOffsetOverride);
             return true;
         }
 
