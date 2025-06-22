@@ -36,6 +36,8 @@ namespace HTJ21
 
         [Header("Debugging")]
         [SerializeField, ReadOnly] private InspectType _currentInsectType;
+        [SerializeField, ReadOnly] private bool _rotateWithPlayer;
+        [SerializeField, ReadOnly] private Quaternion _startRotation;
         [SerializeField, ReadOnly] private Transform _inspectingTarget;
         [SerializeField, ReadOnly] private Transform _inspectingObject;
         [SerializeField, ReadOnly] private Transform _objectOffset;
@@ -67,7 +69,7 @@ namespace HTJ21
             _playerController.LockMovement = false;
         }
 
-        public void StartInspect(Transform obj, InspectType inspectType, Transform offset, Transform targetOverride = null, string text = "", float comeToOffsetOverride = 0f)
+        public void StartInspect(Transform obj, InspectType inspectType, bool rotateWithPlayer, Transform offset, Transform targetOverride = null, string text = "", float comeToOffsetOverride = 0f)
         {
             if (obj == null || _isInspecting || _isMovingBack) return;
 
@@ -75,6 +77,8 @@ namespace HTJ21
             _isReading = false;
             _staredInspectThisFrame = true;
             _inspectingObject = obj;
+            _rotateWithPlayer = rotateWithPlayer;
+            _startRotation = Quaternion.Inverse(transform.rotation) * obj.rotation;
             _inspectingTarget = (inspectType == InspectType.Goto) ? _head : obj;
             _objectOffset = offset;
             _currentInsectType = inspectType;
@@ -136,6 +140,11 @@ namespace HTJ21
             }
             else if (_currentInsectType == InspectType.Moveable)
             {
+                if (_rotateWithPlayer)
+                {
+                    _inspectingObject.rotation = transform.rotation * _startRotation;
+                }
+                
                 Vector3 offsetPosLoc = _offset.transform.localPosition;
                 offsetPosLoc.z += _currentComeToOffsetOverride;
                 Vector3 offsetPos = _offset.transform.TransformPoint(offsetPosLoc);

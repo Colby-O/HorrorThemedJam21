@@ -2753,6 +2753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 0
+  _rotateWithPlayer: 0
   _offset: {fileID: 4785816085663882619}
   _targetOverride: {fileID: 6126442592683395758}
   _comeToOffsetOverride: 0
@@ -4875,6 +4876,7 @@ Transform:
   - {fileID: 1042218298125029885}
   - {fileID: 2328187780281206903}
   - {fileID: 2874086434940442543}
+  - {fileID: 8440105934716227388}
   m_Father: {fileID: 1516699338036052741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5141903975988525828
@@ -9674,6 +9676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 0
+  _rotateWithPlayer: 0
   _offset: {fileID: 9000223497322361347}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
@@ -10315,6 +10318,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1189643331512939906, guid: a3fe81002ed04d14fbf15e17eede0ed2, type: 3}
   m_PrefabInstance: {fileID: 1135225987761280633}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1205193787092254696
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8573561593640546473}
+    m_Modifications:
+    - target: {fileID: 3674729160839582666, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_Name
+      value: Shower
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.228
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+--- !u!4 &8440105934716227388 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7320868360118956244, guid: b97950337ec9b114cbbff26812314e0e, type: 3}
+  m_PrefabInstance: {fileID: 1205193787092254696}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1326235457938383462
 PrefabInstance:
@@ -12315,6 +12380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 3
+  _rotateWithPlayer: 0
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
@@ -12725,6 +12791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 0
+  _rotateWithPlayer: 0
   _offset: {fileID: 757703248196629684}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
@@ -14837,6 +14904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 1
+  _rotateWithPlayer: 0
   _offset: {fileID: 0}
   _targetOverride: {fileID: 8805967915986682876}
   _comeToOffsetOverride: 0.1
@@ -18657,6 +18725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 0
+  _rotateWithPlayer: 0
   _offset: {fileID: 4873970915451371423}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
@@ -21506,6 +21575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 1
+  _rotateWithPlayer: 0
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0.2
