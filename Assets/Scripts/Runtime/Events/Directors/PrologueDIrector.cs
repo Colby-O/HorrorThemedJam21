@@ -34,6 +34,7 @@ namespace HTJ21
 
         [Header("Dialogues")]
         [SerializeField] private DialogueSO _introDialogue;
+        [SerializeField] private DialogueSO _onWakeUpDialogue;
 
         [Header("Object References")]
         [SerializeField] private MeshRenderer _moon;
@@ -49,11 +50,9 @@ namespace HTJ21
             _moonLookTrigger.gameObject.SetActive(true);
         }
 
-        private void WakeUpCutsceneLogic()
+        public void WakeUpCutsceneLogic()
         {
             HTJ21GameManager.Player.LockMovement = true;
-            _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
-            _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;
 
             Vector3 mid = Vector3.Lerp(_cameraStart.position, _cameraEndPos, 0.5f);
             Vector3 lineDir = (_cameraEndPos - _cameraStart.position).normalized;
@@ -82,6 +81,7 @@ namespace HTJ21
                         },
                         () =>
                         {
+                            if (_onWakeUpDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onWakeUpDialogue);
                             HTJ21GameManager.Player.LockMovement = false;
                         }
                     );
@@ -204,7 +204,7 @@ namespace HTJ21
                 $"Officer's Graves House\nSnoqualmie, Washington\n{_clock.GetTime()}",
                 () =>
                 {
-                    GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_introDialogue);
+                    if (_introDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_introDialogue);
                 }
             );
         }
@@ -233,11 +233,14 @@ namespace HTJ21
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
             HTJ21GameManager.Car.DisableMirrors();
 
-            //HTJ21GameManager.Player.GetCamera().transform.position = _cameraStart.position;
-            //HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
+            _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
+            _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;
 
-            //IntroMonologue();
-            WakeUpCutsceneLogic();
+            HTJ21GameManager.Player.GetCamera().transform.position = _cameraStart.position;
+            HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
+
+            IntroMonologue();
+            //WakeUpCutsceneLogic();
         }
 
         private void OnPortalEnter(Portal p1, Portal p2)

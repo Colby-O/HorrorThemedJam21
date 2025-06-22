@@ -10,15 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06264d2f54d6c884eb47ac2cbc4ec893, type: 3}
-  m_Name: SafeLocked
+  m_Name: 1
   m_EditorClassIdentifier: 
   _dialogues:
   - avatarName: Officer Graves
     msg:
       list:
       - Key: 0
-        Value: I forgot the passcode to this darn thing.
+        Value: "What the hell\u2026 "
       keyCollision: 0
     dialogueEvent: {fileID: 0}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: Didn't I fall asleep on the coach?
+      keyCollision: 0
+    dialogueEvent: {fileID: 11400000, guid: f52ac1bee1dc7a24091bc5451d9f467c, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0

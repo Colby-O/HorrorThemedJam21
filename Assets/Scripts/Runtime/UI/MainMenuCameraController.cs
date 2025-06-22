@@ -1,4 +1,5 @@
 using PlazmaGames.Animation;
+using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
 using UnityEngine;
@@ -8,19 +9,23 @@ namespace HTJ21
     public class MainMenuCameraController : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
-        [SerializeField] private float _transitionDuration;
+        [SerializeField] private bool _skipTransition = false;
 
         [SerializeField] private Transform _cameraStart;
         [SerializeField] private GameObject _menuCar;
+        [SerializeField] private RadioController _radio;
+        [SerializeField] private AudioClip _radioTalkShowClip;
 
         public void GoToPlayer()
         {
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
 
+            if (_radioTalkShowClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_radioTalkShowClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
+
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
-                this, 
-                _transitionDuration, 
+                this,
+                (!_radioTalkShowClip || _skipTransition) ? 0f : _radioTalkShowClip.length, 
                 (float t) =>
                 {
                     transform.position = Vector3.Lerp(startPos, _cameraStart.position, t);
@@ -31,6 +36,8 @@ namespace HTJ21
                     GameManager.EmitEvent(new Events.StartGame());
                     gameObject.SetActive(false);
                     _menuCar.SetActive(false);
+                    _radio.TurnOn();
+                    _radio.NextStation();
                 }
             );
         }

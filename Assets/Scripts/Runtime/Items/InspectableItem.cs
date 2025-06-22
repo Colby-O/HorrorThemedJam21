@@ -1,4 +1,5 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Core;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -21,11 +22,26 @@ namespace HTJ21
 
         [SerializeField] private string _text;
 
+        [Header("Dialogue")]
+        [SerializeField] private bool _playMoreThanOnce = false;
+        [SerializeField] private DialogueSO _onInspectDialogue;
+        [SerializeField, ReadOnly] private bool _hasLookedAtOnce = false;
+
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
         public bool CanInteract { get; set; }
+
+        public void SetDialogue(DialogueSO so)
+        {
+            _onInspectDialogue = so;
+        }
+
+        public DialogueSO GetDialogue()
+        {
+            return _onInspectDialogue;
+        }
 
         public void EndInteraction()
         {
@@ -41,6 +57,12 @@ namespace HTJ21
 
         public bool Interact(Interactor interactor)
         {
+            if (_playMoreThanOnce || !_hasLookedAtOnce)
+            {
+                _hasLookedAtOnce = true;
+                if (_onInspectDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onInspectDialogue);
+            }
+
             if (HTJ21GameManager.Inspector) HTJ21GameManager.Inspector.StartInspect(transform, _inspectType, _offset, _targetOverride, _text, _comeToOffsetOverride);
             return true;
         }

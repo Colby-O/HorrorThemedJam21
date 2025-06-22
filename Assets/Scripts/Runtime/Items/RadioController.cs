@@ -50,6 +50,16 @@ namespace HTJ21
             NextStation();
         }
 
+        public void NextStation()
+        {
+            PlazmaDebug.Log("Loading Next Station", "Radio", Color.hotPink, 2);
+            int next = (_currentID + 1) % _stations.Count;
+            _currentID = next;
+            _currentStation = _stations[next];
+            PlayStation(_currentStation);
+            UpdateInfo(_currentStation);
+        }
+
         private void PlayStation(RadioStation station)
         {
             PlazmaDebug.Log("Playing Radio Audio", "Radio", Color.hotPink, 2);
@@ -65,16 +75,6 @@ namespace HTJ21
             _stationInfo = _scroll.GetFirst();
             _stationInfo.text = $" {station.stationName} -- {station.songName} ";
             _scroll.OnTextUpdate();
-        }
-
-        private void NextStation()
-        {
-            PlazmaDebug.Log("Loading Next Station", "Radio", Color.hotPink, 2);
-            int next =(_currentID + 1) % _stations.Count;
-            _currentID = next;
-            _currentStation = _stations[next];
-            PlayStation(_currentStation);
-            UpdateInfo(_currentStation);
         }
 
         private void Start()

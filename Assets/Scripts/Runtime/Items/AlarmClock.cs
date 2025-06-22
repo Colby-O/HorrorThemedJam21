@@ -11,12 +11,13 @@ namespace HTJ21
         [SerializeField] private TMP_Text _timeDisplay;
         [SerializeField] private TMP_Text _nightDayDisplay;
 
+        [SerializeField] private InspectableItem _item;
+
         [SerializeField, ReadOnly] private DateTime _date;
         [SerializeField, ReadOnly] private int _lastMinute = -1;
 
         public string GetTime()
         {
-            _date = DateTime.Now;
             int hour = _date.Hour;
             int minute = _date.Minute;
             string amOrPm = (hour > 12 && hour < 24) ? "PM" : "AM";
@@ -25,12 +26,15 @@ namespace HTJ21
 
         private void Awake()
         {
+            _date = new DateTime(2025, 07, 1, 15, 0, 0);
+            _lastMinute = -1;
             _camera.enabled = false;
         }
 
         private void Update()
         {
-            _date = DateTime.Now;
+            _date = _date.AddSeconds(Time.deltaTime);
+
             int hour = _date.Hour;
             int minute = _date.Minute;
             string amOrPm = (hour > 12 && hour < 24) ? "PM" : "AM";
