@@ -20,5 +20,5 @@ MonoBehaviour:
         Value: The moon feels...
       keyCollision: 0
     dialogueEvent: {fileID: 11400000, guid: 1f632959856b22746b9f9b12b0be3de4, type: 2}
-    waitDelayOverride: 0
+    waitDelayOverride: 0.8
     typeSpeedOverride: 0

@@ -1,6 +1,7 @@
 using PlazmaGames.Animation;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -38,7 +39,12 @@ namespace HTJ21
 
         [SerializeField] private bool _isLocked = false;
 
-        public UnityEvent OnOpen = new();
+        public UnityEvent OnOpen = new UnityEvent();
+
+        public void SetDirectionOverride(int dir)
+        {
+            _directionOverride = dir;
+        }
 
         private float CurrentAngle()
         {
@@ -47,6 +53,8 @@ namespace HTJ21
             angle = angle > 180 ? angle - 360 : angle;
             return angle;
         }
+
+        public bool IsLocked() => _isLocked;
 
         public void Lock()
         {
@@ -185,6 +193,14 @@ namespace HTJ21
         {
             _hasOpenedBefore = false;
             _hasAttemptedToUnlock = false;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+            _pivot.localRotation = Quaternion.Euler(0, 0, 0);
+            _inProgress = false;
+            _isOpen = false;
         }
     }
 }

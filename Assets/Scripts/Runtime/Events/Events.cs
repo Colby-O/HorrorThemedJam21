@@ -1,6 +1,7 @@
 using PlazmaGames.Core.Events;
 using UnityEngine;
 using UnityEngine.Events;
+using static HTJ21.Events;
 
 namespace HTJ21
 {
@@ -29,5 +30,10 @@ namespace HTJ21
         public record PrologueLookAtMoon();
         public static EventResponse NewPrologueLookAtMoon(UnityAction<Component, PrologueLookAtMoon> func) => new EventResponse((comp, data) => func.Invoke(comp, data as PrologueLookAtMoon));
 
+        // Home 1 
+        public record Home1FakeScare();
+        public static EventResponse NewHome1FakeScare(UnityAction<Component, Home1FakeScare> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1FakeScare));
+        public record Home1RealScare();
+        public static EventResponse NewHome1RealScare(UnityAction<Component, Home1RealScare> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1RealScare));
     }
 }

@@ -48,6 +48,7 @@ namespace HTJ21
         [SerializeField] private Portal _toAct1;
         [SerializeField] private Portal _fromHome;
         [SerializeField] private Keypad _doorKeyPad;
+        [SerializeField] private Door _bedroomDoor;
 
         [SerializeField] private AudioSource _audioSource;
         
@@ -281,7 +282,6 @@ namespace HTJ21
             HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
 
             IntroMonologue();
-            //WakeUpCutsceneLogic();
         }
 
         private void OnPortalEnter(Portal p1, Portal p2)
@@ -304,6 +304,8 @@ namespace HTJ21
             HTJ21GameManager.Car.SuperDuperEnterCarForReal();
             HTJ21GameManager.Car.EnableMirrors();
 
+            _bedroomDoor.SetDirectionOverride(0);
+            _moonLookTrigger.gameObject.SetActive(false);
             _moon.gameObject.SetActive(false);
         }
     }

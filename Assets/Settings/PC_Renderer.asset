@@ -50,6 +50,27 @@ MonoBehaviour:
   m_Name: DitheringRenderFeature
   m_EditorClassIdentifier: 
   m_Active: 1
+--- !u!114 &-342365944069381733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1614fc811f8f184697d9bee70ab9fe5, type: 3}
+  m_Name: DecalRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  m_Settings:
+    technique: 0
+    maxDrawDistance: 1000
+    decalLayers: 0
+    dBufferSettings:
+      surfaceData: 2
+    screenSpaceSettings:
+      normalBlend: 0
 --- !u!114 &-70723477897083109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,7 +114,8 @@ MonoBehaviour:
   - {fileID: -70723477897083109}
   - {fileID: -7213864703060006784}
   - {fileID: 7063074519289896288}
-  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e99921b07aa1e5fbd04ff802861f44534e39b601d6380da140562
+  - {fileID: -342365944069381733}
+  m_RendererFeatureMap: ad6b866f10d7b46c4122d9b1124e99921b07aa1e5fbd04ff802861f44534e39b601d6380da1405629ba18de0fcab3ffb
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

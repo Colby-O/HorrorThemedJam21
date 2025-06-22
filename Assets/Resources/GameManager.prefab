@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _debug: 1
-  _verbose: 100000000
+  _verbose: 0
   _monoSystemHolder: {fileID: 7202734959094077488}
   _uiSystem: {fileID: 2999991884575964212}
   _animSystem: {fileID: 8189270598657297784}
