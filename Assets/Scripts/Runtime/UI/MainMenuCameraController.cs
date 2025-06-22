@@ -21,7 +21,7 @@ namespace HTJ21
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
 
-            if (_radioTalkShowClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_radioTalkShowClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
+            if (!_skipTransition && _radioTalkShowClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_radioTalkShowClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
 
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                 this,

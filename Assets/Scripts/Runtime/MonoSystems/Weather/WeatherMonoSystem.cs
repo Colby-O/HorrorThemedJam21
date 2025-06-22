@@ -23,6 +23,7 @@ namespace HTJ21
         [SerializeField] private Vector2 _thunderDelay;
         [SerializeField] private Vector2 _skyDelay;
         [SerializeField] private List<AudioClip> _thunderClips;
+        [SerializeField] private AudioClip _loudThunderClip;
 
         [SerializeField, ReadOnly] private bool _isLightingOn = true;
         [SerializeField, ReadOnly] private bool _isRainOn = true;
@@ -98,6 +99,7 @@ namespace HTJ21
             _timeToNextLighting = Random.Range(_lightingInterval.x, _lightingInterval.y);
             _skylight.gameObject.SetActive(true);
             HTJ21GameManager.GetActiveCamera().backgroundColor = _lightingColor;
+            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_loudThunderClip, PlazmaGames.Audio.AudioType.Sfx, loop: false);
         }
 
         private void OnSceneLoad(Scene scene, LoadSceneMode mode)

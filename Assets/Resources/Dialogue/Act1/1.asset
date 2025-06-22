@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06264d2f54d6c884eb47ac2cbc4ec893, type: 3}
+  m_Name: 1
+  m_EditorClassIdentifier: 
+  _dialogues:
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: 'Any units in the Coal Creek area, please respond. '
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: 10-4, im three minutes out.
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: We got a reported domestic dispute at 411 Cedar Street, are you available
+          to respond?
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0
+  - avatarName: Officer Graves
+    msg:
+      list:
+      - Key: 0
+        Value: 10-4, I'll respone when on scene.
+      keyCollision: 0
+    dialogueEvent: {fileID: 0}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0
+  - avatarName: Dispatch
+    msg:
+      list:
+      - Key: 0
+        Value: I am uploading the coordinates to your GPS.
+      keyCollision: 0
+    dialogueEvent: {fileID: 11400000, guid: 67af567c0933271cfa4aee63c73a9665, type: 2}
+    waitDelayOverride: 0
+    typeSpeedOverride: 0

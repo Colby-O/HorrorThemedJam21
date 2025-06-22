@@ -56,6 +56,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 14b0d289b62e980459ff64a33281a9ac, type: 3}
   - {fileID: 8300000, guid: cea9a17b6805ba54cb51a1e2c30dcad3, type: 3}
   - {fileID: 8300000, guid: 071b3f01e5a003b4d82d308ee52b8251, type: 3}
+  _loudThunderClip: {fileID: 8300000, guid: 0cd58bfee2a3e9bd497d6599443b4a38, type: 3}
   _isLightingOn: 1
   _isRainOn: 1
 --- !u!1 &1151677369100752972

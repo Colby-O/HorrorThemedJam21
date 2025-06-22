@@ -16,6 +16,7 @@ TagManager:
   - RopeAttachable
   - CarHitch
   - Board
+  - GpsMarker
   layers:
   - Default
   - TransparentFX
