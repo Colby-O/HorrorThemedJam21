@@ -16,6 +16,8 @@ namespace HTJ21
         [Header("Rope")]
         public float RopeSnapDistance = 3;
         public AudioClip RopeSnapSound;
+        public float RockDragVolumeMaxSpeed = 1;
+        public float SoccerBallHitForce = 1;
 
         [Header("Dialogue -- Act 1")]
         public string Act1Location;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5895949522866250171}
   - component: {fileID: 8323886248572435254}
   - component: {fileID: 6595042329115493807}
+  - component: {fileID: 4857230146931372491}
   m_Layer: 7
   m_Name: Rope
   m_TagString: Untagged
@@ -54,6 +55,9 @@ MonoBehaviour:
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 2
   _text: 
+  _playMoreThanOnce: 0
+  _onInspectDialogue: {fileID: 0}
+  _hasLookedAtOnce: 0
   _outlineMR: {fileID: 4941949010413177994}
   _hasOutline: 0
 --- !u!54 &5895949522866250171
@@ -117,6 +121,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attachedTo: {fileID: 0}
+--- !u!65 &4857230146931372491
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4575069182017149191}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.36061108, y: 0.09770155, z: 0.27499393}
+  m_Center: {x: 0.013267564, y: 0.030299425, z: -0.016891481}
 --- !u!1001 &6004637307345817614
 PrefabInstance:
   m_ObjectHideFlags: 0

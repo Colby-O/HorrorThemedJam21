@@ -1,6 +1,8 @@
+using System;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace HTJ21
@@ -225,6 +227,18 @@ namespace HTJ21
             _controller.Move(transform.TransformDirection(_movementSpeed));
 
             if (!IsInCar() && _inputHandler.LightPressed()) ToggleLight();
+        }
+
+        private void OnTriggerEnter(Collider hit)
+        {
+            if (hit.gameObject.CompareTag("SoccerBall"))
+            {
+                if (hit.gameObject.TryGetComponent(out Rigidbody rig))
+                {
+                    Vector3 dir = (hit.transform.position - transform.position).normalized;
+                    rig.AddForce(dir * HTJ21GameManager.Preferences.SoccerBallHitForce, ForceMode.Impulse);
+                }
+            }
         }
     }
 }
