@@ -59,11 +59,24 @@ namespace HTJ21
             _as?.Play();
 
             target.text = string.Empty;
-            foreach (char c in msg)
+
+            for (int i = 0; i < msg.Length; i++)
             {
                 while (HTJ21GameManager.IsPaused) yield return null;
 
-                target.text += c;
+                if (msg[i] == '<')
+                {
+                    int endIndex = msg.IndexOf('>', i);
+                    if (endIndex != -1)
+                    {
+                        string fullTag = msg.Substring(i, endIndex - i + 1);
+                        target.text += fullTag;
+                        i = endIndex;
+                        continue;
+                    }
+                }
+
+                target.text += msg[i];
                 yield return new WaitForSeconds(typeSpeed);
             }
 

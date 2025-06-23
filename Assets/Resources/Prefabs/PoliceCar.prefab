@@ -2618,6 +2618,8 @@ MonoBehaviour:
   _leftMirrorCam: {fileID: 208746545015073319}
   _rightMirrorCam: {fileID: 3589784046057824827}
   _backMirrorCam: {fileID: 4499430958413791504}
+  _onExitFirstTimeDialogue: {fileID: 11400000, guid: 929c2a1c060ba1549949100d01295137, type: 2}
+  _hasExited: 0
 --- !u!114 &3490147504427259798
 MonoBehaviour:
   m_ObjectHideFlags: 0

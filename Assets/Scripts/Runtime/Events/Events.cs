@@ -30,6 +30,12 @@ namespace HTJ21
         public record PrologueLookAtMoon();
         public static EventResponse NewPrologueLookAtMoon(UnityAction<Component, PrologueLookAtMoon> func) => new EventResponse((comp, data) => func.Invoke(comp, data as PrologueLookAtMoon));
 
+        // Act1
+        public record ArriveAtNeighborhood();
+        public static EventResponse NewArriveAtNeighborhood(UnityAction<Component, ArriveAtNeighborhood> func) => new EventResponse((comp, data) => func.Invoke(comp, data as ArriveAtNeighborhood));
+        public record ArriveAtHouse();
+        public static EventResponse NewArriveAtHouse(UnityAction<Component, ArriveAtHouse> func) => new EventResponse((comp, data) => func.Invoke(comp, data as ArriveAtHouse));
+
         // Home 1 
         public record Home1FakeScare();
         public static EventResponse NewHome1FakeScare(UnityAction<Component, Home1FakeScare> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1FakeScare));

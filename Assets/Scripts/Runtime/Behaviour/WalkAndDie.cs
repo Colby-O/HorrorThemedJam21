@@ -7,7 +7,8 @@ namespace HTJ21
         [SerializeField] private float _speed = 0.3f;
         [SerializeField] private float _walkDistance = 8;
 
-        private Rigidbody _rig;
+        [SerializeField] private Rigidbody _rig;
+        [SerializeField] private Animator _animator;
 
         private Vector3 _startPosition;
         private bool _walking = false;
@@ -20,7 +21,10 @@ namespace HTJ21
 
         private void Awake()
         {
-            _rig = GetComponent<Rigidbody>();
+            if (!_rig) _rig = GetComponent<Rigidbody>();
+            if (!_animator) _animator = GetComponent<Animator>();
+
+            if (_animator) _animator.SetBool("IsWalking", true);
         }
         
         private void FixedUpdate()
