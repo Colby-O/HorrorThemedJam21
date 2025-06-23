@@ -176,7 +176,7 @@ namespace HTJ21
             }
         }
 
-        private static void GenerateIntersectionCurve(RoadwayIntersection intersection, Vector3 center, List<Vector3> pointsInner, List<Vector3> pointsOuter, float roadWidth, float curveHeight, float curveWidth, ref List<Vector3> vertices, ref List<int> triangles, ref List<Vector2> uvs)
+        private static void GenerateIntersectionCurve(RoadwayIntersection intersection, Vector3 center, List<Vector3> pointsInner, List<Vector3> pointsOuter, List<Vector3> pointsOuter2, float roadWidth, float curveHeight, float curveWidth, ref List<Vector3> vertices, ref List<int> triangles, ref List<Vector2> uvs)
         {
             if (curveHeight < 0.001f || curveWidth < 0.001f) return;
 
@@ -188,45 +188,53 @@ namespace HTJ21
                 Vector3 p1 = pointsInner[j - 1];
                 Vector3 p2 = pointsInner[j - 1] + Vector3.up * curveHeight;
                 Vector3 p3 = pointsOuter[j - 1] + Vector3.up * curveHeight;
-                Vector3 p4 = pointsOuter[j - 1];
-                Vector3 p5;
+                //Vector3 p4 = pointsOuter[j - 1];
+                Vector3 p5 = pointsOuter2[j - 1] - Vector3.up * 5f * curveHeight;
                 Vector3 p6;
                 Vector3 p7;
                 Vector3 p8;
+                //Vector3 p9;
+                Vector3 p10;
                 if (j == pointsInner.Count)
                 {
-                    p5 = pointsInner[0];
-                    p6 = pointsInner[0] + Vector3.up * curveHeight;
-                    p7 = pointsOuter[0] + Vector3.up * curveHeight;
-                    p8 = pointsOuter[0];
+                    p6 = pointsInner[0];
+                    p7 = pointsInner[0] + Vector3.up * curveHeight;
+                    p8 = pointsOuter[0] + Vector3.up * curveHeight;
+                    //p9 = pointsOuter[0];
+                    p10 = pointsOuter2[0] - Vector3.up * 5f * curveHeight;
                 }
                 else
                 {
-                    p5 = pointsInner[j];
-                    p6 = pointsInner[j] + Vector3.up * curveHeight;
-                    p7 = pointsOuter[j] + Vector3.up * curveHeight;
-                    p8 = pointsOuter[j];
+                    p6 = pointsInner[j];
+                    p7 = pointsInner[j] + Vector3.up * curveHeight;
+                    p8 = pointsOuter[j] + Vector3.up * curveHeight;
+                    //p9 = pointsOuter[j];
+                    p10 = pointsOuter2[j] - Vector3.up * 5f * curveHeight;
                 }
 
-                if (intersection.HasJunction(p1, p5, roadWidth)) continue;
+                if (intersection.HasJunction(p1, p6, roadWidth)) continue;
 
                 vertices.Add(p1);
                 vertices.Add(p2);
                 vertices.Add(p3);
-                vertices.Add(p4);
+                //vertices.Add(p4);
                 vertices.Add(p5);
                 vertices.Add(p6);
                 vertices.Add(p7);
                 vertices.Add(p8);
+                //vertices.Add(p9);
+                vertices.Add(p10);
 
                 uvs.Add(new Vector2(p1.x * uvScale, p1.z * uvScale));
                 uvs.Add(new Vector2(p2.x * uvScale, p2.z * uvScale));
                 uvs.Add(new Vector2(p3.x * uvScale, p3.z * uvScale));
-                uvs.Add(new Vector2(p4.x * uvScale, p4.z * uvScale));
+                //uvs.Add(new Vector2(p4.x * uvScale, p4.z * uvScale));
                 uvs.Add(new Vector2(p5.x * uvScale, p5.z * uvScale));
                 uvs.Add(new Vector2(p6.x * uvScale, p6.z * uvScale));
                 uvs.Add(new Vector2(p7.x * uvScale, p7.z * uvScale));
                 uvs.Add(new Vector2(p8.x * uvScale, p8.z * uvScale));
+                //uvs.Add(new Vector2(p9.x * uvScale, p9.z * uvScale));
+                uvs.Add(new Vector2(p10.x * uvScale, p10.z * uvScale));
 
                 // Curve Side Inner
                 triangles.Add(vOffset + 0);
@@ -247,13 +255,22 @@ namespace HTJ21
                 triangles.Add(vOffset + 6);
 
                 // Curve Side Outer
-                triangles.Add(vOffset + 6);
+                //triangles.Add(vOffset + 7);
+                //triangles.Add(vOffset + 2);
+                //triangles.Add(vOffset + 3);
+
+                //triangles.Add(vOffset + 7);
+                //triangles.Add(vOffset + 3);
+                //triangles.Add(vOffset + 8);
+
+                // Curve Side Outer
                 triangles.Add(vOffset + 2);
                 triangles.Add(vOffset + 3);
-
                 triangles.Add(vOffset + 6);
+
                 triangles.Add(vOffset + 3);
                 triangles.Add(vOffset + 7);
+                triangles.Add(vOffset + 6);
 
                 vOffset = vertices.Count;
             }
@@ -314,12 +331,14 @@ namespace HTJ21
             List<Vector3> pointsInner = new List<Vector3>();
             List<Edge> edgesOuter = new List<Edge>();
             List<Vector3> pointsOuter= new List<Vector3>();
-
+            List<Edge> edgesOuter2 = new List<Edge>();
+            List<Vector3> pointsOuter2 = new List<Vector3>();
 
             Vector3 center = GetIntersectionInnerEdges(intersection, roadWidth, ref edgesInner, ref pointsInner);
             GetIntersectionOuterEdges(intersection, roadWidth, curveWidth, ref edgesOuter, ref pointsOuter);
+            GetIntersectionOuterEdges(intersection, roadWidth, 2f * curveWidth, ref edgesOuter2, ref pointsOuter2);
 
-            GenerateIntersectionCurve(intersection, center, pointsInner, pointsOuter, roadWidth, curveHeight, curveWidth, ref vertices, ref trianglesCurb, ref uvs);
+            GenerateIntersectionCurve(intersection, center, pointsInner, pointsOuter, pointsOuter2, roadWidth, curveHeight, curveWidth, ref vertices, ref trianglesCurb, ref uvs);
             CleanMesh(ref vertices, ref trianglesCurb, ref uvs);
             GenerateIntersection(center, pointsInner, ref vertices, ref trianglesRoad, ref uvs);
 
@@ -401,17 +420,20 @@ namespace HTJ21
             {
                 RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth, out Vector3 rightPT, out Vector3 leftPT);
                 RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth + curveWidth, out Vector3 curbRightPT, out Vector3 curbLeftPT);
+                RoadwayHelper.GetRoadwayWidthAt(RoadwayCreator.Instance.GetContainer(), roadway.splineIndex, roadway.segments[i], roadWidth + 2f * curveWidth, out Vector3 edgeRightPT, out Vector3 edgeLeftPT);
 
                 Vector3[] points = new Vector3[]
                 {
                     rightPT,
                     rightPT + Vector3.up * curveHeight,
                     curbRightPT + Vector3.up * curveHeight,
-                    curbRightPT,
+                    //curbRightPT,
                     leftPT,
                     leftPT + Vector3.up * curveHeight,
                     curbLeftPT + Vector3.up * curveHeight,
-                    curbLeftPT
+                    //curbLeftPT,
+                    edgeRightPT - Vector3.up * 5f * curveHeight,
+                    edgeLeftPT - Vector3.up * 5f * curveHeight,
                 };
 
                 foreach (var pt in points)
@@ -427,58 +449,77 @@ namespace HTJ21
                 idx = vOffset + i * 8;
 
                 // Right Curb Inner Side
-                triangles.Add(idx + 8);
+                triangles.Add(idx + 8); //*
                 triangles.Add(idx);
                 triangles.Add(idx + 1);
 
-                triangles.Add(idx + 8);
+                triangles.Add(idx + 8); //*
                 triangles.Add(idx + 1);
-                triangles.Add(idx + 9);
+                triangles.Add(idx + 9); //*
 
                 //// Right Curb
                 triangles.Add(idx + 2);
-                triangles.Add(idx + 9);
+                triangles.Add(idx + 9); //*
                 triangles.Add(idx + 1);
 
-                triangles.Add(idx + 9);
+                triangles.Add(idx + 9); //*
                 triangles.Add(idx + 2);
-                triangles.Add(idx + 10);
+                triangles.Add(idx + 10); //*
 
-                //// Right Curb Outer Side
-                triangles.Add(idx + 10);
+                ////// Right Curb Outer Side
+                //triangles.Add(idx + 12);
+                //triangles.Add(idx + 2);
+                //triangles.Add(idx + 3);
+
+                //triangles.Add(idx + 12);
+                //triangles.Add(idx + 3);
+                //triangles.Add(idx + 13);
+
+                // Right Siding
+                triangles.Add(idx + 10); //*
+                triangles.Add(idx + 6); //*
+                triangles.Add(idx + 14); //*
+
+                triangles.Add(idx + 6); //*
+                triangles.Add(idx + 10); //*
                 triangles.Add(idx + 2);
-                triangles.Add(idx + 3);
-
-                triangles.Add(idx + 10);
-                triangles.Add(idx + 3);
-                triangles.Add(idx + 11);
 
                 //// Left Curb Inner Side
-                triangles.Add(idx + 4);
-                triangles.Add(idx + 12);
-                triangles.Add(idx + 5);
+                triangles.Add(idx + 3); //*
+                triangles.Add(idx + 11); //*
+                triangles.Add(idx + 4); //*
 
-                triangles.Add(idx + 5);
-                triangles.Add(idx + 12);
-                triangles.Add(idx + 13);
+                triangles.Add(idx + 4); //*
+                triangles.Add(idx + 11); //*
+                triangles.Add(idx + 12); //*
 
                 //// Left Curb
-                triangles.Add(idx + 13);
-                triangles.Add(idx + 6);
-                triangles.Add(idx + 5);
+                triangles.Add(idx + 12); //*
+                triangles.Add(idx + 5); //*
+                triangles.Add(idx + 4); //*
 
-                triangles.Add(idx + 14);
-                triangles.Add(idx + 6);
-                triangles.Add(idx + 13);
+                triangles.Add(idx + 13); //*
+                triangles.Add(idx + 5); //*
+                triangles.Add(idx + 12); //*
 
                 //// Left Curb Outer Side
-                triangles.Add(idx + 6);
-                triangles.Add(idx + 14);
-                triangles.Add(idx + 7);
+                //triangles.Add(idx + 6);
+                //triangles.Add(idx + 16);
+                //triangles.Add(idx + 7);
 
-                triangles.Add(idx + 7);
-                triangles.Add(idx + 14);
-                triangles.Add(idx + 15);
+                //triangles.Add(idx + 7);
+                //triangles.Add(idx + 16);
+                //triangles.Add(idx + 17);
+
+                // Left Siding
+                triangles.Add(idx + 7); //*
+                triangles.Add(idx + 13); //*
+                triangles.Add(idx + 15); //*
+
+                triangles.Add(idx + 13); //*
+                triangles.Add(idx + 7); //*
+                triangles.Add(idx + 5); //*
+
             }
         }
 
