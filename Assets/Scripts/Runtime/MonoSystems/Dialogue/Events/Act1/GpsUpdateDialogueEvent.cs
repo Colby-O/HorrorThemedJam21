@@ -18,7 +18,7 @@ namespace HTJ21
             _startTime = Time.time;
         }
 
-        private void Set()
+        public override void OnExit()
         {
             IGPSMonoSystem gps = GameManager.GetMonoSystem<IGPSMonoSystem>();
             if (GpsState == false)
@@ -28,7 +28,7 @@ namespace HTJ21
             else
             {
                 gps.TurnOn();
-                if (NewTarget != "")
+                if (NewTarget != string.Empty)
                 {
                     GameObject target = GameObject.FindGameObjectsWithTag("GpsMarker").FirstOrDefault(g => g.name == NewTarget);
                     if (target)
@@ -39,17 +39,14 @@ namespace HTJ21
             }
         }
 
-        public override void OnExit()
-        {
-        }
-
         public override void OnUpdate()
         {
-            if (_startTime > 0 && Time.time - _startTime > Delay)
-            {
-                _startTime = 0;
-                Set();
-            }
+
+        }
+
+        public override bool CanProceed()
+        {
+            return _startTime > 0 && Time.time - _startTime > Delay;
         }
     }
 }

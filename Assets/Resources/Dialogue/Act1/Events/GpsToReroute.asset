@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NewTarget: GpsRerouteMarker
   GpsState: 1
-  Delay: 1.8
+  Delay: 5

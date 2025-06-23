@@ -1,9 +1,10 @@
 #if UNITY_EDITOR
-using System.Collections.Generic;
-using PlazmaGames.Utilities;
 using PlazmaGames.Core;
+using PlazmaGames.Utilities;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 namespace HTJ21
@@ -11,8 +12,10 @@ namespace HTJ21
     public class CameraScreenCapture : MonoBehaviour
     {
         public string fileName;
-        public KeyCode screenshotKey;
+        public InputAction screenshotAction;
         public Transform _itemParent;
+
+        [SerializeField] private Camera _camera;
 
         private Camera Camera
         {
@@ -25,11 +28,20 @@ namespace HTJ21
                 return _camera;
             }
         }
-        private Camera _camera;
+
+        private void OnEnable()
+        {
+            screenshotAction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            screenshotAction.Disable();
+        }
 
         private void LateUpdate()
         {
-            if (Input.GetKeyDown(screenshotKey)) Capture();
+            if (screenshotAction.WasPressedThisFrame()) Capture();
         }
 
         public void Capture()
@@ -49,7 +61,7 @@ namespace HTJ21
 
             string fn = fileName;
 
-            string path = Application.dataPath + "/Textures/ScreenCaptures" + fn + ".png";
+            string path = Application.dataPath + "/Textures/ScreenCaptures/" + fn + ".png";
             Debug.Log($"Saving icon to {path}.");
             File.WriteAllBytes(path, bytes);
         }
