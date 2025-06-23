@@ -271,6 +271,7 @@ namespace HTJ21
             if (!_hasExited && _onExitFirstTimeDialogue && GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() == Act.Act1) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onExitFirstTimeDialogue);
             _hasExited = true;
             if (_playerModel) _playerModel.SetActive(false);
+            HTJ21GameManager.CarTutorial.DisableAllTutorial();
         }
 
         private void Update()

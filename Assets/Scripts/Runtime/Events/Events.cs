@@ -41,5 +41,7 @@ namespace HTJ21
         public static EventResponse NewHome1FakeScare(UnityAction<Component, Home1FakeScare> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1FakeScare));
         public record Home1RealScare();
         public static EventResponse NewHome1RealScare(UnityAction<Component, Home1RealScare> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1RealScare));
+        public record Home1ToggleMusic();
+        public static EventResponse NewHome1ToggleMusic(UnityAction<Component, Home1ToggleMusic> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1ToggleMusic));
     }
 }

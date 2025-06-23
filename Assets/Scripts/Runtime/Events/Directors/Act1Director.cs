@@ -72,8 +72,6 @@ namespace HTJ21
             GameManager.AddEventListener<Events.ArriveAtNeighborhood>(Events.NewArriveAtNeighborhood((from, data) =>
             {
                 _gpsMs.TurnOff();
-                HTJ21GameManager.CarTutorial.ShowTutorial(3);
-                HTJ21GameManager.Car.Unlock();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
             }));
 

@@ -29,6 +29,6 @@ MonoBehaviour:
       - Key: 0
         Value: Copy, be careful.
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: 376f3423741e275478ef0e25170606b4, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
