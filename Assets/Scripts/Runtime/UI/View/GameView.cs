@@ -43,6 +43,7 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _isWritingLocation = false;
         [SerializeField, ReadOnly] private float _timeSinceWriteStart = 0f;
         [SerializeField, ReadOnly] private string _currentMessage;
+        [SerializeField, ReadOnly] private float _currentDelay = 0f;
         [SerializeField, ReadOnly] private bool _showedMessage = false;
 
         IEnumerator TypeDialogue(string msg, float delay, float typeSpeed, TMP_Text target, bool isDialogue, UnityAction onFinished = null)
@@ -50,6 +51,7 @@ namespace HTJ21
             _isWriting = true;
             _currentMessage = msg;
             _showedMessage = false;
+            _currentDelay = delay;
 
             if (isDialogue) _isWritingDialogue = true;
             else _isWritingLocation = true;
@@ -87,6 +89,23 @@ namespace HTJ21
 
             if (isDialogue) _isWritingDialogue = false;
             else _isWritingLocation = false;
+
+            _currentMessage = string.Empty;
+            _currentDelay = 0f;
+            _showedMessage = false;
+
+            if (onFinished != null) onFinished.Invoke();
+        }
+
+        IEnumerator DialogueWait(float delay, UnityAction onFinished = null)
+        {
+
+            _timeSinceWriteStart = 0f;
+
+            _showedMessage = true;
+            yield return new WaitForSeconds(delay);
+
+            _isWritingDialogue = false;
 
             _currentMessage = string.Empty;
             _showedMessage = false;
@@ -140,7 +159,15 @@ namespace HTJ21
 
         public void SkipDialogue()
         {
-            if(_isWritingDialogue)
+            if (!_showedMessage && _isWritingDialogue)
+            {
+                StopAllCoroutines();
+                _dialogue.text = _currentMessage;
+                _as?.Stop();
+                _showedMessage = true;
+                StartCoroutine(DialogueWait(_currentDelay, Next));
+            }
+            else if(_isWritingDialogue)
             {
                 StopAllCoroutines();
                 _isWriting = false;
@@ -148,6 +175,7 @@ namespace HTJ21
                 _isWritingDialogue = false;
                 _isWritingLocation = false;
                 _dialogue.text = string.Empty;
+                _currentDelay = 0f;
                 _as?.Stop();
                 Next();
             }

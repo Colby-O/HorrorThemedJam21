@@ -230,6 +230,7 @@ namespace HTJ21
 
             if (_inputHandler.JustCrouched())
             {
+                if (_animator) _animator.SetCrouchState(true);
                 _head.localPosition = _head.localPosition.SetY(_settings.CrouchHeight);
                 _controller.height = _settings.CrouchHeight + 0.3f;
                 _controller.center = _controller.center.SetY(_controller.height / 2);
@@ -237,6 +238,7 @@ namespace HTJ21
 
             if (_inputHandler.JustUncrouched())
             {
+                if (_animator) _animator.SetCrouchState(false);
                 _head.localPosition = _head.localPosition.SetY(_defaultHeight);
                 _controller.height = _defaultHeight + 0.3f;
                 _controller.center = _controller.center.SetY(_controller.height / 2);

@@ -588,6 +588,7 @@ MonoBehaviour:
   _indoorsPitch: 1.25
   _outdoorsPitch: 1
   _outdoorsWalkClip: {fileID: 0}
+  _animator: {fileID: 0}
   _movementSpeed: {x: 0, y: 0, z: 0}
   _currentVel: {x: 0, y: 0, z: 0}
   _velY: 0
@@ -955,18 +956,6 @@ PrefabInstance:
     - target: {fileID: 8503487926638924253, guid: 55f73f16dcc57fb41bc80968a196efb2, type: 3}
       propertyPath: m_Name
       value: OfficerGraves
-      objectReference: {fileID: 0}
-    - target: {fileID: 9135900083149466333, guid: 55f73f16dcc57fb41bc80968a196efb2, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9135900083149466333, guid: 55f73f16dcc57fb41bc80968a196efb2, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9135900083149466333, guid: 55f73f16dcc57fb41bc80968a196efb2, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9135900083149466333, guid: 55f73f16dcc57fb41bc80968a196efb2, type: 3}
       propertyPath: m_LocalPosition.x

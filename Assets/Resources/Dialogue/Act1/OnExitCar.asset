@@ -17,8 +17,7 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: I better get out and fetch my flashlight from the trunk before I make
-          contact.
+        Value: I better fetch my flashlight from the trunk before I make contact.
       keyCollision: 0
     dialogueEvent: {fileID: 0}
     waitDelayOverride: 0

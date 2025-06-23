@@ -7,14 +7,14 @@ namespace HTJ21
     {
         Idle,
         Walking,
-        PickingUp
+        Driving
     }
 
     public class PlayerAnimationController : MonoBehaviour
     {
         [SerializeField] private LayerMask _walkableLayerMask;
 
-        [SerializeField, ReadOnly] private PlayerAnimationState _state;
+        [SerializeField] private PlayerAnimationState _state;
 
         [Header("IK Bones")]
         [SerializeField] private Transform _lHand;
@@ -34,24 +34,32 @@ namespace HTJ21
         [Header("Idle Settings")]
         [SerializeField] private float _idleLerpSpeed = 5f;
 
+        [Header("Crouch")]
+        [SerializeField] private float _crouchHeight = 0.5f;
+
+        [Header("Driving")]
+        [SerializeField] private Transform _leftGrip;
+        [SerializeField] private Transform _rightGrip;
+        [SerializeField] private Transform _wheelCenter;
+        [SerializeField] private float _seatHeight = -1f;
+        [SerializeField] private float _offsetInSeat = -0.2f;
+
         private Vector3 _leftFootStartPos, _rightFootStartPos;
         private Vector3 _leftHandStartPos, _rightHandStartPos;
 
-        [SerializeField, ReadOnly] private bool _isWalking;
-        [SerializeField, ReadOnly] private bool _returnToIdle;
+        [SerializeField, ReadOnly] private bool _isCrouching;
         [SerializeField, ReadOnly] private float _timer;
+
+        public void SetCrouchState(bool isCrouching)
+        {
+            _isCrouching = isCrouching;
+        }
 
         public void SetAnimationState(PlayerAnimationState state)
         {
-            if (PlayerAnimationState.Walking == state)
+            _state = state;
+            if (state != PlayerAnimationState.Walking)
             {
-                _isWalking = true;
-                _returnToIdle = false;
-            }
-            else if (PlayerAnimationState.Idle == state)
-            {
-                _isWalking = false;
-                _returnToIdle = true;
                 _timer = 0f;
             }
         }
@@ -69,6 +77,13 @@ namespace HTJ21
             }
 
             footTransform.localPosition = footTransform.parent.InverseTransformPoint(worldTarget);
+        }
+
+        private void GripWheel(Transform handTransform, Transform gripTransform, Transform center)
+        { 
+            if (!handTransform || !gripTransform || !center) return;
+
+            handTransform.position = gripTransform.position;
         }
 
         private void Walking()
@@ -98,6 +113,11 @@ namespace HTJ21
             SetFootPosition(_rFoot, _rFoot.localPosition);
         }
 
+        private void Crouch()
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, (_isCrouching) ? -_crouchHeight : 0f, transform.localPosition.z);
+        }
+
         void Awake()
         {
             if (_lFoot) _leftFootStartPos = _lFoot.localPosition;
@@ -110,8 +130,44 @@ namespace HTJ21
 
         private void Update()
         {
-            if (_isWalking) Walking();
-            else if (_returnToIdle) ReturnToIdle();
+            if (_state == PlayerAnimationState.Walking)
+            {
+                Crouch();
+                Walking();
+
+            }
+            else if (_state == PlayerAnimationState.Idle)
+            {
+                Crouch();
+                ReturnToIdle();
+            }
+            else if (_state == PlayerAnimationState.Driving && _leftGrip && _rightGrip)
+            {
+                GripWheel(_lHand, _leftGrip, _wheelCenter);
+                GripWheel(_rHand, _rightGrip, _wheelCenter);
+
+                // RIGHT HAND
+                Vector3 palmDirR = (_wheelCenter.position - _rHand.position).normalized; // direction to wheel (palm target)
+                Vector3 forwardR = transform.forward; // finger direction
+                Vector3 upR = Vector3.Cross(palmDirR, forwardR); // proper up so palm stays facing target
+
+                Quaternion rightHandRot = Quaternion.LookRotation(forwardR, upR);
+
+                // LEFT HAND
+                Vector3 palmDirL = (_wheelCenter.position - _lHand.position).normalized; // direction to wheel (palm target)
+                Vector3 forwardL = transform.forward; // finger direction
+                Vector3 upL = Vector3.Cross(palmDirL, forwardL); // proper up
+
+                Quaternion leftHandRot = Quaternion.LookRotation(forwardL, upL);
+
+                _lHand.rotation = leftHandRot;
+                _rHand.rotation = leftHandRot;
+
+                transform.localPosition = new Vector3(transform.localPosition.x, _seatHeight, _offsetInSeat);
+
+                SetFootPosition(_lFoot, _lFoot.localPosition);
+                SetFootPosition(_rFoot, _rFoot.localPosition);
+            }
         }
     }
 }
