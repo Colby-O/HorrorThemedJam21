@@ -18,6 +18,7 @@ namespace HTJ21
         public AudioClip RopeSnapSound;
         public float RockDragVolumeMaxSpeed = 1;
         public float SoccerBallHitForce = 1;
+        public AudioClip BoardPopSound;
 
         [Header("Dialogue -- Act 1")]
         public string Act1Location;
