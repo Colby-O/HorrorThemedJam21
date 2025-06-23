@@ -146,17 +146,15 @@ namespace HTJ21
                 GripWheel(_lHand, _leftGrip, _wheelCenter);
                 GripWheel(_rHand, _rightGrip, _wheelCenter);
 
-                // RIGHT HAND
-                Vector3 palmDirR = (_wheelCenter.position - _rHand.position).normalized; // direction to wheel (palm target)
-                Vector3 forwardR = transform.forward; // finger direction
-                Vector3 upR = Vector3.Cross(palmDirR, forwardR); // proper up so palm stays facing target
+                Vector3 palmDirR = (_wheelCenter.position - _rHand.position).normalized; 
+                Vector3 forwardR = transform.forward; 
+                Vector3 upR = Vector3.Cross(palmDirR, forwardR); 
 
                 Quaternion rightHandRot = Quaternion.LookRotation(forwardR, upR);
 
-                // LEFT HAND
-                Vector3 palmDirL = (_wheelCenter.position - _lHand.position).normalized; // direction to wheel (palm target)
-                Vector3 forwardL = transform.forward; // finger direction
-                Vector3 upL = Vector3.Cross(palmDirL, forwardL); // proper up
+                Vector3 palmDirL = (_wheelCenter.position - _lHand.position).normalized;
+                Vector3 forwardL = transform.forward; 
+                Vector3 upL = Vector3.Cross(palmDirL, forwardL); 
 
                 Quaternion leftHandRot = Quaternion.LookRotation(forwardL, upL);
 
