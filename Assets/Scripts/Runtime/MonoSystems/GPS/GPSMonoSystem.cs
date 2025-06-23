@@ -58,9 +58,17 @@ namespace HTJ21
 
         public Transform GetTarget() => _target;
 
-        public void TurnOn() => _isOn = true;
+        public void TurnOn()
+        {
+            _renderer.gameObject.SetActive(true);
+            _isOn = true;
+        }
 
-        public void TurnOff() => _isOn = false;
+        public void TurnOff()
+        {
+            _renderer.gameObject.SetActive(false);
+            _isOn = false;
+        }
 
         public Vector3 GetClosestNodePositionToPoint(List<Roadway> roadways, Vector3 target)
         {

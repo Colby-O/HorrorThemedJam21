@@ -27,6 +27,8 @@ namespace HTJ21
         [SerializeField] private float _outdoorsPitch = 1f;
         [SerializeField] private AudioClip _outdoorsWalkClip;
 
+        [Header("Animation")]
+        [SerializeField] private PlayerAnimationController _animator;
 
         [SerializeField, ReadOnly] private Vector3 _movementSpeed;
         [SerializeField, ReadOnly] private Vector3 _currentVel;
@@ -34,6 +36,8 @@ namespace HTJ21
         
         [SerializeField] private Transform _lookAt = null;
         [SerializeField] private float _lookAtSpeed = 4;
+
+        [SerializeField, ReadOnly] private bool _disableFlashlight = false;
 
         private float gravity = -9.81f;
         
@@ -87,9 +91,20 @@ namespace HTJ21
             _head.gameObject.SetActive(false);
         }
 
+        public void DisableFlashlight()
+        {
+            _disableFlashlight = true;
+            _light.SetActive(false);
+        }
+
+        public void EnableFlashlight()
+        {
+            _disableFlashlight = false;
+        }
+
         private void ToggleLight()
         {
-            if (!_pickupManager.HasItem(PickupableItem.FlashLight)) return;
+            if (!_pickupManager.HasItem(PickupableItem.FlashLight) || _disableFlashlight) return;
             _light.SetActive(!_light.activeSelf);
         }
 
@@ -178,6 +193,7 @@ namespace HTJ21
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
             if (!_as) _as = GetComponent<AudioSource>();
 
+            _disableFlashlight = false;
             _light.SetActive(false);
         }
 
@@ -204,14 +220,17 @@ namespace HTJ21
                 _as.clip = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsWalkClip : _outdoorsWalkClip;
                 _as.pitch = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsPitch : _outdoorsPitch;
                 if (!_as.isPlaying) _as.Play();
+                if (_animator) _animator.SetAnimationState(PlayerAnimationState.Walking);
             }
             else
             {
                 if (_as) _as.Stop();
-	    }
+                if (_animator) _animator.SetAnimationState(PlayerAnimationState.Idle);
+            }
 
             if (_inputHandler.JustCrouched())
             {
+                if (_animator) _animator.SetCrouchState(true);
                 _head.localPosition = _head.localPosition.SetY(_settings.CrouchHeight);
                 _controller.height = _settings.CrouchHeight + 0.3f;
                 _controller.center = _controller.center.SetY(_controller.height / 2);
@@ -219,6 +238,7 @@ namespace HTJ21
 
             if (_inputHandler.JustUncrouched())
             {
+                if (_animator) _animator.SetCrouchState(false);
                 _head.localPosition = _head.localPosition.SetY(_defaultHeight);
                 _controller.height = _defaultHeight + 0.3f;
                 _controller.center = _controller.center.SetY(_controller.height / 2);

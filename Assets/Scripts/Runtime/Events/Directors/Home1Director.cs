@@ -124,6 +124,8 @@ namespace HTJ21
         {
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
+            HTJ21GameManager.Player.DisableFlashlight();
+
             _fakeScareTrigger.gameObject.SetActive(true);
             _realScareTrigger.gameObject.SetActive(true);
 
@@ -149,7 +151,7 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
-
+            HTJ21GameManager.Player.EnableFlashlight();
         }
     }
 }

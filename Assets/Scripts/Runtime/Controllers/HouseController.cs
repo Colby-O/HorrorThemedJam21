@@ -72,6 +72,15 @@ namespace HTJ21
             }
         }
 
+        public void PreloadAct(Act act)
+        {
+            foreach (GameObject section in _sections.Keys)
+            {
+                if (!_sections[section].Contains(act)) section.SetActive(false);
+                else section.SetActive(true);
+            }
+        }
+
         public void EnableHouse()
         {
             foreach (GameObject section in _sections.Keys)

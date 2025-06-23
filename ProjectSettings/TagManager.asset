@@ -32,8 +32,8 @@ TagManager:
   - Radio
   - Terrain
   - ScreenCapture
-  - 
-  - 
+  - Walkable
+  - PortalInvisble
   - 
   - 
   - 

@@ -57,7 +57,8 @@ namespace HTJ21
                 _isDialogueInProgress = true;
                 _currentDialogueEvent = _dialogueEvents.Dequeue();
                 _currentDialogueEvent.StartDialogueEvent();
-                OpenDialogue();
+                if (_currentDialogueEvent.dialogues.Count > 0) OpenDialogue();
+                else ResetDialogue();
             }
             else
             {

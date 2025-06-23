@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
@@ -116,6 +117,11 @@ namespace HTJ21
         [SerializeField] private MirrorCamera _rightMirrorCam;
         [SerializeField] private MirrorCamera _backMirrorCam;
 
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _onExitFirstTimeDialogue;
+        [SerializeField, ReadOnly] private bool _hasExited = false;
+
+        [SerializeField] private GameObject _playerModel;
 
         private PlayerController _player;
         private EngineSound _engineSound;
@@ -218,6 +224,7 @@ namespace HTJ21
             _inputHandler.LightCallback.AddListener(ToggleHeadLight);
             DisableSiren();
             Lock();
+            _hasExited = false;
         }
 
         private void ProcessLook()
@@ -242,6 +249,7 @@ namespace HTJ21
             _wasEnteredThisFrame = true;
             EnableMirrors();
             _camera.gameObject.SetActive(true);
+            if (_playerModel) _playerModel.SetActive(true);
         }
         
         public void SuperDuperEnterCarForReal()
@@ -250,6 +258,7 @@ namespace HTJ21
             EnableMirrors();
             _camera.gameObject.SetActive(true);
             HTJ21GameManager.Player.DisablePlayer();
+            if (_playerModel) _playerModel.SetActive(true);
         }
         
         private void ExitCar()
@@ -259,6 +268,9 @@ namespace HTJ21
             DisableMirrors();
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);
+            if (!_hasExited && _onExitFirstTimeDialogue && GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() == Act.Act1) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onExitFirstTimeDialogue);
+            _hasExited = true;
+            if (_playerModel) _playerModel.SetActive(false);
         }
 
         private void Update()
