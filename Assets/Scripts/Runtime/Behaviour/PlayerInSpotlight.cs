@@ -1,3 +1,4 @@
+using PlazmaGames.Attribute;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,8 +9,22 @@ namespace HTJ21
         [SerializeField] private Light _spotLight;
         [SerializeField] private float _visibilityThreshold = 0.5f;
 
+        [SerializeField, ReadOnly] private bool _isEnabled = true; 
+
         public UnityEvent OnPlayerHit;
-        bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Renderer targetRenderer, Transform caster, float visibilityThreshold = 0.5f)
+
+
+        public void Enable()
+        {
+            _isEnabled = true;
+        }
+
+        public void Disable()
+        {
+            _isEnabled = false;
+        }
+
+        private bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Renderer targetRenderer, Transform caster, float visibilityThreshold = 0.5f)
         {
             if (spotLightComponent.type != LightType.Spot)
                 return false;
@@ -60,10 +75,13 @@ namespace HTJ21
         private void Awake()
         {
             OnPlayerHit = new UnityEvent();
+            Enable();
         }
 
         private void Update()
         {
+            if (!_isEnabled || HTJ21GameManager.IsPaused) return;
+
             if (HTJ21GameManager.Player && IsTargetVisibleInSpotlight(_spotLight.transform, _spotLight, HTJ21GameManager.Player.GetRenderer(), HTJ21GameManager.Player.transform, _visibilityThreshold))
             {
                 OnPlayerHit.Invoke();

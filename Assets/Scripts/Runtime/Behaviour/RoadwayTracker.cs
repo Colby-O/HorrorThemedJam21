@@ -4,7 +4,7 @@ using UnityEngine.Splines;
 namespace HTJ21
 {
     [RequireComponent(typeof(Light))]
-    public class SplineTargetTracker : MonoBehaviour
+    public class RoadwayTracker : MonoBehaviour
     {
         [SerializeField] private int _splineIndex;
         [SerializeField] private float _speed = 0.2f;
@@ -25,7 +25,7 @@ namespace HTJ21
 
         private void Update()
         {
-            if (_splineContainer == null || _splineContainer.Spline == null)
+            if (_splineContainer == null || _splineContainer.Spline == null || HTJ21GameManager.IsPaused)
                 return;
 
             float length = _splineContainer.Spline.GetLength();
