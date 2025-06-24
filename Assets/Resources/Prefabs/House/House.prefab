@@ -3079,6 +3079,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5084865302941087388}
   - component: {fileID: 7452898185597080299}
+  - component: {fileID: 4796129423513603559}
   m_Layer: 0
   m_Name: BloodSlashDecal
   m_TagString: Untagged
@@ -3102,6 +3103,30 @@ Transform:
   m_Father: {fileID: 716874041463461231}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &7452898185597080299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2166869259672015486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: d07cbdc6098b6164dbb8e6b767c4fc05, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 1
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 100, y: 100}
+  m_UVBias: {x: 1.64, y: 2.05}
+  m_DecalLayerMask: 128
+  m_ScaleMode: 0
+  m_Offset: {x: -0.03, y: 0, z: 0.5}
+  m_Size: {x: 200, y: 60.51, z: 1}
+  m_FadeFactor: 1
+--- !u!114 &4796129423513603559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
