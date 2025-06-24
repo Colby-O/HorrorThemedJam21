@@ -9,13 +9,16 @@ namespace HTJ21
         [SerializeField] private float _fallExponent = 2;
 
         private bool _fell = false;
-        private Quaternion _startRotation;
+        private Vector3 _startRotation;
         private float _startTime;
 
         public void Fall()
         {
             _fell = true;
-            _startRotation = transform.rotation;
+            _startRotation = transform.localEulerAngles;
+            if (_fallRotation.x == 0) _fallRotation.x = _startRotation.x;
+            if (_fallRotation.y == 0) _fallRotation.y = _startRotation.y;
+            if (_fallRotation.z == 0) _fallRotation.z = _startRotation.z;
             _startTime = Time.time;
         }
         
@@ -24,7 +27,7 @@ namespace HTJ21
             if (_fell && Time.time <= _startTime + _fallTime)
             {
                 float t = Mathf.Pow((Time.time - _startTime) / _fallTime, _fallExponent);
-                transform.rotation = Quaternion.Lerp(_startRotation, Quaternion.Euler(_fallRotation), t);
+                transform.localEulerAngles = Vector3.Lerp(_startRotation, _fallRotation, t);
             }
         }
     }
