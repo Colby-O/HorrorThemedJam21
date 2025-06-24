@@ -10,9 +10,10 @@ namespace HTJ21
         [SerializeField] private MeshFilter _meshFilter;
         [SerializeField] private MeshRenderer _meshRenderer;
         [SerializeField] private Light _light;
-        [Range(0f, 1f)] public float _opacity = 0.3f;
-        [Range(4, 128)] public int _segments = 24;
-
+        [SerializeField, Range(0f, 1f)] private float _opacity = 0.3f;
+        [SerializeField, Range(4, 128)] private int _segments = 24;
+        [SerializeField, Range(0f, 1f)] private float _startFadeDistance = 0.8f; 
+        [SerializeField, Range(0f, 100f)] private float fadeSharpness = 2f;
         private Mesh _mesh;
 
         private void Setup()
@@ -32,14 +33,13 @@ namespace HTJ21
             mesh.name = "VolumetricSpotlightMesh";
 
             float angle = _light.spotAngle * 0.5f;
-            float radius = Mathf.Tan(angle * Mathf.Deg2Rad) * _light.range;
+            float maxRadius = Mathf.Tan(angle * Mathf.Deg2Rad) * _light.range;
 
             Vector3[] vertices = new Vector3[_segments + 2];
             Color[] colors = new Color[vertices.Length];
             int[] triangles = new int[_segments * 3];
 
-            vertices[0] = Vector3.zero; 
-            colors[0] = new Color(_light.color.r, _light.color.g, _light.color.b, _opacity); 
+            float radius = Mathf.Tan(angle * Mathf.Deg2Rad) * _light.range;
 
             for (int i = 0; i <= _segments; i++)
             {
@@ -48,8 +48,28 @@ namespace HTJ21
 
                 float x = Mathf.Sin(theta) * radius;
                 float y = Mathf.Cos(theta) * radius;
-                vertices[i + 1] = new Vector3(x, y, _light.range);
-                colors[i + 1] = new Color(_light.color.r, _light.color.g, _light.color.b, 0f);
+                Vector3 frustumEdgeLocal = new Vector3(x, y, _light.range);
+
+                Vector3 worldTarget = transform.TransformPoint(frustumEdgeLocal);
+                Vector3 worldOrigin = transform.position;
+                Vector3 worldDir = (worldTarget - worldOrigin).normalized;
+
+                float distance = _light.range;
+
+                if (Physics.Raycast(worldOrigin, worldDir, out RaycastHit hit, _light.range))
+                {
+                    distance = hit.distance;
+                }
+
+                Vector3 hitPointWorld = worldOrigin + worldDir * distance;
+                Vector3 localPoint = transform.InverseTransformPoint(hitPointWorld);
+                vertices[i + 1] = localPoint;
+
+                float dst = localPoint.magnitude;
+                float fadeStart = _startFadeDistance * _light.range;
+                float t = Mathf.Clamp01((dst - fadeStart) / (_light.range - fadeStart));
+                float fade = Mathf.Pow(1 - t, fadeSharpness);
+                colors[i + 1] = new Color(_light.color.r, _light.color.g, _light.color.b, fade * _opacity);
             }
 
             for (int i = 0; i < _segments; i++)
@@ -79,11 +99,6 @@ namespace HTJ21
 
             _mesh = GenerateMesh();
             _meshFilter.sharedMesh = _mesh;
-
-            if (_meshRenderer.sharedMaterial)
-            {
-                _meshRenderer.sharedMaterial.color = new Color(_light.color.r, _light.color.g, _light.color.b, _opacity);
-            }
         }
     }
 }
