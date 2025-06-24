@@ -4,6 +4,12 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.SceneManagement;
+using PlazmaGames.Runtime.DataStructures;
+using System;
+using System.Linq;
+
+
+
 
 
 #if UNITY_EDITOR
@@ -14,6 +20,16 @@ using UnityEditor.Timeline;
 
 namespace HTJ21
 {
+    [System.Serializable]
+    public class RoadwayMaterials 
+    {
+        [SerializeField] public List<int> SplineIndices = new List<int>();
+        [SerializeField] public List<int> Intersections = new List<int>();
+        [SerializeField] public Material RoadMat;
+        [SerializeField] public Material IntersectionMat;
+        [SerializeField] public Material CurbMat;
+    }
+
     [ExecuteInEditMode]
     public class RoadwayCreator : MonoBehaviour
     {
@@ -33,9 +49,8 @@ namespace HTJ21
         [SerializeField] private float _curveHeight;
 
         [Header("Mesh Parameters")]
-        [SerializeField] Material _roadMat;
-        [SerializeField] Material _intersectionMat;
-        [SerializeField] Material _curbMat;
+        [SerializeField] private RoadwayMaterials _defaultMaterials;
+        [SerializeField] private List<RoadwayMaterials> _overridesPresets;
 
         public static RoadwayCreator Instance { get; private set; }
 
@@ -133,10 +148,34 @@ namespace HTJ21
                 float length = _splineContainer.Splines[roadway.splineIndex].GetLength();
                 int numberOfSegments = Mathf.CeilToInt(length / _resolution);
                 for (float j = 0.0f; j <= numberOfSegments; j++) roadway.segments.Add(j / numberOfSegments);
+
+                if (_overridesPresets != null && _overridesPresets.Any(e => e.SplineIndices.Contains(roadway.splineIndex)))
+                {
+                    RoadwayMeshGenerator.SetMaterials(_overridesPresets.First(e => e.SplineIndices.Contains(roadway.splineIndex)));
+                }
+                else
+                {
+                    RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
+                }
                 RoadwayMeshGenerator.GenerateRoadMesh(roadway, _roadWidth, _curveWidth, _curveHeight);
             }
 
-            foreach (RoadwayIntersection intersection in GetIntersections()) RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, _roadWidth, _curveWidth, _curveHeight);
+            List<RoadwayIntersection> intersections = GetIntersections();
+            for (int i = 0; i < intersections.Count; i++) 
+            {
+                RoadwayIntersection intersection = intersections[i];
+
+                if (_overridesPresets != null && _overridesPresets.Any(e => e.Intersections.Contains(i)))
+                {
+                    RoadwayMeshGenerator.SetMaterials(_overridesPresets.First(e => e.Intersections.Contains(i)));
+                }
+                else
+                {
+                    RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
+                }
+
+                RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, _roadWidth, _curveWidth, _curveHeight);
+            }
         }
 
         public void ClearIntersections()
@@ -156,9 +195,7 @@ namespace HTJ21
         {
 #if UNITY_EDITOR
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
-            RoadwayMeshGenerator.RoadMat = _roadMat;
-            RoadwayMeshGenerator.IntersectionMat = _intersectionMat;
-            RoadwayMeshGenerator.CurbMat = _curbMat;
+            RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
             Spline.Changed += OnSplineChanged;
 #endif
             Instance = this;
