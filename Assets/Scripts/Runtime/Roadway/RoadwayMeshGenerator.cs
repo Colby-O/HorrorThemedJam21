@@ -30,7 +30,7 @@ namespace HTJ21
         public static Material IntersectionMat { get; set; }
         public static Material CurbMat { get; set; }
 
-        public static void SetMaterials(RoadwayMaterials mat)
+        public static void SetMaterials(RoadwayData mat)
         {
             RoadMat = mat.RoadMat;
             IntersectionMat = mat.IntersectionMat;

@@ -63,10 +63,11 @@ namespace HTJ21
             float terrainLength = tData.size.z;
 
             List<Roadway> roadways = RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer());
-            float width = RoadwayCreator.Instance.RoadWidth() + _shoulderWidth;
 
             foreach (Roadway roadway in roadways)
             {
+                if (RoadwayCreator.Instance.IsOnTerrainIgnoreLayer(roadway.splineIndex)) continue;
+                float width = RoadwayCreator.Instance.RoadWidth(roadway.splineIndex) + _shoulderWidth;
                 Spline spline = RoadwayCreator.Instance.GetContainer().Splines[roadway.splineIndex];
                 int numSamples = Mathf.CeilToInt(spline.GetLength() / _resolution);
 

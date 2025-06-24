@@ -21,13 +21,17 @@ using UnityEditor.Timeline;
 namespace HTJ21
 {
     [System.Serializable]
-    public class RoadwayMaterials 
+    public class RoadwayData 
     {
         [SerializeField] public List<int> SplineIndices = new List<int>();
         [SerializeField] public List<int> Intersections = new List<int>();
         [SerializeField] public Material RoadMat;
         [SerializeField] public Material IntersectionMat;
         [SerializeField] public Material CurbMat;
+        [SerializeField] public float RoadWidth;
+        [SerializeField] public float CurbWidth;
+        [SerializeField] public float CurbHeight;
+        [SerializeField] public bool TerrainIgnore = false;
     }
 
     [ExecuteInEditMode]
@@ -44,13 +48,13 @@ namespace HTJ21
         [SerializeField] private RoadwaySO _data;
 
         [Header("Road Parameters")]
-        [SerializeField] private float _roadWidth;
-        [SerializeField] private float _curveWidth;
-        [SerializeField] private float _curveHeight;
+        //[SerializeField] private float _roadWidth;
+        //[SerializeField] private float _curveWidth;
+        //[SerializeField] private float _curveHeight;
 
         [Header("Mesh Parameters")]
-        [SerializeField] private RoadwayMaterials _defaultMaterials;
-        [SerializeField] private List<RoadwayMaterials> _overridesPresets;
+        [SerializeField] private RoadwayData _defaultData;
+        [SerializeField] private List<RoadwayData> _overridesPresets;
 
         public static RoadwayCreator Instance { get; private set; }
 
@@ -149,15 +153,20 @@ namespace HTJ21
                 int numberOfSegments = Mathf.CeilToInt(length / _resolution);
                 for (float j = 0.0f; j <= numberOfSegments; j++) roadway.segments.Add(j / numberOfSegments);
 
+
+
+                RoadwayData data = null;
                 if (_overridesPresets != null && _overridesPresets.Any(e => e.SplineIndices.Contains(roadway.splineIndex)))
                 {
-                    RoadwayMeshGenerator.SetMaterials(_overridesPresets.First(e => e.SplineIndices.Contains(roadway.splineIndex)));
+                    data = _overridesPresets.First(e => e.SplineIndices.Contains(roadway.splineIndex));
                 }
                 else
                 {
-                    RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
+                    data = _defaultData;
                 }
-                RoadwayMeshGenerator.GenerateRoadMesh(roadway, _roadWidth, _curveWidth, _curveHeight);
+
+                RoadwayMeshGenerator.SetMaterials(data);
+                RoadwayMeshGenerator.GenerateRoadMesh(roadway, data.RoadWidth, data.CurbWidth, data.CurbHeight);
             }
 
             List<RoadwayIntersection> intersections = GetIntersections();
@@ -165,16 +174,18 @@ namespace HTJ21
             {
                 RoadwayIntersection intersection = intersections[i];
 
+                RoadwayData data = null;
                 if (_overridesPresets != null && _overridesPresets.Any(e => e.Intersections.Contains(i)))
                 {
-                    RoadwayMeshGenerator.SetMaterials(_overridesPresets.First(e => e.Intersections.Contains(i)));
+                    data = _overridesPresets.First(e => e.Intersections.Contains(i));
                 }
                 else
                 {
-                    RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
+                    data = _defaultData;
                 }
 
-                RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, _roadWidth, _curveWidth, _curveHeight);
+                RoadwayMeshGenerator.SetMaterials(data);
+                RoadwayMeshGenerator.GenerateIntersectionMesh(intersection, data.RoadWidth, data.CurbWidth, data.CurbHeight);
             }
         }
 
@@ -195,7 +206,7 @@ namespace HTJ21
         {
 #if UNITY_EDITOR
             RoadwayMeshGenerator.Parent = GetRoadwayHolder();
-            RoadwayMeshGenerator.SetMaterials(_defaultMaterials);
+            RoadwayMeshGenerator.SetMaterials(_defaultData);
             Spline.Changed += OnSplineChanged;
 #endif
             Instance = this;
@@ -217,7 +228,16 @@ namespace HTJ21
             //if (TerrainRoadwayConformer.Instance != null && TerrainRoadwayConformer.Instance.enabled) TerrainRoadwayConformer.Instance.ConformTerrainToRoadway();
         }
 #endif
-        public float RoadWidth() => _roadWidth;
+        public float RoadWidth(int splineIndex) 
+        { 
+            return (_overridesPresets != null && _overridesPresets.Any(e => e.SplineIndices.Contains(splineIndex))) ? _overridesPresets.First(e => e.SplineIndices.Contains(splineIndex)).RoadWidth : _defaultData.RoadWidth;
+        }
+
+        public bool IsOnTerrainIgnoreLayer(int splineIndex)
+        {
+            
+            return (_overridesPresets != null && _overridesPresets.Any(e => e.SplineIndices.Contains(splineIndex))) ? _overridesPresets.First(e => e.SplineIndices.Contains(splineIndex)).TerrainIgnore : _defaultData.TerrainIgnore;
+        }
     }
 }
 

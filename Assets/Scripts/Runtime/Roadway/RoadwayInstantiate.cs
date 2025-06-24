@@ -161,9 +161,9 @@ namespace HTJ21
 			_drawnSections = new();
 			_components = new();
 			
-			float roadWidth = RoadwayCreator.Instance.RoadWidth();
 			foreach (Section s in _sections)
 			{
+                float roadWidth = RoadwayCreator.Instance.RoadWidth(s.spline);
                 DrawnSection ds = new();
 				_drawnSections.Add(ds);
 				foreach (InstanceInfo inst in _instances)
