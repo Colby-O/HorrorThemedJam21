@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using PlazmaGames.Attribute;
 using Unity.Mathematics;
 using UnityEngine;
@@ -9,6 +10,13 @@ namespace HTJ21
     [ExecuteInEditMode]
     public class TerrainRoadwayConformer : MonoBehaviour
     {
+        [System.Serializable]
+        private class ShoulderWidthOverride
+        {
+            public int splineId;
+            public float shoulderWidth;
+        }
+        
         [Header("References")]
         [SerializeField] private Terrain _terrain;
         [Header("Settings")]
@@ -21,6 +29,7 @@ namespace HTJ21
         [SerializeField, InspectorButton("ConformTerrainToRoadway")] private bool _conformTerrainToRoadway = false;
         [SerializeField, InspectorButton("ResetTerrainHeight")] private bool _resetTerrain = false;
         [SerializeField] private bool _autoReset = true;
+        [SerializeField] private List<ShoulderWidthOverride> _shoulderWidthOverrides = new();
 
         public static TerrainRoadwayConformer Instance { get; private set; }
 
@@ -67,7 +76,14 @@ namespace HTJ21
             foreach (Roadway roadway in roadways)
             {
                 if (RoadwayCreator.Instance.IsOnTerrainIgnoreLayer(roadway.splineIndex)) continue;
-                float width = RoadwayCreator.Instance.RoadWidth(roadway.splineIndex) + _shoulderWidth;
+                float shoulderWidth = _shoulderWidth;
+                ShoulderWidthOverride swo = _shoulderWidthOverrides.FirstOrDefault(o => o.splineId == roadway.splineIndex);
+                if (swo != null)
+                {
+                    shoulderWidth = swo.shoulderWidth;
+                }
+                    
+                float width = RoadwayCreator.Instance.RoadWidth(roadway.splineIndex) + shoulderWidth;
                 Spline spline = RoadwayCreator.Instance.GetContainer().Splines[roadway.splineIndex];
                 int numSamples = Mathf.CeilToInt(spline.GetLength() / _resolution);
 
