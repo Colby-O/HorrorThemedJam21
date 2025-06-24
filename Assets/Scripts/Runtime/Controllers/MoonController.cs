@@ -13,10 +13,11 @@ namespace HTJ21
             float dst = Vector3.Distance(target.position, _spotLight.transform.position);
             if (dst > _spotLight.range) return false;
 
-            float angle = Vector3.Angle(_spotLight.transform.forward, (transform.position - _spotLight.transform.position).normalized);
+            float angle = Vector3.Angle(_spotLight.transform.forward, (target.position - _spotLight.transform.position).normalized);
+
             if (angle > _spotLight.spotAngle * 0.5f) return false;
 
-            if (Physics.Raycast(_spotLight.transform.position, (transform.position - _spotLight.transform.position).normalized, out RaycastHit hit, dst))
+            if (Physics.Raycast(_spotLight.transform.position, (target.position - _spotLight.transform.position).normalized, out RaycastHit hit, dst))
             {
                 if (hit.transform != target)
                 {
@@ -34,7 +35,7 @@ namespace HTJ21
 
         private void Update()
         {
-            Debug.Log($"The Player Is {(IsInSpotlight(HTJ21GameManager.Player.transform) ? "In The Spotlight" : "Not In The Spotlight")}");
+
         }
     }
 }
