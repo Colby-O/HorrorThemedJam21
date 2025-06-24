@@ -19,6 +19,8 @@ namespace HTJ21
         [SerializeField] private Camera _camera;
         [SerializeField] private PickupManager _pickupManager;
         [SerializeField] private TutorialController _tutorial;
+        [SerializeField] private Transform _center;
+        [SerializeField] private Renderer _renderer;
 
         [Header("Audio")]
         [SerializeField] private AudioSource _as;
@@ -50,7 +52,12 @@ namespace HTJ21
         public float UncontrollableApproach = 0;
 
         public void LookAt(Transform t) => _lookAt = t;
+
         public void StopLookAt() => _lookAt = null;
+
+        public Renderer GetRenderer() => _renderer;
+
+        public Transform GetCenter() => _center;
 
         public Transform GetHead() => _head;
 
