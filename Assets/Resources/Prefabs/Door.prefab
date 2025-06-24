@@ -173,14 +173,19 @@ MonoBehaviour:
   _hasOutline: 0
   _onFirstTryLockedDialogue: {fileID: 0}
   _onLockedDialogue: {fileID: 0}
+  _onFirstOpenDialogue: {fileID: 0}
+  _hasOpenedBefore: 0
   _hasAttemptedToUnlock: 0
   _audioSource: {fileID: 8672449431427353134}
   _openSound: {fileID: 8300000, guid: f7f98176c18eaf74fbd4610797d37116, type: 3}
   _closeSound: {fileID: 8300000, guid: a64c18f4dcdf5074299f22526a0b98ae, type: 3}
-  _lockedSound: {fileID: 0}
+  _lockedSound: {fileID: 8300000, guid: e87ca934db295420a8d97e55a580da71, type: 3}
   _isOpen: 0
   _inProgress: 0
   _isLocked: 0
+  OnOpen:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &7659481138560356099
 BoxCollider:
   m_ObjectHideFlags: 0

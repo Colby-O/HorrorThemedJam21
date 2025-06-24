@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.107, y: 2.419}
+  m_AnchoredPosition: {x: -0.162, y: 2.419}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &9127560245984327057
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -185,6 +185,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4510474148164351662}
+  - component: {fileID: 9108454494394071924}
   m_Layer: 0
   m_Name: HouseNumber
   m_TagString: Untagged
@@ -209,6 +210,18 @@ Transform:
   - {fileID: 2000567149106145655}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9108454494394071924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848677476816951872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2027e41b477f2ded0bdfabb2683540c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6743762672611792081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -267,7 +280,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 4fd74da82b13d8346afa6931d0f95d84, type: 2}
     - target: {fileID: 919132149155446097, guid: 7445ce321f54afb499e5c20e303521bf, type: 3}
       propertyPath: m_Name
-      value: HouseNumber
+      value: Model
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
