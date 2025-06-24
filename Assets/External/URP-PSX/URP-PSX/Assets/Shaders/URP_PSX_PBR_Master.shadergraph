@@ -1373,8 +1373,8 @@
     "m_ObjectId": "006866b8c7a243f2bb69d4ae0738107a",
     "m_Title": "Skybox Color",
     "m_Position": {
-        "x": 2513.000244140625,
-        "y": 1357.9998779296875
+        "x": 2513.0,
+        "y": 1358.0
     }
 }
 
@@ -1782,8 +1782,8 @@
     "m_ObjectId": "0c9dfa0072a54cd599e77498165cf7b4",
     "m_Title": "Affine Mapping",
     "m_Position": {
-        "x": -1877.9998779296875,
-        "y": 601.9999389648438
+        "x": -1878.0,
+        "y": 602.0
     }
 }
 
@@ -2307,7 +2307,7 @@
     "m_Title": "Texture Sampling",
     "m_Position": {
         "x": -436.0,
-        "y": 911.9999389648438
+        "y": 912.0
     }
 }
 
@@ -3415,8 +3415,8 @@
     "m_ObjectId": "469e7bb8f4854ec0a772370f528104ea",
     "m_Title": "Diffuse",
     "m_Position": {
-        "x": 1675.9998779296875,
-        "y": 945.9999389648438
+        "x": 1676.0,
+        "y": 946.0
     }
 }
 
@@ -4711,7 +4711,7 @@
     "m_ObjectId": "779c4583c544496fb3b0e0acd7e498d8",
     "m_Title": "Regular UVs",
     "m_Position": {
-        "x": -1902.9998779296875,
+        "x": -1903.0,
         "y": 1048.0
     }
 }
@@ -4722,8 +4722,8 @@
     "m_ObjectId": "7ab9aba454b447cdac8da5180c87bbed",
     "m_Title": "Specular",
     "m_Position": {
-        "x": 1344.9998779296875,
-        "y": 1382.9998779296875
+        "x": 1345.0,
+        "y": 1383.0
     }
 }
 
@@ -5879,7 +5879,7 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_Space": 2,
+    "m_Space": 4,
     "m_PositionSource": 0
 }
 
@@ -5952,7 +5952,7 @@
     "m_Title": "Pixelation",
     "m_Position": {
         "x": -1350.0,
-        "y": 836.9999389648438
+        "y": 837.0
     }
 }
 
@@ -6685,8 +6685,8 @@
     "m_ObjectId": "bb464e1285174d0bbd3ca45167ad9e16",
     "m_Title": "Not Using Camera or Vertex Jitter",
     "m_Position": {
-        "x": 1633.9998779296875,
-        "y": 438.9999084472656
+        "x": 1634.0,
+        "y": 439.0
     }
 }
 
@@ -7800,7 +7800,7 @@
     "m_ObjectId": "ec0ed9399a6041c29819f156c1e86c40",
     "m_Title": "Vertex Snapping",
     "m_Position": {
-        "x": 503.9999694824219,
+        "x": 504.0,
         "y": -429.0
     }
 }
@@ -7886,8 +7886,8 @@
     "m_ObjectId": "f19859a8c8c645c7a766c199aa68298c",
     "m_Title": "Using Vertex Jitter",
     "m_Position": {
-        "x": 1490.9998779296875,
-        "y": 10.99993896484375
+        "x": 1491.0,
+        "y": 11.0
     }
 }
 
@@ -7919,7 +7919,7 @@
     "m_Title": "Lighting",
     "m_Position": {
         "x": 710.0,
-        "y": 1360.9998779296875
+        "y": 1361.0
     }
 }
 
@@ -8112,8 +8112,8 @@
     "m_ObjectId": "f9c3dff267c747099f0d18c04220e3ec",
     "m_Title": "Color Precision",
     "m_Position": {
-        "x": 269.0001220703125,
-        "y": 712.9999389648438
+        "x": 269.0,
+        "y": 713.0
     }
 }
 
@@ -8123,7 +8123,7 @@
     "m_ObjectId": "fa862e2aec7840b0a1dc61c573a61f7b",
     "m_Title": "Using CameraClipping",
     "m_Position": {
-        "x": -164.99990844726563,
+        "x": -165.0,
         "y": -194.0
     }
 }
