@@ -52,6 +52,8 @@ namespace HTJ21
         public void LookAt(Transform t) => _lookAt = t;
         public void StopLookAt() => _lookAt = null;
 
+        public Transform GetHead() => _head;
+
         public TutorialController GetTutorial() => _tutorial;
 
         public Camera GetCamera() => _camera;

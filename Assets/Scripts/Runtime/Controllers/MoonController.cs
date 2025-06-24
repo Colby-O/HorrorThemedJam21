@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HTJ21
 {
@@ -6,6 +7,7 @@ namespace HTJ21
     {
         [SerializeField] private Light _spotLight;
 
+        public UnityEvent OnPlayerHit;
         public bool IsInSpotlight(Transform target)
         {
             if (_spotLight.type != LightType.Spot) return false;
@@ -30,12 +32,15 @@ namespace HTJ21
 
         private void Awake()
         {
-            
+            OnPlayerHit = new UnityEvent();
         }
 
         private void Update()
         {
-
+            if (HTJ21GameManager.Player && IsInSpotlight(HTJ21GameManager.Player.GetHead()))
+            {
+                OnPlayerHit.Invoke();
+            }
         }
     }
 }
