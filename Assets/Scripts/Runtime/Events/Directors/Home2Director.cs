@@ -4,7 +4,7 @@ namespace HTJ21
 {
     public class Home2Director : Director
     {
-        [SerializeField] private MoonController _moonController;
+        [SerializeField] private PlayerInSpotlight _moonController;
         [SerializeField] private Transform _startLoc;
 
         private void ResetPlayer()
