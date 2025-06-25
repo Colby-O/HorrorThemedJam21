@@ -40,6 +40,7 @@ namespace HTJ21
         [SerializeField] private float _lookAtSpeed = 4;
 
         [SerializeField, ReadOnly] private bool _disableFlashlight = false;
+        [SerializeField, ReadOnly] private bool _isCrouching;
 
         private float gravity = -9.81f;
         
@@ -125,9 +126,9 @@ namespace HTJ21
                 return;
             }
 
-            float dirSpeed = (_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed;
+            float dirSpeed = (_isCrouching ? _settings.CrouchSpeedMul : 1f) * ((_inputHandler.RawMovement.y == 1) ? _settings.WalkingForwardSpeed : _settings.WalkingBackwardSpeed);
             float forwardSpeed = _inputHandler.RawMovement.y * dirSpeed;
-            float rightSpeed = _inputHandler.RawMovement.x * _settings.WalkingStrideSpeed;
+            float rightSpeed = _inputHandler.RawMovement.x * (_isCrouching ? _settings.CrouchSpeedMul : 1f) * _settings.WalkingStrideSpeed;
 
             if (UncontrollableApproach != 0)
             {
@@ -239,6 +240,7 @@ namespace HTJ21
 
             if (_inputHandler.JustCrouched())
             {
+                _isCrouching = true;
                 if (_animator) _animator.SetCrouchState(true);
                 _head.localPosition = _head.localPosition.SetY(_settings.CrouchHeight);
                 _controller.height = _settings.CrouchHeight + 0.3f;
@@ -247,6 +249,7 @@ namespace HTJ21
 
             if (_inputHandler.JustUncrouched())
             {
+                _isCrouching = false;
                 if (_animator) _animator.SetCrouchState(false);
                 _head.localPosition = _head.localPosition.SetY(_defaultHeight);
                 _controller.height = _defaultHeight + 0.3f;
