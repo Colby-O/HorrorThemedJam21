@@ -379,6 +379,9 @@ MonoBehaviour:
   _segments: 8
   _startFadeDistance: 0
   fadeSharpness: 100
+  _setUpdateLimit: 1
+  _updateRate: 0.5
+  _timer: 0.33333334
 --- !u!1 &7355634239413827043
 GameObject:
   m_ObjectHideFlags: 0

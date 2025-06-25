@@ -193,5 +193,15 @@ namespace HTJ21
             transform.position = position + _offsetRight * right + _offsetUp * upVector;
             transform.rotation = targetRotation * Quaternion.Euler(_rotationOffset);
         }
+
+        private void OnEnable()
+        {
+            Continue();
+        }
+
+        private void OnDisable()
+        {
+            Stop();
+        }
     }
 }

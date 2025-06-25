@@ -1,5 +1,4 @@
 using PlazmaGames.Attribute;
-using PlazmaGames.Core.Debugging;
 using UnityEngine;
 
 namespace HTJ21
@@ -14,6 +13,9 @@ namespace HTJ21
         [SerializeField, Range(4, 128)] private int _segments = 24;
         [SerializeField, Range(0f, 1f)] private float _startFadeDistance = 0.8f; 
         [SerializeField, Range(0f, 100f)] private float fadeSharpness = 2f;
+        [SerializeField] private bool _setUpdateLimit = false;
+        [SerializeField] private float _updateRate = 0.1f;
+        [SerializeField, ReadOnly] private float _timer;
         private Mesh _mesh;
 
         private Vector3 _lastPosition;
@@ -184,15 +186,23 @@ namespace HTJ21
         private void OnEnable()
         {
             Setup();
+            _timer = Random.Range(0.0f, _updateRate);
         }
 
         private void Update()
         {
             if (_light.type != LightType.Spot) return;
 
+            if (_setUpdateLimit)
+            {
+                _timer += Time.deltaTime;
+                if (_timer > _updateRate) _timer = 0;
+                else return;
+            }
+
             if (LightChanged())
             {
-                _mesh = GenerateMesh();
+                GenerateMesh();
                 _meshFilter.sharedMesh = _mesh;
                 CacheLightState();
             }
