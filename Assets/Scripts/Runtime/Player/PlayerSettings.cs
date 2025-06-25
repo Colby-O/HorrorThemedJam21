@@ -14,6 +14,7 @@ namespace HTJ21
         public float MovementSmoothing = 0.5f;
         public float GravityMultiplier = 1.0f;
         public float CrouchHeight = 1.2f;
+        public float CrouchSpeedMul = 0.5f;
 
         [Header("Look")]
         public Vector2 Sensitivity = Vector2.one;

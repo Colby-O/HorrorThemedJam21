@@ -1,5 +1,4 @@
 using PlazmaGames.Attribute;
-using PlazmaGames.Core.Debugging;
 using UnityEngine;
 
 namespace HTJ21
@@ -14,7 +13,34 @@ namespace HTJ21
         [SerializeField, Range(4, 128)] private int _segments = 24;
         [SerializeField, Range(0f, 1f)] private float _startFadeDistance = 0.8f; 
         [SerializeField, Range(0f, 100f)] private float fadeSharpness = 2f;
+        [SerializeField] private bool _setUpdateLimit = false;
+        [SerializeField] private float _updateRate = 0.1f;
+        [SerializeField, ReadOnly] private float _timer;
         private Mesh _mesh;
+
+        private Vector3 _lastPosition;
+        private Quaternion _lastRotation;
+        private float _lastRange;
+        private float _lastAngle;
+        private float _lastOpacity;
+
+        private bool LightChanged()
+        {
+            return _light.transform.position != _lastPosition ||
+                   _light.transform.rotation != _lastRotation ||
+                   _light.range != _lastRange ||
+                   _light.spotAngle != _lastAngle ||
+                   _opacity != _lastOpacity;
+        }
+
+        private void CacheLightState()
+        {
+            _lastPosition = _light.transform.position;
+            _lastRotation = _light.transform.rotation;
+            _lastRange = _light.range;
+            _lastAngle = _light.spotAngle;
+            _lastOpacity = _opacity;
+        }
 
         private void Setup()
         {
@@ -29,8 +55,9 @@ namespace HTJ21
 
         private Mesh GenerateMesh()
         {
-            Mesh mesh = new Mesh();
-            mesh.name = "VolumetricSpotlightMesh";
+            if (_mesh == null) _mesh = new Mesh();
+            else _mesh.Clear();
+            _mesh.name = "VolumetricSpotlightMesh";
 
             float angleRad = _light.spotAngle * 0.5f * Mathf.Deg2Rad;
             float radius = Mathf.Tan(angleRad) * _light.range;
@@ -147,26 +174,43 @@ namespace HTJ21
                 triangles[i * 3 + 2] = (i + 2 > _segments) ? 1 : i + 2;
             }
 
-            mesh.SetVertices(vertices);
-            mesh.SetColors(colors);
-            mesh.SetTriangles(triangles, 0);
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+            _mesh.SetVertices(vertices);
+            _mesh.SetColors(colors);
+            _mesh.SetTriangles(triangles, 0);
+            _mesh.RecalculateNormals();
+            _mesh.RecalculateBounds();
 
-            return mesh;
+            return _mesh;
         }
 
         private void OnEnable()
         {
             Setup();
+            _timer = Random.Range(0.0f, _updateRate);
         }
 
         private void Update()
         {
             if (_light.type != LightType.Spot) return;
 
-            _mesh = GenerateMesh();
-            _meshFilter.sharedMesh = _mesh;
+            if (_setUpdateLimit)
+            {
+                _timer += Time.deltaTime;
+                if (_timer > _updateRate) _timer = 0;
+                else return;
+            }
+
+            if (LightChanged())
+            {
+                GenerateMesh();
+                _meshFilter.sharedMesh = _mesh;
+                CacheLightState();
+            }
+
+            if (_meshRenderer.sharedMaterial)
+            {
+                _meshRenderer.sharedMaterial.color = new Color(_light.color.r, _light.color.g, _light.color.b, _opacity);
+            }
         }
     }
 }

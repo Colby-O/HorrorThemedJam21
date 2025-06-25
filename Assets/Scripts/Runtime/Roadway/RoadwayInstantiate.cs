@@ -79,6 +79,8 @@ namespace HTJ21
             public bool oScale;
             public float scaleFrom = 1f;
             public float scaleTo = 1f;
+
+            public bool spawnComponents = true;
         }
 
         [System.Serializable]
@@ -200,6 +202,8 @@ namespace HTJ21
                         scaleFrom = overrides.scaleFrom;
                         scaleTo = overrides.scaleTo;
                     }
+                    bool spawnComponents = true;
+                    if (overrides is { spawnComponents: false }) spawnComponents = false;
                     UnityEngine.Random.InitState(seed);
 					float tStart = RoadwayHelper.GetKnotTInSpline(s.container, s.spline, s.knotStart);
 					float tLength = RoadwayHelper.GetTBetweenKnots(s.container, s.spline, s.knotStart, s.knotEnd);
@@ -250,19 +254,22 @@ namespace HTJ21
                             );
                             di.matrices[i] = mat;
 
-							for (int j = 0; j < inst.prefab.transform.childCount; j++)
-							{
-								if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
-								{
-									GameObject go = GameObject.Instantiate(light, leftPos, Quaternion.Euler(rotation), transform).gameObject;
-                                    SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
-									_components.Add(new MeshComponent(go));
-								}
-                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                            if (spawnComponents)
+                            {
+                                for (int j = 0; j < inst.prefab.transform.childCount; j++)
                                 {
-									GameObject go = GameObject.Instantiate(collider, leftPos, Quaternion.Euler(rotation), transform).gameObject;
-                                    SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
-                                    _components.Add(new MeshComponent(go));
+                                    if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
+                                    {
+                                        GameObject go = GameObject.Instantiate(light, leftPos, Quaternion.Euler(rotation), transform).gameObject;
+                                        SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
+                                        _components.Add(new MeshComponent(go));
+                                    }
+                                    if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                    {
+                                        GameObject go = GameObject.Instantiate(collider, leftPos, Quaternion.Euler(rotation), transform).gameObject;
+                                        SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
+                                        _components.Add(new MeshComponent(go));
+                                    }
                                 }
                             }
 						}
@@ -300,19 +307,22 @@ namespace HTJ21
 
                             di.matrices[index] = mat;
 
-                            for (int j = 0; j < inst.prefab.transform.childCount; j++)
+                            if (spawnComponents)
                             {
-                                if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
+                                for (int j = 0; j < inst.prefab.transform.childCount; j++)
                                 {
-									GameObject go = GameObject.Instantiate(light, rightPos, Quaternion.Euler(rotation), transform).gameObject;
-                                    SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
-                                    _components.Add(new MeshComponent(go));
-                                }
-                                if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
-                                {
-									GameObject go = GameObject.Instantiate(collider, rightPos, Quaternion.Euler(rotation), transform).gameObject;
-                                    SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
-                                    _components.Add(new MeshComponent(go));
+                                    if (inst.prefab.transform.GetChild(j).TryGetComponent<Light>(out Light light))
+                                    {
+                                        GameObject go = GameObject.Instantiate(light, rightPos, Quaternion.Euler(rotation), transform).gameObject;
+                                        SetChildMatrix(go.transform, inst.prefab.transform, light.transform, mat);
+                                        _components.Add(new MeshComponent(go));
+                                    }
+                                    if (inst.prefab.transform.GetChild(j).TryGetComponent<BoxCollider>(out BoxCollider collider))
+                                    {
+                                        GameObject go = GameObject.Instantiate(collider, rightPos, Quaternion.Euler(rotation), transform).gameObject;
+                                        SetChildMatrix(go.transform, inst.prefab.transform, collider.transform, mat);
+                                        _components.Add(new MeshComponent(go));
+                                    }
                                 }
                             }
                         }

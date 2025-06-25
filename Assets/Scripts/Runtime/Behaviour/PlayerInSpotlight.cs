@@ -35,10 +35,10 @@ namespace HTJ21
                 bounds.center,
                 bounds.min,
                 bounds.max,
-                new Vector3(bounds.min.x, bounds.max.y, bounds.min.z), 
-                new Vector3(bounds.max.x, bounds.max.y, bounds.min.z), 
-                new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), 
-                new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), 
+                new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
+                new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
+                new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
+                new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
             };
 
             int visibleCount = 0;
