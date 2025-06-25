@@ -1,4 +1,5 @@
 using PlazmaGames.Animation;
+using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace HTJ21
 {
     public class MoveAlongSpline : MonoBehaviour
     {
+        public static bool IsTriggering = false;
+
         [SerializeField] private SplineContainer _splineContainer;
         [SerializeField] private int _splineIndex = 0;
         [SerializeField] private Vector2 _travelRange = new Vector2Int(0, 1);
@@ -49,16 +52,18 @@ namespace HTJ21
         {
             GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
             _isWaiting = true;
+            MoveAlongSpline.IsTriggering = true;
         }
 
         public void Continue()
         {
             _isWaiting = false;
+            MoveAlongSpline.IsTriggering = false;
         }
 
         private void Update()
         {
-            if (_splineContainer == null || _splineContainer.Splines.Count <= _splineIndex || _isWaiting || HTJ21GameManager.IsPaused)
+            if (_splineContainer == null || _splineContainer.Splines.Count <= _splineIndex || _isWaiting || HTJ21GameManager.IsPaused || MoveAlongSpline.IsTriggering)
                 return;
 
             float length = _splineContainer.Splines[_splineIndex].GetLength();
