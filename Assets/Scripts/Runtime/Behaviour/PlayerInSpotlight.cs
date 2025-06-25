@@ -8,7 +8,6 @@ namespace HTJ21
     {
         [SerializeField] private Light _spotLight;
         [SerializeField] private float _visibilityThreshold = 0.5f;
-        [SerializeField] private float _radius = 0.1f;
 
         [SerializeField, ReadOnly] private bool _isEnabled = true; 
 
@@ -33,14 +32,13 @@ namespace HTJ21
             Bounds bounds = targetRenderer.bounds;
             Vector3[] samplePoints = new Vector3[]
             {
-                HTJ21GameManager.Player.transform.position,
-                //bounds.center,
-                //bounds.min,
-                //bounds.max,
-                //new Vector3(bounds.min.x, bounds.max.y, bounds.min.z), 
-                //new Vector3(bounds.max.x, bounds.max.y, bounds.min.z), 
-                //new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), 
-                //new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), 
+                bounds.center,
+                bounds.min,
+                bounds.max,
+                new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
+                new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
+                new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
+                new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
             };
 
             int visibleCount = 0;
@@ -57,7 +55,7 @@ namespace HTJ21
                 if (distance > spotLightComponent.range)
                     continue;
 
-                if (Physics.SphereCast(spotlight.position, _radius, toPoint.normalized, out RaycastHit hit, distance))
+                if (Physics.Raycast(spotlight.position, toPoint.normalized, out RaycastHit hit, distance))
                 {
                     if (hit.transform == caster || hit.collider.transform.IsChildOf(caster.transform))
                     {
