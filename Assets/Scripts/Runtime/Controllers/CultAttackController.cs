@@ -16,6 +16,20 @@ namespace HTJ21
         [SerializeField] private Transform _playerDuringLoc;
         [SerializeField] private AudioClip _scareClip;
 
+        [SerializeField] private Home2Director _home2Director;
+
+        public Home2Director GetDirector()
+        {
+            Director director = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector();
+            if (director is Home2Director) return (Home2Director)director;
+            else return null;
+        }
+
+        private void OnSeen()
+        {
+            if (_home2Director) _home2Director.ResetPlayer();
+            else GetDirector().ResetPlayer();
+        }
 
         private void OnCaught()
         {
@@ -50,6 +64,7 @@ namespace HTJ21
                             _alongSpline.Continue();
                             _seenHandler.Enable();
                             _scareLight.gameObject.SetActive(false);
+                            OnSeen();
                         }
                     );
                 }   
