@@ -47,5 +47,11 @@ namespace HTJ21
         // Epilogue Part 1
         public record VoidNextCheck();
         public static EventResponse NewVoidNextCheck(UnityAction<Component, VoidNextCheck> func) => new EventResponse((comp, data) => func.Invoke(comp, data as VoidNextCheck));
+        public record RoadSectionFinished();
+        public static EventResponse NewRoadSectionFinished(UnityAction<Component, RoadSectionFinished> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RoadSectionFinished));
+        public record RoomSectionStart();
+        public static EventResponse NewRoomSectionFinished(UnityAction<Component, RoomSectionFinished> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RoomSectionFinished));
+        public record RoomSectionFinished();
+        public static EventResponse NewRoomSectionStart(UnityAction<Component, RoomSectionStart> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RoomSectionStart));
     }
 }

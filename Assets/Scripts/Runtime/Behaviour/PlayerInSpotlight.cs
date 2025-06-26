@@ -11,7 +11,7 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private bool _isEnabled = true; 
 
-        public UnityEvent OnPlayerHit;
+        public UnityEvent OnPlayerHit = new UnityEvent();
 
 
         public void Enable()
@@ -74,7 +74,6 @@ namespace HTJ21
 
         private void Awake()
         {
-            OnPlayerHit = new UnityEvent();
             Enable();
         }
 

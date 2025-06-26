@@ -9,6 +9,17 @@ namespace HTJ21
     {
         [SerializeField] private PlayerInSpotlight _moonController;
 
+        [Header("Sections")]
+        [SerializeField] private GameObject _roadSection;
+        [SerializeField] private GameObject _roomSection;
+        [SerializeField] private GameObject _showcaseSection;
+
+        [SerializeField] private GameObject _moonBeam;
+
+        [Header("References")]
+        [SerializeField] private Door _enterRoomDoor;
+        [SerializeField] private Door _exitRoomDoor;
+
         [Header("Checkpoints")]
         [SerializeField] private List<Transform> _checkpoints;
 
@@ -34,13 +45,36 @@ namespace HTJ21
         private void Setup()
         {
             _currentCheckpoint = 0;
-            _moonController.OnPlayerHit.AddListener(ResetPlayer);
         }
 
         private void AddEvents()
         {
             GameManager.AddEventListener<Events.VoidNextCheck>(Events.NewVoidNextCheck((from, data) =>
             {
+                NextCheckpoint();
+            }));
+
+            GameManager.AddEventListener<Events.RoadSectionFinished>(Events.NewRoadSectionFinished((from, data) =>
+            {
+                _roomSection.SetActive(true);
+            }));
+
+
+            GameManager.AddEventListener<Events.RoomSectionStart>(Events.NewRoomSectionStart((from, data) =>
+            {
+                _moonBeam.SetActive(false);
+                _enterRoomDoor.Close();
+                _enterRoomDoor.Lock();
+                NextCheckpoint();
+            }));
+
+            GameManager.AddEventListener<Events.RoomSectionFinished>(Events.NewRoomSectionFinished((from, data) =>
+            {
+                _roadSection.SetActive(false);
+                _roomSection.SetActive(false);
+                _showcaseSection.SetActive(true);
+                _exitRoomDoor.Close();
+                _exitRoomDoor.Lock();
                 NextCheckpoint();
             }));
         }

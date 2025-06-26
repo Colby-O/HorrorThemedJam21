@@ -1,3 +1,4 @@
+using PlazmaGames.Attribute;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -18,14 +19,27 @@ namespace HTJ21
         private SplineContainer _splineContainer;
         private bool _movingForward = true;
 
+        [SerializeField, ReadOnly] private bool _isStopped = false;
+
+        public void Stop()
+        {
+            _isStopped = true;
+        }
+
+        public void Continue()
+        {
+            _isStopped = false;
+        }
+
         private void Start()
         {
             _splineContainer = RoadwayCreator.Instance.GetContainer();
+            Continue();
         }
 
         private void Update()
         {
-            if (_splineContainer == null || _splineContainer.Spline == null || HTJ21GameManager.IsPaused)
+            if (_splineContainer == null || _splineContainer.Spline == null || HTJ21GameManager.IsPaused || _isStopped)
                 return;
 
             float length = _splineContainer.Spline.GetLength();
