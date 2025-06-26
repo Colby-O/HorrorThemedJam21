@@ -1,9 +1,12 @@
 using PlazmaGames.Attribute;
 using Unity.Mathematics;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Splines;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 namespace HTJ21
 {
