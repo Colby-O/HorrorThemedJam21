@@ -11,6 +11,7 @@ namespace HTJ21
         {
             _rig = GetComponent<Rigidbody>();
             _as = GetComponent<AudioSource>();
+            _as.Play();
         }
 
         private void FixedUpdate()
