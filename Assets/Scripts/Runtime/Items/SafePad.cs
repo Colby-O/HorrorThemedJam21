@@ -36,7 +36,7 @@ namespace HTJ21
         private void OnButtonClicked(int id)
         {
             _entered.Add(id);
-            if (_entered.Count <= 4) _lights[_entered.Count - 1].material.SetColor("_BaseColor", Color.red);
+            if (_entered.Count <= _lights.Count) _lights[_entered.Count - 1].material.SetColor("_BaseColor", Color.red);
         }
 
         private bool IsSolved()
@@ -81,7 +81,7 @@ namespace HTJ21
             {
                 Solve();
             }
-            else if (_entered.Count >= 4 && (!_isSolved || !IsSolved())) Failed();
+            else if (_entered.Count >= _lights.Count && (!_isSolved || !IsSolved())) Failed();
         }
     }
 }
