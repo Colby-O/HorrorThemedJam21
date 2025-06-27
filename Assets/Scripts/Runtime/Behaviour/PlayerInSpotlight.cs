@@ -9,6 +9,7 @@ namespace HTJ21
         [SerializeField] private Light _spotLight;
         [SerializeField] private float _visibilityThreshold = 0.5f;
 
+        [SerializeField] private bool _useRaycast = true;
         [SerializeField, ReadOnly] private bool _isEnabled = true; 
 
         public UnityEvent OnPlayerHit = new UnityEvent();
@@ -24,52 +25,34 @@ namespace HTJ21
             _isEnabled = false;
         }
 
-        private bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Renderer targetRenderer, Transform caster, float visibilityThreshold = 0.5f)
+        private bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Transform target, Transform caster, float visibilityThreshold = 0.5f)
         {
             if (spotLightComponent.type != LightType.Spot)
                 return false;
 
-            Bounds bounds = targetRenderer.bounds;
-            Vector3[] samplePoints = new Vector3[]
-            {
-                bounds.center,
-                bounds.min,
-                bounds.max,
-                new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
-                new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
-                new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
-                new Vector3(bounds.max.x, bounds.min.y, bounds.max.z),
-            };
-
             int visibleCount = 0;
 
-            foreach (var point in samplePoints)
+
+            Vector3 toPoint = target.position - spotlight.position;
+            float distance = toPoint.magnitude;
+
+            float angle = Vector3.Angle(spotlight.forward, toPoint);
+            if (angle > spotLightComponent.spotAngle * 0.5f) return false;
+
+            if (distance > spotLightComponent.range) return false;
+
+            if (_useRaycast)
             {
-                Vector3 toPoint = point - spotlight.position;
-                float distance = toPoint.magnitude;
-
-                float angle = Vector3.Angle(spotlight.forward, toPoint);
-                if (angle > spotLightComponent.spotAngle * 0.5f)
-                    continue;
-
-                if (distance > spotLightComponent.range)
-                    continue;
-
                 if (Physics.Raycast(spotlight.position, toPoint.normalized, out RaycastHit hit, distance))
                 {
-                    if (hit.transform == caster || hit.collider.transform.IsChildOf(caster.transform))
+                    if (hit.transform != caster && !hit.collider.transform.IsChildOf(caster.transform))
                     {
-                        visibleCount++;
+                        return false;
                     }
-                }
-                else
-                {
-                    visibleCount++;
                 }
             }
 
-            float visibilityRatio = (float)visibleCount / samplePoints.Length;
-            return visibilityRatio >= visibilityThreshold;
+            return true;
         }
 
         private void Awake()
@@ -81,7 +64,7 @@ namespace HTJ21
         {
             if (!_isEnabled || HTJ21GameManager.IsPaused) return;
 
-            if (HTJ21GameManager.Player && IsTargetVisibleInSpotlight(_spotLight.transform, _spotLight, HTJ21GameManager.Player.GetRenderer(), HTJ21GameManager.Player.transform, _visibilityThreshold))
+            if (HTJ21GameManager.Player && IsTargetVisibleInSpotlight(_spotLight.transform, _spotLight, HTJ21GameManager.Player.transform, HTJ21GameManager.Player.transform, _visibilityThreshold))
             {
                 OnPlayerHit.Invoke();
             }

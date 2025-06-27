@@ -15,14 +15,17 @@ namespace HTJ21
 
         public Act3Director GetDirector()
         {
+
+
             Director director = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector();
             if (director is Act3Director) return (Act3Director)director;
             else return null;
         }
 
-
         private void OnSeen()
         {
+            if (HTJ21GameManager.Player.IsInCover()) return;
+
             _seenHandler.Disable();
             HTJ21GameManager.Player.LockMoving = true;
             HTJ21GameManager.Player.LookAt(transform);

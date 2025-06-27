@@ -42,6 +42,10 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _disableFlashlight = false;
         [SerializeField, ReadOnly] private bool _isCrouching;
 
+        [Header("Seen Settings")]
+        [SerializeField, ReadOnly] private bool _isHidden = false;
+        [SerializeField, ReadOnly] private bool _needToCourch = false;
+
         private float gravity = -9.81f;
         
         private float _defaultHeight;
@@ -203,6 +207,23 @@ namespace HTJ21
             return isIndoors && HTJ21GameManager.HasStarted;
         }
 
+        public void SetHiddenState(bool needToCrouch)
+        {
+            _needToCourch = needToCrouch;
+            _isHidden = true;
+        }
+
+        public void ClearHiddenState()
+        {
+            _needToCourch = false;
+            _isHidden = false;
+        }
+
+        public bool IsInCover()
+        {
+            return _isHidden && (!_needToCourch || (_needToCourch && _isCrouching));
+        }
+
         private void Awake()
         {
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
@@ -210,6 +231,7 @@ namespace HTJ21
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
             if (!_as) _as = GetComponent<AudioSource>();
 
+            ClearHiddenState();
             _disableFlashlight = false;
             _light.SetActive(false);
         }
