@@ -9,6 +9,9 @@ namespace HTJ21
     {
         [SerializeField] private PickupableItem _type;
 
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _onInspectDialogue;
+
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
@@ -33,11 +36,13 @@ namespace HTJ21
 
         public string GetHint()
         {
-            return "Click 'E' to Pickup Flashlight";
+            return $"Click 'E' to Pickup {((_type == PickupableItem.FlashLight) ? "Flashlight" : "Bathroom Key")}";
         }
 
         public bool Interact(Interactor interactor)
         {
+            if (_onInspectDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onInspectDialogue);
+
             if (HTJ21GameManager.PickupManager)
             {
                 HTJ21GameManager.PickupManager.Pickup(_type);

@@ -6695,7 +6695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8581734414002748402}
   m_Layer: 0
-  m_Name: Home2
+  m_Name: Act3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

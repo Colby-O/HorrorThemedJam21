@@ -24,5 +24,7 @@ namespace HTJ21
         public string Act1Location;
         public DialogueSO IntroDialogue;
         public DialogueSO PickupFlashlightDialogue;
+
+        public float HangingHitForce = 0.1f;
     }
 }

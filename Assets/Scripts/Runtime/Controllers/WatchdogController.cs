@@ -9,14 +9,14 @@ namespace HTJ21
     public class WatchdogController : MonoBehaviour
     {
         [SerializeField] private PlayerInSpotlight _seenHandler;
-        [SerializeField] private Home2Director _home2Director;
+        [SerializeField] private Act3Director _home2Director;
         [SerializeField] private AudioClip _scareClip;
         [SerializeField] private RoadwayTracker _spotLight;
 
-        public Home2Director GetDirector()
+        public Act3Director GetDirector()
         {
             Director director = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector();
-            if (director is Home2Director) return (Home2Director)director;
+            if (director is Act3Director) return (Act3Director)director;
             else return null;
         }
 

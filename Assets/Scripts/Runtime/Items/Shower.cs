@@ -3,6 +3,7 @@ using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HTJ21
 {
@@ -26,6 +27,14 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
+        [SerializeField, ReadOnly] private bool _isActive = true;
+
+        public UnityEvent OnShowerFinish = new UnityEvent();
+
+        public void Enable() => _isActive = true;
+
+        public void Disable() => _isActive = false;
+
         public void EndInteraction()
         {
 
@@ -45,7 +54,7 @@ namespace HTJ21
 
         public bool IsInteractable()
         {
-            return !_isShowering;
+            return !_isShowering && _isActive;
         }
 
         public void AddOutline()
@@ -70,7 +79,7 @@ namespace HTJ21
             _outlineMR.materials = mats;
         }
 
-        private void RestoreToDefaults(bool keepBlood = false)
+        public void RestoreToDefaults(bool keepBlood = false)
         {
             _isShowering = false;
             _waterPS.gameObject.SetActive(false);
@@ -80,7 +89,7 @@ namespace HTJ21
             if (!keepBlood) _blood.gameObject.SetActive(false);
         }
 
-        private void SpookyShower()
+        private void SpookyShower(bool fadeToBlack = true)
         {
             if (_as) _as.Play();
 
@@ -105,21 +114,30 @@ namespace HTJ21
                 },
                 () =>
                 {
-                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(
-                        _showerFadeoutDuration,
-                        () =>
-                        {
-                            if (_as) _as.Stop();
-                            RestoreToDefaults(true);
-                            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
-                            GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
-                        }
-                    );
+                    if (fadeToBlack)
+                    {
+                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(
+                            _showerFadeoutDuration,
+                            () =>
+                            {
+                                if (_as) _as.Stop();
+                                RestoreToDefaults();
+                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+                                OnShowerFinish?.Invoke();
+                            }
+                        );
+                    }
+                    else
+                    {
+                        if (_as) _as.Stop();
+                        RestoreToDefaults();
+                        OnShowerFinish?.Invoke();
+                    }
                 }
             );
         }
 
-        private void StartShower()
+        public void StartShower(bool fadeToBlack = true)
         {
             if (_as) _as.Play();
 
@@ -138,16 +156,25 @@ namespace HTJ21
                 }, 
                 () => 
                 {
-                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(
-                        _showerFadeoutDuration, 
-                        () => 
-                        {
-                            if (_as) _as.Stop();
-                            RestoreToDefaults();
-                            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
-                            GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
-                        }
-                    );
+                    if (fadeToBlack)
+                    {
+                        GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(
+                            _showerFadeoutDuration,
+                            () =>
+                            {
+                                if (_as) _as.Stop();
+                                RestoreToDefaults();
+                                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+                                OnShowerFinish?.Invoke();
+                            }
+                        );
+                    }
+                    else
+                    {
+                        if (_as) _as.Stop();
+                        RestoreToDefaults();
+                        OnShowerFinish?.Invoke();
+                    }
                 }
             );
         }

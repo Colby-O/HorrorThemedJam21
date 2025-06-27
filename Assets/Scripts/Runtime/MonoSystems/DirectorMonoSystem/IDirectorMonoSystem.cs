@@ -5,6 +5,7 @@ namespace HTJ21
 {
     public interface IDirectorMonoSystem : IMonoSystem
     {
+        public Act GetStartAct();
         public void Begin();
         public void NextAct();
         public bool IsCurrentActIndoors();

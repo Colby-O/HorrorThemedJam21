@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace HTJ21
 {
+    [CreateAssetMenu(fileName = "DefaultEvent", menuName = "Dialogue/Events/Default")]
     public class DefaultDialogueEvent : DialogueEvent
     {
         public override void OnEnter()

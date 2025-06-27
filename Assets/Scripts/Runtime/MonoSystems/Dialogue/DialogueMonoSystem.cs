@@ -12,6 +12,8 @@ namespace HTJ21
 
         private bool _nextDialogue = false;
 
+        [SerializeField] private DialogueEvent _defaultDialogueEvent;
+
         private Queue<DialogueSO> _dialogueEvents;
 
         private DialogueSO _currentDialogueEvent = null;
@@ -22,7 +24,7 @@ namespace HTJ21
         {
             _nextDialogue = false;
             _currentDialogue = _currentDialogueEvent.dialogues.Dequeue();
-            if (_currentDialogue.dialogueEvent == null) _currentDialogue.dialogueEvent = new DefaultDialogueEvent();
+            if (_currentDialogue.dialogueEvent == null) _currentDialogue.dialogueEvent = _defaultDialogueEvent;
 
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowDialogue();
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().DisplayDialogue(_currentDialogue);

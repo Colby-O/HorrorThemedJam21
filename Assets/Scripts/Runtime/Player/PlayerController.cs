@@ -75,6 +75,13 @@ namespace HTJ21
             _controller.enabled = true;
         }
 
+        public void Teleport(Vector3 pos)
+        {
+            _controller.enabled = false;
+            transform.position = pos;
+            _controller.enabled = true;
+        }
+
         public void EnterAt(Vector3 position)
         {
             gameObject.SetActive(true);
@@ -269,6 +276,14 @@ namespace HTJ21
                 {
                     Vector3 dir = (hit.transform.position - transform.position).normalized;
                     rig.AddForce(dir * HTJ21GameManager.Preferences.SoccerBallHitForce, ForceMode.Impulse);
+                }
+            }
+            else if (hit.gameObject.CompareTag("Hanging"))
+            {
+                if (hit.gameObject.TryGetComponent(out Rigidbody rig))
+                {
+                    Vector3 dir = (hit.transform.position - transform.position).normalized;
+                    rig.AddForce(dir * HTJ21GameManager.Preferences.HangingHitForce, ForceMode.Impulse);
                 }
             }
         }
