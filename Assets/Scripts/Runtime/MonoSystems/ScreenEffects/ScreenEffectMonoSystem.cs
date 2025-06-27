@@ -1,4 +1,5 @@
 using System;
+using PlazmaGames.Attribute;
 using PlazmaGames.Core.Debugging;
 using PlazmaGames.Rendering.CRT;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace HTJ21
         private float _fadeToBlackLength;
         private System.Action _fadeToBlackCallback;
 
-        private UnityEngine.UI.Image _fadeToBlackImage;
+        [SerializeField, ReadOnly] private UnityEngine.UI.Image _fadeToBlackImage;
 
         // Blink parameters
         private bool _startFromOpen = true;
@@ -107,7 +108,12 @@ namespace HTJ21
             SetChromicOffset(_defaultChromicOffset);
             SetScreenBend(_defaultScreenBend);
             ToggleRendererFeature("Blur", false);
-            if (_fadeToBlackImage) _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
+            if (_fadeToBlackImage)
+            {
+                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
+                _fadeToBlack = false;
+                _fadeToBlackCallback = null;
+            }
         }
         
         private void OnEnable() => SceneManager.sceneLoaded += OnSceneLoad;

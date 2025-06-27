@@ -18,6 +18,7 @@ TagManager:
   - Board
   - GpsMarker
   - SoccerBall
+  - Hanging
   layers:
   - Default
   - TransparentFX

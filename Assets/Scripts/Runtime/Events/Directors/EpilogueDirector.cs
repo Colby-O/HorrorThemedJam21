@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace HTJ21
 {
-    public class Act3Director : MonoBehaviour
+    public class EpilogueDirector : MonoBehaviour
     {
         private void StartAct()
         {

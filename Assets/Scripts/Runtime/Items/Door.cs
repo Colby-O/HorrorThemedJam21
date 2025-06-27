@@ -37,6 +37,10 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _isOpen = false;
         [SerializeField, ReadOnly] private bool _inProgress = false;
 
+        [Header("Locked Settings")]
+        [SerializeField] private bool _requiresKey = false;
+        [SerializeField] private PickupableItem _key;
+        [SerializeField] private bool _hasUsed = false;
         [SerializeField] private bool _isLocked = false;
 
         public UnityEvent OnOpen = new UnityEvent();
@@ -82,6 +86,12 @@ namespace HTJ21
         {
             if (_isOpen) return;
             if (_inProgress) return;
+
+            if (_requiresKey && !_hasUsed && HTJ21GameManager.PickupManager.HasItem(_key))
+            {
+                Unlock();
+                _hasUsed = true;
+            }
 
             if (_isLocked)
             {

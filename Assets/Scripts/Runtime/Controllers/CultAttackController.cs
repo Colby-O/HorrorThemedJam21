@@ -16,12 +16,12 @@ namespace HTJ21
         [SerializeField] private Transform _playerDuringLoc;
         [SerializeField] private AudioClip _scareClip;
 
-        [SerializeField] private Home2Director _home2Director;
+        [SerializeField] private Act3Director _home2Director;
 
-        public Home2Director GetDirector()
+        public Act3Director GetDirector()
         {
             Director director = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector();
-            if (director is Home2Director) return (Home2Director)director;
+            if (director is Act3Director) return (Act3Director)director;
             else return null;
         }
 

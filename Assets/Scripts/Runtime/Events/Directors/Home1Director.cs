@@ -13,7 +13,6 @@ namespace HTJ21
         [SerializeField] private float _lightOffDuration;
         [SerializeField] private AudioClip _tensionClip;
         
-
         [Header("Real Jumpscare")]
         [SerializeField] private EventTrigger _realScareTrigger;
         [SerializeField] private float _turnDuration;
@@ -29,6 +28,9 @@ namespace HTJ21
         [SerializeField] private float _timer = 0f;
         [SerializeField, ReadOnly] private bool _isOn;
         [SerializeField, ReadOnly] private bool _isClam;
+
+        [Header("Shower")]
+        [SerializeField] private Shower _showerController;
 
         [Header("Refereces")]
         [SerializeField] private EventTrigger _musicChangeTrigger;
@@ -98,6 +100,8 @@ namespace HTJ21
             HTJ21GameManager.HouseController.LockAllDoors();
             HTJ21GameManager.Player.LockMoving = true;
 
+            _showerController.Disable();
+
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_buildUp2, PlazmaGames.Audio.AudioType.Music, false, false);
 
@@ -145,6 +149,7 @@ namespace HTJ21
                                     HTJ21GameManager.HouseController.TurnOnLights();
                                     HTJ21GameManager.HouseController.UnlockDoors();
                                     StopFlickering();
+                                    _showerController.Enable();
                                     _jumpscare.gameObject.SetActive(false);
                                     _musicChangeTrigger.gameObject.SetActive(false);
                                 }
@@ -183,6 +188,12 @@ namespace HTJ21
             }));
         }
 
+        private void OnShowerFinished()
+        {
+            _showerController.RestoreToDefaults();
+            GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
+        }
+
         private void Setup()
         {
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
@@ -194,6 +205,8 @@ namespace HTJ21
             _musicChangeTrigger.gameObject.SetActive(true);
 
             _isFlickering = false;
+
+            _showerController.OnShowerFinish.AddListener(OnShowerFinished);
         }
 
         public override void OnActInit()
@@ -236,6 +249,7 @@ namespace HTJ21
         public override void OnActEnd()
         {
             HTJ21GameManager.Player.EnableFlashlight();
+            _showerController.OnShowerFinish.RemoveListener(OnShowerFinished);
         }
     }
 }

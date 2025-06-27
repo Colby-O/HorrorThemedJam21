@@ -232,6 +232,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "36b0b24bd2cb462e947a01209ba913e2"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "eb37f385e1624ffb84139208db013831"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "3ba9dfdc354a4ed09098ea8c32924bf9"
                 },
                 "m_SlotId": 3
@@ -1487,7 +1501,7 @@
     "m_Title": "Diffuse",
     "m_Position": {
         "x": 1676.0,
-        "y": 946.0
+        "y": 945.9999389648438
     }
 }
 
@@ -2049,8 +2063,8 @@
     "m_ObjectId": "7ab9aba454b447cdac8da5180c87bbed",
     "m_Title": "Specular",
     "m_Position": {
-        "x": 1345.0,
-        "y": 1383.0
+        "x": 1344.9998779296875,
+        "y": 1382.9998779296875
     }
 }
 
@@ -3802,7 +3816,7 @@
     "m_Title": "Lighting",
     "m_Position": {
         "x": 710.0,
-        "y": 1361.0
+        "y": 1360.9998779296875
     }
 }
 

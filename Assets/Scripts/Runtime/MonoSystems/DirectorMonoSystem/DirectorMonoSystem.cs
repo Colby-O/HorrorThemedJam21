@@ -41,6 +41,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private SerializableDictionary<Act, Director> _directors;
         [SerializeField, ReadOnly] private Director _currentDirector;
 
+        public Act GetStartAct() => _startAct;
+
         public bool IsCurrentActIndoors()
         {
             return _currentDirector.GetAct() == Act.Prologue || _currentDirector.GetAct() == Act.Home1 || _currentDirector.GetAct() == Act.Home2 || _currentDirector.GetAct() == Act.Act2;
@@ -48,7 +50,7 @@ namespace HTJ21
 
         public void Begin()
         {
-            StartAct(_startAct);
+            StartAct(_startAct.Next());
         }
 
         public void NextAct()
@@ -80,9 +82,11 @@ namespace HTJ21
             PlazmaDebug.LogWarning($"Starting Act {act}.", "Director", 2, Color.purple);
             _currentDirector = _directors[act];
             _currentDirector.gameObject.SetActive(true);
-            _currentDirector.OnActStart();
 
+            GameManager.GetMonoSystem<IVisibilityMonoSystem>().Load(_currentDirector.GetAct());
             if (_houseController) _houseController.OnActChange();
+
+            _currentDirector.OnActStart();
         }
 
         private void Start()
@@ -113,6 +117,7 @@ namespace HTJ21
                 Begin();
             }));
 
+            GameManager.GetMonoSystem<IVisibilityMonoSystem>().Load(_startAct);
             if (_houseController) _houseController.OnActChange();
         }
 
