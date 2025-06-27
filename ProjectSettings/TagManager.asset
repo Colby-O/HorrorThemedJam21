@@ -35,8 +35,8 @@ TagManager:
   - ScreenCapture
   - Walkable
   - PortalInvisble
-  - MirrorsOnly
-  - 
+  - InvisibleToMiror
+  - OnlyInMirror
   - 
   - 
   - 
