@@ -67,9 +67,7 @@ namespace HTJ21
 
         public List<RoadwayIntersection> GetIntersections()
         {
-            if (!_data.intersections.ContainsKey(gameObject.scene.name)) _data.intersections.Add(gameObject.scene.name, new List<RoadwayIntersection>());
-
-            return _data.intersections[gameObject.scene.name];
+            return _data.intersections;
         }
 
         public Transform GetRoadwayHolder() 
