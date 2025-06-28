@@ -1,12 +1,31 @@
+using PlazmaGames.Animation;
+using PlazmaGames.Audio;
+using PlazmaGames.Core;
+using PlazmaGames.UI;
 using System.Collections.Generic;
 using System.Linq;
-using PlazmaGames.Core;
 using UnityEngine;
 
 namespace HTJ21
 {
     public class Act1Director : Director
     {
+        [SerializeField] private List<EventTrigger> _triggers;
+        [SerializeField] private List<GameObject> _items;
+        [SerializeField] private List<GameObject> _boards;
+
+        private List<Vector3> _boardPos;
+        private List<Quaternion> _boardRot;
+
+        [Header("Tree Fall Event")]
+        [SerializeField] private WalkAndDie _meanCultist;
+        [SerializeField] private TreeFall _fallenTree;
+
+        [Header("Items")]
+        [SerializeField] private ItemPickup _flashlightPickup;
+        [SerializeField] private OpenInteractable _trunk;
+        [SerializeField] private Crowbar _crowbar;
+
         [SerializeField] private Transform _gpsTarget;
         [SerializeField] private Transform _gpsTargetReroute1;
         [SerializeField] private Transform _gpsTargetReroute2;
@@ -15,8 +34,8 @@ namespace HTJ21
         [SerializeField] private WalkAndDie _cultistAtTree;
 
         [SerializeField] private Door _murderHouseDoor;
-        [SerializeField] private GameObject _murderHousePortal;
-        [SerializeField] private GameObject _murderHouseReturnPortal;
+        [SerializeField] private Portal _murderHousePortal;
+        [SerializeField] private Portal _murderHouseReturnPortal;
         
         [SerializeField] private GameObject _murderHouseDoorBoards;
         [SerializeField] private float _initialDialogueDelay = 2.5f;
@@ -43,8 +62,7 @@ namespace HTJ21
             LoadDialogue("3");
             LoadDialogue("4");
 
-            _murderHousePortal.SetActive(false);
-            _murderHouseReturnPortal.SetActive(false);
+            ClosePortals();
             _gpsMs = GameManager.GetMonoSystem<IGPSMonoSystem>();
 
             _doorBoards = _murderHouseDoorBoards.GetComponentsInChildren<Rigidbody>().ToList();
@@ -79,34 +97,144 @@ namespace HTJ21
             {
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["4"]);
             }));
+
+            _murderHouseDoor.OnOpen.AddListener(() =>
+            {
+                OpenPortals();
+                HTJ21GameManager.HouseController.EnableHouse();
+                HTJ21GameManager.HouseController.PreloadAct(GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct().Next());
+            });
+
+            _boardPos = new List<Vector3>();
+            _boardRot = new List<Quaternion>();
+            foreach (GameObject board in _boards)
+            {
+                _boardPos.Add(board.transform.position);
+                _boardRot.Add(board.transform.rotation);
+            }
+        }
+
+        private void OpenPortals()
+        {
+            _murderHousePortal.Enable();
+            _murderHouseReturnPortal.Enable();
+        }
+
+        private void ClosePortals()
+        {
+            _murderHousePortal.Disable();
+            _murderHouseReturnPortal.Disable();
+        }
+
+        private void RestartInteractablesRecursive(GameObject obj)
+        {
+            if (obj.TryGetComponent(out IInteractable interactable))
+            {
+                interactable.Restart();
+            }
+
+            foreach (Transform child in obj.transform)
+            {
+                RestartInteractablesRecursive(child.gameObject);
+            }
+        }
+
+        private void Setup()
+        {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Player);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Car);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Inspector);
+
+            HTJ21GameManager.Car.RestartHitch();
+
+            foreach (EventTrigger trigger in _triggers) trigger.Restart();
+
+            _crowbar.Restart();
+
+            foreach (GameObject item in _items)
+            {
+                RestartInteractablesRecursive(item);
+            }
+
+            for (int i = 0; i < _boards.Count; i++)
+            {
+                if (_boards[i].TryGetComponent(out Rigidbody rb))
+                {
+                    rb.isKinematic = true;
+                }
+
+                _boards[i].transform.position = _boardPos[i];
+                _boards[i].transform.rotation = _boardRot[i];
+            }
+
+            _murderHouseDoor.Restart();
+            _murderHouseDoor.Lock();
+
+            _meanCultist.Restart();
+            _fallenTree.Restart();
+
+            HTJ21GameManager.Player.EnablePlayer();
+            HTJ21GameManager.Player.StopLookAt();
+            HTJ21GameManager.Player.LockMoving = false;
+            HTJ21GameManager.Player.LockMovement = false;
+            HTJ21GameManager.Player.ResetHead();
+            HTJ21GameManager.Player.ResetCamera();
+
+            HTJ21GameManager.Inspector.EndInspect();
+
+            _flashlightPickup.Restart();
+            HTJ21GameManager.PickupManager.DropAll();
+            HTJ21GameManager.Player.TurnOffLight();
+
+            if (!HTJ21GameManager.CinematicCar.IsEnabled())
+            {
+                HTJ21GameManager.Car.ZeroVelocity();
+                HTJ21GameManager.Car.Restart();
+            }
+            else
+            {
+                HTJ21GameManager.CinematicCar.TransferCurrentSpeedToCar();
+                HTJ21GameManager.CinematicCar.Disable();
+            }
+
+            _trunk.Close();
+            HTJ21GameManager.Car.SetDrivingProfile("Normal");
+            HTJ21GameManager.Car.SuperDuperEnterCarForReal();
+            HTJ21GameManager.Car.EnableMirrors();
+            HTJ21GameManager.Car.Lock();
+            HTJ21GameManager.CarTutorial.DisableAllTutorial();
+            HTJ21GameManager.PlayerTutorial.DisableAllTutorial();
+            HTJ21GameManager.CarTutorial.ShowTutorial(0);
+            HTJ21GameManager.Car.EnterCar();
+
+            if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            HTJ21GameManager.IsPaused = false;
+
+            _murderHouseDoor.Lock();
+
+            ClosePortals();
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
+
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
+            GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogueAll();
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ForceStopDialogue();
+            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
+            _gpsMs.TurnOff();
+
+            _startTime = Time.time;
         }
 
         public override void OnActStart()
         {
-            _gpsMs.TurnOff();
-            PlayerController player = FindFirstObjectByType<PlayerController>();
-            if (player) player.EnablePlayer();
-            HTJ21GameManager.IsPaused = false;
-            HTJ21GameManager.CinematicCar?.Disable();
-            HTJ21GameManager.CarTutorial.ShowTutorial(0);
-            _murderHouseDoor.Lock();
-            _murderHouseDoor.OnOpen.AddListener(() =>
-            {
-                _murderHousePortal.SetActive(true);
-                _murderHouseReturnPortal.SetActive(true);
-                HTJ21GameManager.HouseController.EnableHouse();
-                HTJ21GameManager.HouseController.PreloadAct(GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct().Next());
-            });
-            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
-
-            _startTime = Time.time;
+            Setup();
         }
         
         private void OnPortalEnter(Portal p1, Portal p2)
         {
-            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
-            p2.gameObject.SetActive(false);
-            p1.gameObject.SetActive(false);
             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
         }
 
@@ -132,6 +260,8 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+            ClosePortals();
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
         }
 
         public void UpdateGps()

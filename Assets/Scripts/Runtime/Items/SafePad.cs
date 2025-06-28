@@ -24,6 +24,16 @@ namespace HTJ21
 
         public UnityEvent OnSolved {  get; set; }
 
+        public void Restart()
+        {
+            _isSolved = false;
+           _entered.Clear();
+            Failed(true);
+
+            if (TryGetComponent(out InspectableItem item)) item.CanInteract = true;
+            foreach (KeypadButton button in _buttons) button.Enable();
+        }
+
         private void Failed(bool overrideAudio = false)
         {
             _entered.Clear();

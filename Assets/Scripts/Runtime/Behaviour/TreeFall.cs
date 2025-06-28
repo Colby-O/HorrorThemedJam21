@@ -12,6 +12,9 @@ namespace HTJ21
         private Vector3 _startRotation;
         private float _startTime;
 
+        private Vector3 _startPos;
+        private Quaternion _startRot;
+
         public void Fall()
         {
             _fell = true;
@@ -21,8 +24,21 @@ namespace HTJ21
             if (_fallRotation.z == 0) _fallRotation.z = _startRotation.z;
             _startTime = Time.time;
         }
-        
-        void Update()
+
+        public void Restart()
+        {
+            transform.position = _startPos;
+            transform.rotation = _startRot;
+            _fell = false;
+        }
+
+        private void Awake()
+        {
+            _startPos = transform.position;
+            _startRot = transform.rotation;
+        }
+
+        private void Update()
         {
             if (_fell && Time.time <= _startTime + _fallTime)
             {

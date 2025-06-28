@@ -86,6 +86,7 @@ namespace HTJ21
     {
         [SerializeField] private PlayerSettings _settings;
         [SerializeField] private TutorialController _tutorial;
+        [SerializeField] private HitchInteractable _hitch;
 
         [SerializeField] private CarInfo info;
 
@@ -123,6 +124,9 @@ namespace HTJ21
 
         [SerializeField] private GameObject _playerModel;
 
+        [SerializeField, ReadOnly] private Vector3 _startPosition;
+        [SerializeField, ReadOnly] private Quaternion _startRotation;
+
         private PlayerController _player;
         private EngineSound _engineSound;
         private IInputMonoSystem _inputHandler;
@@ -148,6 +152,12 @@ namespace HTJ21
         private bool _isLocked = false;
 
         public bool IsLocked() => _isLocked;
+
+        public void Restart()
+        {
+            transform.position = _startPosition;
+            transform.rotation = _startRotation;
+        }
 
         public void Lock()
         {
@@ -193,6 +203,11 @@ namespace HTJ21
             _rightMirrorCam.Enable();
         }
 
+        public void RestartHitch()
+        {
+            _hitch.Restart();
+        }
+
         public void SetDisableState(bool state)
         {
             _isDisabled = state;
@@ -206,6 +221,9 @@ namespace HTJ21
 
         private void Awake()
         {
+            _startPosition = transform.position;
+            _startRotation = transform.rotation;
+
             LoadProfile("Normal");
             LoadProfile("Emergency");
             LoadProfile("Debug");
@@ -261,10 +279,10 @@ namespace HTJ21
             if (_playerModel) _playerModel.SetActive(true);
         }
         
-        private void ExitCar()
+        public void ExitCar(bool force = false)
         {
             Debug.Log("EXIT CAR");
-            if (_isLocked || _wasEnteredThisFrame || !InCar()) return;
+            if ((_isLocked && !force) || _wasEnteredThisFrame || !InCar()) return;
             DisableMirrors();
             _camera.gameObject.SetActive(false);
             _player.EnterAt(_doorLocation.position);
@@ -424,6 +442,14 @@ namespace HTJ21
                 Speed() / 0.3f * 60.0f / (2.0f * Mathf.PI) * info.GearRatio(_gear) * _settings.RpmScale,
                 0,
                 info.maxRpm);
+        }
+
+        public void ZeroVelocity()
+        {
+            HTJ21GameManager.Car.SetDisableState(true);
+            _rig.isKinematic = false;
+            _rig.linearVelocity = Vector3.zero;
+            HTJ21GameManager.Car.SetDisableState(false);
         }
 
         public bool SetDrivingProfile(string name)

@@ -54,7 +54,7 @@ namespace HTJ21
                         _attachedTo = rig;
                         if (_attachedTo.TryGetComponent(out InspectableItem ii))
                         {
-                            Destroy(ii);
+                            ii.CanInteract = false;
                         }
                         _rope = GameObject.Instantiate(_ropePrefab).GetComponent<Rope>();
                         _rope.Attach(transform, _attachedTo.transform);

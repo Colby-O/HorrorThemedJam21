@@ -50,6 +50,13 @@ namespace HTJ21
         [SerializeField, ReadOnly] private float _timeSinceRespawned = 0f;
         [SerializeField] private float _gracePeriod = 0.1f;
 
+        [SerializeField, ReadOnly] private Vector3 _cameraStartPos;
+        [SerializeField, ReadOnly] private Quaternion _cameraStartRot;
+        [SerializeField, ReadOnly] private Vector3 _playerStartPos;
+        [SerializeField, ReadOnly] private Quaternion _playerStartRot;
+        [SerializeField, ReadOnly] private Vector3 _headStartPos;
+        [SerializeField, ReadOnly] private Quaternion _headStartRot;
+
         private float gravity = -9.81f;
         
         private float _defaultHeight;
@@ -134,6 +141,16 @@ namespace HTJ21
         {
             if (!_pickupManager.HasItem(PickupableItem.FlashLight) || _disableFlashlight) return;
             _light.SetActive(!_light.activeSelf);
+        }
+
+        public void TurnOffLight()
+        {
+            _light.SetActive(false);   
+        }
+
+        public void TurnOnLight()
+        {
+            _light.SetActive(true);
         }
 
         private void ProcessMovement()
@@ -229,6 +246,24 @@ namespace HTJ21
             return _justRespawned || (_hiddenStates.Count > 0 && (_isCrouching || !_hiddenStates.Any(e => e.needToCrouch)));
         }
 
+        public void ResetHead()
+        {
+            GetHead().transform.localPosition = _headStartPos;
+            GetHead().transform.localRotation = _headStartRot;
+        }
+
+        public void ResetCamera()
+        {
+            GetCamera().transform.localPosition = _cameraStartPos;
+            GetCamera().transform.localRotation = _cameraStartRot;
+        }
+
+        public void ResetPlayer() 
+        {
+            Teleport(_playerStartPos);
+            transform.rotation = _playerStartRot;
+        }
+
         private void Awake()
         {
             _inputHandler = GameManager.GetMonoSystem<IInputMonoSystem>();
@@ -239,6 +274,15 @@ namespace HTJ21
             _hiddenStates = new List<CoverState>();
             _disableFlashlight = false;
             _light.SetActive(false);
+
+            _cameraStartPos = GetCamera().transform.localPosition;
+            _cameraStartRot = GetCamera().transform.localRotation;
+
+            _playerStartPos = transform.position;
+            _playerStartRot = transform.rotation;
+
+            _headStartPos = GetHead().transform.localPosition;
+            _headStartRot = GetHead().transform.localRotation;
         }
 
         private void Start()

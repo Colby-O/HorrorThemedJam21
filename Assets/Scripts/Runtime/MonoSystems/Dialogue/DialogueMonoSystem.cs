@@ -89,6 +89,14 @@ namespace HTJ21
             _currentDialogue = null;
         }
 
+        public void ResetDialogueAll()
+        {
+            _isDialogueInProgress = false;
+            _currentDialogueEvent = null;
+            _currentDialogue = null;
+            _dialogueEvents.Clear();
+        }
+
         private void Awake()
         {
             _dialogueEvents = new Queue<DialogueSO>();

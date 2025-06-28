@@ -401,7 +401,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 26871
+    m_Bits: 59639
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -598,6 +598,17 @@ MonoBehaviour:
   _lookAt: {fileID: 0}
   _lookAtSpeed: 4
   _disableFlashlight: 0
+  _isCrouching: 0
+  _hiddenStates: []
+  _justRespawned: 0
+  _timeSinceRespawned: 0
+  _gracePeriod: 0.1
+  _cameraStartPos: {x: 0, y: 0, z: 0}
+  _cameraStartRot: {x: 0, y: 0, z: 0, w: 0}
+  _playerStartPos: {x: 0, y: 0, z: 0}
+  _playerStartRot: {x: 0, y: 0, z: 0, w: 0}
+  _headStartPos: {x: 0, y: 0, z: 0}
+  _headStartRot: {x: 0, y: 0, z: 0, w: 0}
   LockMoving: 0
   UncontrollableApproach: 0
 --- !u!114 &5671014847207815499

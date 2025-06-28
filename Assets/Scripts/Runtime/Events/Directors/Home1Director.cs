@@ -2,12 +2,16 @@ using PlazmaGames.Animation;
 using PlazmaGames.Attribute;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.UI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HTJ21
 {
     public class Home1Director : Director
     {
+        [SerializeField] private List<GameObject> _items;
+
         [Header("Fake Jumpscare")]
         [SerializeField] private EventTrigger _fakeScareTrigger;
         [SerializeField] private float _lightOffDuration;
@@ -35,6 +39,20 @@ namespace HTJ21
         [Header("Refereces")]
         [SerializeField] private EventTrigger _musicChangeTrigger;
         [SerializeField] private GameObject _jumpscare;
+        [SerializeField] private Transform _startLoc;
+
+        private void RestartInteractablesRecursive(GameObject obj)
+        {
+            if (obj.TryGetComponent(out IInteractable interactable))
+            {
+                interactable.Restart();
+            }
+
+            foreach (Transform child in obj.transform)
+            {
+                RestartInteractablesRecursive(child.gameObject);
+            }
+        }
 
         private void StartFlickering()
         {
@@ -196,17 +214,59 @@ namespace HTJ21
 
         private void Setup()
         {
-            GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Player);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Car);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Inspector);
 
-            HTJ21GameManager.Player.DisableFlashlight();
+            HTJ21GameManager.Car.RestartHitch();
+            HTJ21GameManager.Car.Restart();
+            HTJ21GameManager.Car.ExitCar(true);
+            HTJ21GameManager.Car.DisableMirrors();
+            HTJ21GameManager.CinematicCar.Enable();
+
+            HTJ21GameManager.Player.EnablePlayer();
+            HTJ21GameManager.Player.StopLookAt();
+            HTJ21GameManager.Player.ResetHead();
+            HTJ21GameManager.Player.ResetCamera();
+            HTJ21GameManager.Player.Teleport(_startLoc.position);
+            HTJ21GameManager.Player.LockMoving = false;
+            HTJ21GameManager.Player.LockMovement = false;
+
+            HTJ21GameManager.Inspector.EndInspect();
+
+            HTJ21GameManager.PickupManager.DropAll();
+            HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
+
+            _showerController.Restart();
+
+            foreach (GameObject item in _items)
+            {
+                RestartInteractablesRecursive(item);
+            }
+
+            _showerController.OnShowerFinish.AddListener(OnShowerFinished);
+
+            if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            HTJ21GameManager.IsPaused = false;
+
+            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
+            GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogueAll();
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ForceStopDialogue();
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
+            GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
             _fakeScareTrigger.gameObject.SetActive(true);
             _realScareTrigger.gameObject.SetActive(true);
             _musicChangeTrigger.gameObject.SetActive(true);
-
             _isFlickering = false;
 
-            _showerController.OnShowerFinish.AddListener(OnShowerFinished);
+            _fakeScareTrigger.Restart();
+            _realScareTrigger.Restart();
+            _musicChangeTrigger.Restart();
         }
 
         public override void OnActInit()
@@ -215,12 +275,13 @@ namespace HTJ21
             _realScareTrigger.gameObject.SetActive(false);
             _musicChangeTrigger.gameObject.SetActive(false);
             _jumpscare.SetActive(false);
+
+            AddEvents();
         }
 
         public override void OnActStart()
         {
             Setup();
-            AddEvents();
         }
 
         public override void OnActUpdate()
@@ -248,7 +309,7 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
-            HTJ21GameManager.Player.EnableFlashlight();
+            _showerController.Restart();
             _showerController.OnShowerFinish.RemoveListener(OnShowerFinished);
         }
     }

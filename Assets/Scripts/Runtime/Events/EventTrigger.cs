@@ -15,6 +15,11 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private bool _triggered = false;
 
+        public void Restart()
+        {
+            _triggered = false;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (!(other.CompareTag("Player") || other.CompareTag("Car"))) return;

@@ -57,10 +57,10 @@ namespace HTJ21
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _openTime, (float t) => OpenStep(t, _startRot, _endRot, _startPos, _endPos));
         }
 
-        public void Close()
+        public void Close(bool overrideAudio = false)
         {
             if (!_isOpen) return;
-            if (_audioSource) _audioSource.PlayOneShot(_closeSound);
+            if (!overrideAudio && _audioSource) _audioSource.PlayOneShot(_closeSound);
             _isOpen = false;
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _openTime, (float t) => OpenStep(t, _endRot, _startRot, _endPos, _startPos));
         }
@@ -113,6 +113,11 @@ namespace HTJ21
         {
             _startPos = transform.localPosition;
             _startRot = transform.localRotation.eulerAngles;
+        }
+
+        public void Restart()
+        {
+            Close(true);
         }
     }
 }

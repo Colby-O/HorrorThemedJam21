@@ -30,6 +30,11 @@ namespace HTJ21
             }
         }
 
+        public void Enable()
+        {
+            CanClick = true;
+        }
+
         public void AddOutline()
         {
             if (!_outlineMR || _hasOutline || !CanClick) return;
