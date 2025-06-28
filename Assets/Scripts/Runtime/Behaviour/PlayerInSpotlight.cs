@@ -7,8 +7,6 @@ namespace HTJ21
     public class PlayerInSpotlight : MonoBehaviour
     {
         [SerializeField] private Light _spotLight;
-        [SerializeField] private float _visibilityThreshold = 0.5f;
-
         [SerializeField] private bool _useRaycast = true;
         [SerializeField, ReadOnly] private bool _isEnabled = true; 
 
@@ -25,7 +23,7 @@ namespace HTJ21
             _isEnabled = false;
         }
 
-        private bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Transform target, Transform caster, float visibilityThreshold = 0.5f)
+        private bool IsTargetVisibleInSpotlight(Transform spotlight, Light spotLightComponent, Transform target, Transform caster)
         {
             if (spotLightComponent.type != LightType.Spot)
                 return false;
@@ -64,7 +62,7 @@ namespace HTJ21
         {
             if (!_isEnabled || HTJ21GameManager.IsPaused) return;
 
-            if (HTJ21GameManager.Player && IsTargetVisibleInSpotlight(_spotLight.transform, _spotLight, HTJ21GameManager.Player.transform, HTJ21GameManager.Player.transform, _visibilityThreshold))
+            if (HTJ21GameManager.Player && IsTargetVisibleInSpotlight(_spotLight.transform, _spotLight, HTJ21GameManager.Player.transform, HTJ21GameManager.Player.transform))
             {
                 OnPlayerHit.Invoke();
             }

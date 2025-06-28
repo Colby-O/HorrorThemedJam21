@@ -9,11 +9,25 @@ using UnityEngine.Splines;
 
 namespace HTJ21
 {
+    public static class QuaternionExtension
+    {
+        public static Quaternion Slerp(Quaternion from, Quaternion to, float t, bool useShortestPath = true)
+        {
+            if (useShortestPath && Quaternion.Dot(from, to) < 0.0f)
+            {
+                to = new Quaternion(-to.x, -to.y, -to.z, -to.w);
+            }
+
+            return Quaternion.Slerp(from, to, t);
+        }
+    }
+
     public class MoveAlongSpline : MonoBehaviour
     {
         public static bool IsTriggering = false;
 
         [SerializeField] private SplineContainer _splineContainer;
+        [SerializeField] private Animator _animator;
         [SerializeField] private int _splineIndex = 0;
         [SerializeField] private Vector2 _travelRange = new Vector2Int(0, 1);
         [SerializeField] private float _speed = 0.2f;
@@ -32,6 +46,7 @@ namespace HTJ21
 
         private bool _movingForward = true;
         private bool _isWaiting = false;
+        private bool _isTurning = false;
         private float _tolerance = 0.01f;
         private HashSet<int> _activatedKnotIndices = new HashSet<int>();
 
@@ -63,6 +78,8 @@ namespace HTJ21
 
         private void Update()
         {
+            if (_animator && !HTJ21GameManager.IsPaused && !MoveAlongSpline.IsTriggering) _animator.SetBool("IsWalking", !_isWaiting || (_isWaiting && _isTurning));
+
             if (_splineContainer == null || _splineContainer.Splines.Count <= _splineIndex || _isWaiting || HTJ21GameManager.IsPaused || MoveAlongSpline.IsTriggering)
                 return;
 
@@ -86,6 +103,7 @@ namespace HTJ21
                     _activatedKnotIndices.Add(i);
 
                     _isWaiting = true;
+                    _isTurning = true;
                     Quaternion fromRot = transform.rotation;
                     Quaternion toRot = Quaternion.LookRotation(knot.lookDirection.normalized, transform.up);
                     GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
@@ -93,10 +111,11 @@ namespace HTJ21
                         _canTurn ? _turnSpeed : 0f,
                         (float t) =>
                         {
-                            if (_canTurn) transform.rotation = Quaternion.Slerp(fromRot, toRot, t);
+                            if (_canTurn) transform.rotation = QuaternionExtension.Slerp(fromRot, toRot, t, true);
                         },
                         () =>
                         {
+                            _isTurning = false;
                             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                                 this,
                                 knot.waitTime,
@@ -107,13 +126,14 @@ namespace HTJ21
                                 {
                                     _splineContainer.Evaluate(_splineIndex, t, out float3 _, out float3 tangent, out float3 upVector);
                                     Vector3 resumeDir = (_movingForward ? 1f : -1f) * ((Vector3)tangent).normalized;
+                                    Quaternion reusmeStartRot = transform.rotation;
                                     Quaternion resumeRot = Quaternion.LookRotation(resumeDir, upVector);
                                     GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                                         this,
                                         _canTurn ? _turnSpeed : 0f,
                                         (float t) =>
                                         {
-                                            if (_canTurn) transform.rotation = Quaternion.Slerp(toRot, resumeRot, t);
+                                            if (_canTurn) transform.rotation = QuaternionExtension.Slerp(reusmeStartRot, resumeRot, t, true);
                                         },
                                         () =>
                                         {
@@ -147,18 +167,18 @@ namespace HTJ21
                 _isWaiting = true;
 
                 _splineContainer.Evaluate(_splineIndex, t, out float3 _, out float3 tangent, out float3 upVector);
-                Vector3 oldDir = (_movingForward ? -1f : 1f) * ((Vector3)tangent).normalized;
-                Quaternion fromRot = Quaternion.LookRotation(oldDir, upVector);
-
+                Quaternion fromRot = transform.rotation;
                 Vector3 newDir = (_movingForward ? 1f : -1f) * ((Vector3)tangent).normalized;
                 Quaternion toRot = Quaternion.LookRotation(newDir, upVector);
+
+                _isTurning = true;
 
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                     this,
                     _turnSpeed,
                     (float t) =>
                     {
-                        transform.rotation = Quaternion.Slerp(fromRot, toRot, t);
+                        transform.rotation = QuaternionExtension.Slerp(fromRot, toRot, t, true);
                     },
                     () =>
                     {
@@ -170,6 +190,7 @@ namespace HTJ21
                             },
                             () =>
                             {
+                                _isTurning = false;
                                 _isWaiting = false;
                             }
                         );
