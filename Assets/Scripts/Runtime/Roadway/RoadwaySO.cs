@@ -7,6 +7,6 @@ namespace HTJ21
     [CreateAssetMenu(fileName = "RoadwaySO", menuName = "Roadway/RoadwaySO")]
     public class RoadwaySO : ScriptableObject
     {
-        public SerializableDictionary<string, List<RoadwayIntersection>> intersections = new SerializableDictionary<string, List<RoadwayIntersection>>();
+        public List<RoadwayIntersection> intersections = new List<RoadwayIntersection>();
     }
 }
