@@ -52,6 +52,8 @@ namespace HTJ21
 
         public void NextStation()
         {
+            if (_stations.Count == 0) return;
+            
             PlazmaDebug.Log("Loading Next Station", "Radio", Color.hotPink, 2);
             int next = (_currentID + 1) % _stations.Count;
             _currentID = next;

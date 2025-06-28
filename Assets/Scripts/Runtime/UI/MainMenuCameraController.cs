@@ -16,6 +16,12 @@ namespace HTJ21
         [SerializeField] private RadioController _radio;
         [SerializeField] private AudioClip _radioTalkShowClip;
 
+        public void Disable()
+        {
+            gameObject.SetActive(false);
+            _menuCar.SetActive(false);
+        }
+
         public void GoToPlayer()
         {
             Vector3 startPos = transform.position;
@@ -34,10 +40,9 @@ namespace HTJ21
                 () =>
                 {
                     GameManager.EmitEvent(new Events.StartGame());
-                    gameObject.SetActive(false);
-                    _menuCar.SetActive(false);
                     _radio.TurnOn();
                     _radio.NextStation();
+                    Disable();
                 }
             );
         }

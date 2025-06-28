@@ -56,7 +56,6 @@ namespace HTJ21
             IsPointerUsed = true;
             base.OnPointerDown(eventData);
             onPointerDown.Invoke();
-
         }
     }
 }

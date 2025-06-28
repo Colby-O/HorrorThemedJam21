@@ -1,6 +1,7 @@
 using PlazmaGames.Animation;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.DataPersistence;
 using PlazmaGames.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,7 @@ namespace HTJ21
         [SerializeField] private ScreenEffectMonoSystem _screenEffectSystem;
         [SerializeField] private DirectorMonoSystem _directorSystem;
         [SerializeField] private VisibilityMonoSystem _visibilitySystem;
+        [SerializeField] private DataPersistenceMonoSystem _dataPersistenceSystem;
 
         [Header("Settings")]
         [SerializeField] private GamePreferences preferences;
@@ -61,6 +63,7 @@ namespace HTJ21
             AddMonoSystem<ScreenEffectMonoSystem, IScreenEffectMonoSystem>(_screenEffectSystem);
             AddMonoSystem<DirectorMonoSystem, IDirectorMonoSystem>(_directorSystem);
             AddMonoSystem<VisibilityMonoSystem, IVisibilityMonoSystem>(_visibilitySystem);
+            AddMonoSystem<DataPersistenceMonoSystem, IDataPersistenceMonoSystem>(_dataPersistenceSystem);
         }
 
         public override string GetApplicationName()
