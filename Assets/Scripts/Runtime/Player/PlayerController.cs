@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
@@ -43,8 +45,10 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _isCrouching;
 
         [Header("Seen Settings")]
-        [SerializeField, ReadOnly] private bool _isHidden = false;
-        [SerializeField, ReadOnly] private bool _needToCourch = false;
+        [SerializeField, ReadOnly] private List<CoverState> _hiddenStates;
+        [SerializeField, ReadOnly] private bool _justRespawned = false;
+        [SerializeField, ReadOnly] private float _timeSinceRespawned = 0f;
+        [SerializeField] private float _gracePeriod = 0.1f;
 
         private float gravity = -9.81f;
         
@@ -84,6 +88,9 @@ namespace HTJ21
             _controller.enabled = false;
             transform.position = pos;
             _controller.enabled = true;
+
+            _timeSinceRespawned = 0f;
+            _justRespawned = true;
         }
 
         public void EnterAt(Vector3 position)
@@ -207,21 +214,19 @@ namespace HTJ21
             return isIndoors && HTJ21GameManager.HasStarted;
         }
 
-        public void SetHiddenState(bool needToCrouch)
+        public void SetHiddenState(CoverState state)
         {
-            _needToCourch = needToCrouch;
-            _isHidden = true;
+            if (!_hiddenStates.Contains(state)) _hiddenStates.Add(state);
         }
 
-        public void ClearHiddenState()
+        public void RemoveHiddenState(CoverState state)
         {
-            _needToCourch = false;
-            _isHidden = false;
+            _hiddenStates.Remove(state);
         }
 
         public bool IsInCover()
         {
-            return _isHidden && (!_needToCourch || (_needToCourch && _isCrouching));
+            return _justRespawned || (_hiddenStates.Count > 0 && (_isCrouching || !_hiddenStates.Any(e => e.needToCrouch)));
         }
 
         private void Awake()
@@ -231,7 +236,7 @@ namespace HTJ21
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
             if (!_as) _as = GetComponent<AudioSource>();
 
-            ClearHiddenState();
+            _hiddenStates = new List<CoverState>();
             _disableFlashlight = false;
             _light.SetActive(false);
         }
@@ -247,6 +252,16 @@ namespace HTJ21
             {
                 if (_as && _as.isPlaying) _as.Stop();
                 return;
+            }
+
+            if (_justRespawned)
+            {
+                _timeSinceRespawned += Time.deltaTime;
+                if (_timeSinceRespawned > _gracePeriod)
+                {
+                    _justRespawned = false;
+                    _timeSinceRespawned = 0f;
+                }
             }
 
             CheckIfInDoors();
