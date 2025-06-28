@@ -11,12 +11,23 @@ namespace HTJ21
         [SerializeField] private Animator _animator;
 
         private Vector3 _startPosition;
+        private Quaternion _startRot;
         private bool _walking = false;
 
         public void Walk()
         {
             _startPosition = transform.position;
+            _startRot = transform.rotation;
             _walking = true;
+        }
+
+        public void Restart()
+        {
+            gameObject.SetActive(true);
+            transform.position = _startPosition;
+            transform.rotation = _startRot;
+            _rig.linearVelocity = Vector3.zero;
+            _walking = false;
         }
 
         private void Awake()
@@ -25,6 +36,9 @@ namespace HTJ21
             if (!_animator) _animator = GetComponent<Animator>();
 
             if (_animator) _animator.SetBool("IsWalking", true);
+
+            _startPosition = transform.position;
+            _startRot = transform.rotation;
         }
         
         private void FixedUpdate()
@@ -33,7 +47,7 @@ namespace HTJ21
             _rig.linearVelocity = transform.forward * _speed;
             if (Vector3.Distance(_startPosition, transform.position) > _walkDistance)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
     }

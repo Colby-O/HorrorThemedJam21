@@ -9,7 +9,7 @@ namespace HTJ21
     {
         [SerializeField] private PlayerInSpotlight _seenHandler;
         [SerializeField] private MoveAlongSpline _alongSpline;
-        
+
         [SerializeField] private Light _scareLight;
         [SerializeField] private float _moveDuration;
         [SerializeField] private Transform _scareLoc;

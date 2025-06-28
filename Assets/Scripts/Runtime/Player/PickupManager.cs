@@ -26,6 +26,11 @@ namespace HTJ21
             else _items.Add(item, false);
         }
 
+        public void DropAll()
+        {
+            _items.Clear();
+        }
+
         public bool HasItem(PickupableItem item)
         {
             return _items.ContainsKey(item) && _items[item];

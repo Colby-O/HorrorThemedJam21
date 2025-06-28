@@ -16,6 +16,11 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private bool _hasShown = false;
 
+        public void Restart()
+        {
+            _hasShown = false;
+        }
+
         private void Awake()
         {
             _hasShown = false;

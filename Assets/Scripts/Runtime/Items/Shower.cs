@@ -192,5 +192,13 @@ namespace HTJ21
                 _as.Stop();
             }
         }
+
+        public void Restart()
+        {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+            if (_as) _as.Stop();
+            RestoreToDefaults();
+        }
     }
 }

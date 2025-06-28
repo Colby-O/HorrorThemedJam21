@@ -157,6 +157,22 @@ namespace HTJ21
             _dialogue.transform.parent.gameObject.SetActive(false);
         }
 
+        public void ForceStopDialogue()
+        {
+            if (_isWritingDialogue)
+            {
+                StopAllCoroutines();
+                _isWriting = false;
+                _showedMessage = false;
+                _isWritingDialogue = false;
+                _isWritingLocation = false;
+                _dialogue.text = string.Empty;
+                _currentDelay = 0f;
+                _as?.Stop();
+                Next();
+            }
+        }
+
         public void SkipDialogue()
         {
             if (!_showedMessage && _isWritingDialogue)

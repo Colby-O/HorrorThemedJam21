@@ -15,5 +15,7 @@ namespace HTJ21
         public void EndInteraction();
 
         public string GetHint();
+
+        public void Restart();
     }
 }

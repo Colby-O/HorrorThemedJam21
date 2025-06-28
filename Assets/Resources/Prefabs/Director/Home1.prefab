@@ -30,8 +30,40 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5408781540673504065}
+  - {fileID: 5591325948109733091}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4662518233915647180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5591325948109733091}
+  m_Layer: 0
+  m_Name: Start
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5591325948109733091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4662518233915647180}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 402.01, y: 20.82387, z: 421.71295}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 622275199599805348}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!1 &8072752616820196934
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,18 +109,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _act: 3
+  _items:
+  - {fileID: 0}
   _fakeScareTrigger: {fileID: 0}
   _lightOffDuration: 1
   _tensionClip: {fileID: 8300000, guid: 3372574d261c2244894812aa517b4119, type: 3}
   _realScareTrigger: {fileID: 0}
+  _turnDuration: 0
   _numFlickersReal: 50
   _buildUp1: {fileID: 8300000, guid: 0a085371daf28074681c2770f4904b69, type: 3}
   _buildUp2: {fileID: 8300000, guid: 8f28c29d4e6fc1949867f5b127eed844, type: 3}
   _waitDuration: 1.5
   _jumpscareTrack: {fileID: 8300000, guid: 6d51ce8f2b84a3e40bb4517ba14130c6, type: 3}
-  _scareDuration: 0
   _isFlickering: 0
   _flickerRate: 1
   _timer: 0
   _isOn: 0
+  _isClam: 0
+  _showerController: {fileID: 0}
+  _musicChangeTrigger: {fileID: 0}
   _jumpscare: {fileID: 0}
+  _startLoc: {fileID: 5591325948109733091}

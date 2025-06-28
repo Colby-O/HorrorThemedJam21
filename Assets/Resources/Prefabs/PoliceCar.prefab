@@ -438,8 +438,12 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0
+  _screen: {fileID: 0}
+  _materialIndex: 0
+  _texSize: {x: 512, y: 512}
   _isEnabled: 0
   _timeSinceLastRender: 0
+  _tex: {fileID: 0}
 --- !u!1 &586094106023680409
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,7 +753,7 @@ GameObject:
   - component: {fileID: 7639582766239454777}
   - component: {fileID: 4624773949465330962}
   m_Layer: 7
-  m_Name: Pivot
+  m_Name: TrunkPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2026,8 +2030,12 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0.05
+  _screen: {fileID: 0}
+  _materialIndex: 0
+  _texSize: {x: 512, y: 512}
   _isEnabled: 0
   _timeSinceLastRender: 0
+  _tex: {fileID: 0}
 --- !u!1 &3305125561141198012
 GameObject:
   m_ObjectHideFlags: 0
@@ -2448,8 +2456,12 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _renderInterval: 0.1
   _renderOffset: 0.1
+  _screen: {fileID: 0}
+  _materialIndex: 0
+  _texSize: {x: 512, y: 512}
   _isEnabled: 0
   _timeSinceLastRender: 0
+  _tex: {fileID: 0}
 --- !u!1 &4809097072029275223
 GameObject:
   m_ObjectHideFlags: 0
@@ -2620,6 +2632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
   _tutorial: {fileID: 5383659532431384927}
+  _hitch: {fileID: 4658067027102263634}
   info:
     airResistance: 13
     engineDynamicFriction: 0.01
@@ -2685,6 +2698,8 @@ MonoBehaviour:
   _onExitFirstTimeDialogue: {fileID: 11400000, guid: 929c2a1c060ba1549949100d01295137, type: 2}
   _hasExited: 0
   _playerModel: {fileID: 372800886935423721}
+  _startPosition: {x: 0, y: 0, z: 0}
+  _startRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &3490147504427259798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4367,7 +4382,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_Name
-      value: Portal
+      value: AtAct1
       objectReference: {fileID: 0}
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_TagString

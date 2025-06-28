@@ -28,6 +28,20 @@ namespace HTJ21
             return _screen;
         }
 
+        public void Disable()
+        {
+            Debug.Log("Portal Disabled");
+            _isEnabled = false;
+            _screen.gameObject.SetActive(false);
+        }
+
+        public void Enable()
+        {
+            Debug.Log("Portal Enabled");
+            _isEnabled = true;
+            _screen.gameObject.SetActive(true);
+        }
+
         public void OnObjectEnter(PortalObject obj)
         {
             if (!_nearbyObjects.Contains(obj))
@@ -105,7 +119,6 @@ namespace HTJ21
         {
             if (!_isEnabled || !IsVisible(_linkedPortal.GetScreen(), _playerCamera)) return;
 
-
             _screen.enabled = false;
 
             CreateRenderTexture();
@@ -138,19 +151,21 @@ namespace HTJ21
 
         private void Awake()
         {
-            //_playerCamera = HTJ21GameManager.Player.GetCamera();
             _nearbyObjects = new List<PortalObject>();
             if (!_portalCamera) _portalCamera.GetComponentInChildren<Camera>();
             _portalCamera.enabled = false;
         }
 
-        private void Update()
-        {
-            Render();
-        }
-
         private void LateUpdate()
         {
+            if (!_isEnabled)
+            {
+                if (_nearbyObjects.Count > 0) _nearbyObjects.Clear();
+                return;
+            }
+
+            Render();
+
             for (int i = 0; i < _nearbyObjects.Count; i++) 
             { 
                 PortalObject obj = _nearbyObjects[i];

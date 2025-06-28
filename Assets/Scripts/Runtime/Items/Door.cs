@@ -36,6 +36,7 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private bool _isOpen = false;
         [SerializeField, ReadOnly] private bool _inProgress = false;
+        [SerializeField, ReadOnly] private Quaternion _startRot;
 
         [Header("Locked Settings")]
         [SerializeField] private bool _requiresKey = false;
@@ -82,7 +83,7 @@ namespace HTJ21
             return $"Click 'E' To {(_isOpen ? "Close" : "Open")}";
         }
 
-        public void Open(Transform from)
+        public void Open(Transform from, bool overrideAudio = false)
         {
             if (_isOpen) return;
             if (_inProgress) return;
@@ -95,7 +96,7 @@ namespace HTJ21
 
             if (_isLocked)
             {
-                if (_audioSource && _lockedSound) _audioSource.PlayOneShot(_lockedSound);
+                if (!overrideAudio && _audioSource && _lockedSound) _audioSource.PlayOneShot(_lockedSound);
 
                 if 
                 (
@@ -123,7 +124,7 @@ namespace HTJ21
                 _hasOpenedBefore = true;
             }
 
-            if (_audioSource && _openSound) _audioSource.PlayOneShot(_openSound);
+            if (!overrideAudio && _audioSource && _openSound) _audioSource.PlayOneShot(_openSound);
             OnOpen.Invoke();
 
             _isOpen = true;
@@ -144,12 +145,30 @@ namespace HTJ21
             );
         }
 
-        public void Close()
+        public void Restart()
         {
+            Close(true, true);
+            _hasAttemptedToUnlock = false;
+            _hasOpenedBefore = false;
+            _hasUsed = false;
+        }
+
+        public void Close(bool overrideAudio = false, bool force = false)
+        {
+            if (force)
+            {
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+                _isOpen = false;
+                _inProgress = false;
+                _pivot.localRotation = _startRot;
+                if (!overrideAudio && _audioSource && _closeSound) _audioSource.PlayOneShot(_closeSound);
+                return;
+            }
+
             if (!_isOpen) return;
             if (_inProgress) return;
 
-            if (_audioSource && _closeSound) _audioSource.PlayOneShot(_closeSound);
+            if (!overrideAudio && _audioSource && _closeSound) _audioSource.PlayOneShot(_closeSound);
 
             _inProgress = true;
             _isOpen = false;
@@ -203,6 +222,7 @@ namespace HTJ21
         {
             _hasOpenedBefore = false;
             _hasAttemptedToUnlock = false;
+            _startRot = _pivot.localRotation;
         }
 
         private void OnDisable()

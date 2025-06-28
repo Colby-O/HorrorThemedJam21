@@ -7,6 +7,11 @@ namespace HTJ21
 {
     public class Crowbar : MonoBehaviour
     {
+        public void Restart()
+        {
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag("Board"))

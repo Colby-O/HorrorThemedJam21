@@ -46,7 +46,7 @@ namespace HTJ21
             {
                 if (!door.IsLocked())
                 {
-                    door.Close();
+                    door.Close(false, true);
                     door.Lock();
                     _doorsToUnlock.Add(door);
                 }

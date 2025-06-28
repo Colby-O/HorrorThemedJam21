@@ -33,6 +33,9 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
+        private Vector3 _startPos;
+        private Quaternion _startRot;
+
         public bool CanInteract { get; set; }
 
         public void SetDialogue(DialogueSO so)
@@ -101,11 +104,20 @@ namespace HTJ21
         private void Awake()
         {
             CanInteract = true;
+            _startPos = transform.position;
+            _startRot = transform.rotation;
         }
 
         private void LateUpdate()
         {
             if (HTJ21GameManager.Inspector.IsInspecting() && _hasOutline) RemoveOutline();
+        }
+
+        public void Restart()
+        {
+            CanInteract = true;
+            transform.position = _startPos;
+            transform.rotation = _startRot;
         }
     }
 }

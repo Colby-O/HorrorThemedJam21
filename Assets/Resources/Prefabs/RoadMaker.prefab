@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221165659320413547}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -236.04057, y: -18.18969, z: 267.19376}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -47,53 +47,88 @@ MonoBehaviour:
   _regenerate: 0
   _removeAllIntersections: 0
   _destroy: 0
+  _splineContainer: {fileID: 0}
   _debugMode: 0
-  _resolution: 0.01
+  _resolution: 1
   _roadways:
-  - container: {fileID: 0}
-    splineIndex: 0
+  - splineIndex: 0
     segments: []
-  - container: {fileID: 0}
-    splineIndex: 1
+  - splineIndex: 1
     segments: []
-  - container: {fileID: 0}
-    splineIndex: 2
+  - splineIndex: 2
     segments: []
-  - container: {fileID: 0}
-    splineIndex: 3
+  - splineIndex: 3
     segments: []
-  _intersections:
-  - _junctions:
-    - splineIndex: 0
-      knotIndex: 0
-      splineContainer: {fileID: 0}
-    - splineIndex: 0
-      knotIndex: 4
-      splineContainer: {fileID: 0}
-    - splineIndex: 2
-      knotIndex: 3
-      splineContainer: {fileID: 0}
-    curveWeights:
-    - 0.64
-    - 0.59
-    - 0.27
-  - _junctions:
-    - splineIndex: 1
-      knotIndex: 0
-      splineContainer: {fileID: 0}
-    - splineIndex: 2
-      knotIndex: 0
-      splineContainer: {fileID: 0}
-    - splineIndex: 3
-      knotIndex: 0
-      splineContainer: {fileID: 0}
-    curveWeights:
-    - 0.59
-    - 0.5
-    - 0.68
-  _roadWidth: 3.5
-  _curveWidth: 1
-  _curveHeight: 0.1
-  _roadMat: {fileID: 2100000, guid: dcd5b6732d6209a84a85c844166f06b8, type: 2}
-  _intersectionMat: {fileID: 2100000, guid: 2d58ce02b6889a44caf4eb9569576be9, type: 2}
-  _curbMat: {fileID: 2100000, guid: 733cd026d49b7984786770a19fee372e, type: 2}
+  - splineIndex: 4
+    segments: []
+  - splineIndex: 5
+    segments: []
+  - splineIndex: 6
+    segments: []
+  - splineIndex: 7
+    segments: []
+  - splineIndex: 8
+    segments: []
+  - splineIndex: 9
+    segments: []
+  - splineIndex: 10
+    segments: []
+  - splineIndex: 11
+    segments: []
+  - splineIndex: 12
+    segments: []
+  - splineIndex: 13
+    segments: []
+  - splineIndex: 14
+    segments: []
+  - splineIndex: 15
+    segments: []
+  - splineIndex: 16
+    segments: []
+  - splineIndex: 17
+    segments: []
+  - splineIndex: 18
+    segments: []
+  - splineIndex: 19
+    segments: []
+  - splineIndex: 20
+    segments: []
+  _data: {fileID: 11400000, guid: 48d1c1724ac8e46419822d441596ebdb, type: 2}
+  _defaultData:
+    SplineIndices: 
+    Intersections: 
+    RoadMat: {fileID: 2100000, guid: dcd5b6732d6209a84a85c844166f06b8, type: 2}
+    IntersectionMat: {fileID: 2100000, guid: 2d58ce02b6889a44caf4eb9569576be9, type: 2}
+    CurbMat: {fileID: 2100000, guid: 733cd026d49b7984786770a19fee372e, type: 2}
+    RoadWidth: 3.5
+    CurbWidth: 0.8
+    CurbHeight: 0.1
+    TerrainIgnore: 0
+  _overridesPresets:
+  - SplineIndices: 10000000
+    Intersections: 
+    RoadMat: {fileID: 2100000, guid: 3b320796db2b6954a9318a1cf29cd0e5, type: 2}
+    IntersectionMat: {fileID: 2100000, guid: 3b320796db2b6954a9318a1cf29cd0e5, type: 2}
+    CurbMat: {fileID: 2100000, guid: b651c8367178b1d9e885188b00f76b18, type: 2}
+    RoadWidth: 3.5
+    CurbWidth: 0.5
+    CurbHeight: 0.1
+    TerrainIgnore: 0
+  - SplineIndices: 110000001200000013000000
+    Intersections: 0800000009000000
+    RoadMat: {fileID: 2100000, guid: 7b1c3fc4bda94fc4fb178a2cf93879e5, type: 2}
+    IntersectionMat: {fileID: 2100000, guid: ed4fd86f918d3234b9d83ab75cd0976c, type: 2}
+    CurbMat: {fileID: 2100000, guid: dfc873b4ef49c3b499082568b76cfde4, type: 2}
+    RoadWidth: 7
+    CurbWidth: 0.5
+    CurbHeight: 0.1
+    TerrainIgnore: 1
+  - SplineIndices: 14000000
+    Intersections: 
+    RoadMat: {fileID: 2100000, guid: 3b320796db2b6954a9318a1cf29cd0e5, type: 2}
+    IntersectionMat: {fileID: 2100000, guid: 3b320796db2b6954a9318a1cf29cd0e5, type: 2}
+    CurbMat: {fileID: 2100000, guid: b651c8367178b1d9e885188b00f76b18, type: 2}
+    RoadWidth: 1
+    CurbWidth: 0.1
+    CurbHeight: 0.1
+    TerrainIgnore: 1

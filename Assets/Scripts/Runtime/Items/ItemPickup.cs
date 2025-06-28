@@ -16,6 +16,11 @@ namespace HTJ21
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
 
+        public void Restart()
+        {
+            gameObject.SetActive(true);
+        }
+
         public void AddOutline()
         {
             if (!_outlineMR) return;
@@ -52,7 +57,7 @@ namespace HTJ21
                     //GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.PickupFlashlightDialogue);
                 }
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             return true;
         }
 

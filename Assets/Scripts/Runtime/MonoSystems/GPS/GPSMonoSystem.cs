@@ -123,7 +123,7 @@ namespace HTJ21
                         if (!junction.Equals(thisJunction))
                         {
                             SplineContainer container = RoadwayCreator.Instance.GetContainer();
-                            if (junction.splineIndex < 0 || junction.knotIndex < 0 || container.Splines.Count >= junction.splineIndex || container.Splines[junction.splineIndex].Count >= junction.knotIndex) continue;
+                            //if (junction.splineIndex < 0 || junction.knotIndex < 0 || container.Splines.Count >= junction.splineIndex || container.Splines[junction.splineIndex].Count >= junction.knotIndex) continue;
                             neighbors.Add(new GPSNode(container, junction.splineIndex, junction.knotIndex, container.transform.TransformPoint(container[junction.splineIndex][junction.knotIndex].Position)));
                         }
                     }

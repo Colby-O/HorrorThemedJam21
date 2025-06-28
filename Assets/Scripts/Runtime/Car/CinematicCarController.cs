@@ -53,6 +53,9 @@ namespace HTJ21
 
 
         public Camera GetCamera() => _camera;
+        
+        public bool IsEnabled() => _enabled;
+        
         public void Enable()
         {
             SnapCarToClosestKnot();

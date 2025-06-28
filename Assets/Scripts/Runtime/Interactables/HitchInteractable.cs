@@ -66,14 +66,7 @@ namespace HTJ21
 
         public bool Interact(Interactor interactor)
         {
-            if (_carJoint.connectedBody)
-            {
-                _carJoint.connectedBody = null;
-                _carJoint.massScale = 1e-5f;
-                _ropeItem.SetActive(true);
-                _ropeItem.transform.position = transform.position + -HTJ21GameManager.Car.transform.forward * 0.4f;
-                Destroy(_rope.gameObject);
-            }
+            Restart();
             return true;
         }
 
@@ -85,6 +78,18 @@ namespace HTJ21
         public string GetHint()
         {
             return $"Click 'E' To Detach Rope.";
+        }
+
+        public void Restart()
+        {
+            if (_carJoint.connectedBody)
+            {
+                _carJoint.connectedBody = null;
+                _carJoint.massScale = 1e-5f;
+                _ropeItem.SetActive(true);
+                _ropeItem.transform.position = transform.position + -HTJ21GameManager.Car.transform.forward * 0.4f;
+                Destroy(_rope.gameObject);
+            }
         }
     }
 }

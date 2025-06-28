@@ -9,5 +9,6 @@ namespace HTJ21
         public void Load(DialogueSO dialogueEvent);
         public bool IsLoaded(DialogueSO dialogueEven);
         public void ResetDialogue();
+        public void ResetDialogueAll();
     }
 }

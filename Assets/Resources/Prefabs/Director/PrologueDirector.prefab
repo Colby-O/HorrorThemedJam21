@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6457376529438432792}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3083.6567, y: 0, z: -782.8623}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -46,7 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _act: 1
+  _items:
+  - {fileID: 0}
   _moonLookTrigger: {fileID: 0}
+  _lookAtMoonLoc: {fileID: 0}
   _moonJumpscareClip: {fileID: 8300000, guid: e93a14dc97fe23e43b80330c9ec9dd93, type: 3}
   _pitch: 0.75
   _turnDuration: 1
@@ -65,11 +68,19 @@ MonoBehaviour:
   _cameraEndRot: {x: 0, y: 0, z: 0, w: 0}
   _introDialogue: {fileID: 11400000, guid: 0ebbb1e766f53be498135914b7ed9ac4, type: 2}
   _onWakeUpDialogue: {fileID: 11400000, guid: 3c6e006f88c44174888f82551b8f8061, type: 2}
+  _beforeMoonDialogue: {fileID: 11400000, guid: 27c932c0973fb2047a47765451f052b0, type: 2}
+  _afterMoonDialogue: {fileID: 11400000, guid: a6ca14b68c4614444904817944d063d3, type: 2}
   _moon: {fileID: 0}
   _radio: {fileID: 0}
   _safe: {fileID: 0}
   _deskLamp: {fileID: 0}
   _clock: {fileID: 0}
+  _toAct1: {fileID: 0}
+  _atAct1: {fileID: 0}
+  _fromHomeMurder: {fileID: 0}
+  _doorKeyPad: {fileID: 0}
+  _bedroomDoor: {fileID: 0}
+  _safeDoor: {fileID: 0}
   _audioSource: {fileID: 530230208879824835}
 --- !u!82 &530230208879824835
 AudioSource:

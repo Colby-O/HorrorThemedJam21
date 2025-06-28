@@ -3624,7 +3624,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_Name
-      value: Portal
+      value: PortalAtMurderHouse
       objectReference: {fileID: 0}
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_IsActive
@@ -4199,6 +4199,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8756014185029353959}
     m_Modifications:
+    - target: {fileID: 4558410989076660848, guid: b4a7b62f3ce7eefdbae139037337c6e8, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6086270700845524050, guid: b4a7b62f3ce7eefdbae139037337c6e8, type: 3}
       propertyPath: m_Name
       value: MoveableRock

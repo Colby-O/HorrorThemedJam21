@@ -79,7 +79,13 @@ namespace HTJ21
 
         public string GetHint()
         {
-            return "Open Chest.";
+            return "Click 'E' To Open";
+        }
+
+        public void Restart()
+        {
+            _open = false;
+            _pivot.localEulerAngles = _pivot.localEulerAngles.SetZ(0f);
         }
     }
 }

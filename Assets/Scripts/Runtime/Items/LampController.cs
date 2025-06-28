@@ -82,5 +82,10 @@ namespace HTJ21
             }
             _outlineMR.materials = mats;
         }
+
+        public void Restart()
+        {
+            
+        }
     }
 }

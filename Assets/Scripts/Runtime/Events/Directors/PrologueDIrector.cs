@@ -3,6 +3,8 @@ using PlazmaGames.Attribute;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
@@ -11,6 +13,8 @@ namespace HTJ21
 {
     public class PrologueDirector : Director
     {
+        [SerializeField] private List<GameObject> _items;
+
         [Header("Moon Cutscene")]
         [SerializeField] EventTrigger _moonLookTrigger;
         [SerializeField] private Transform _lookAtMoonLoc;
@@ -46,12 +50,27 @@ namespace HTJ21
         [SerializeField] private LampController _deskLamp;
         [SerializeField] private AlarmClock _clock;
         [SerializeField] private Portal _toAct1;
-        [SerializeField] private Portal _fromHome;
+        [SerializeField] private Portal _atAct1;
+        [SerializeField] private Portal _fromHomeMurder;
         [SerializeField] private Keypad _doorKeyPad;
         [SerializeField] private Door _bedroomDoor;
+        [SerializeField] private Door _safeDoor;
 
         [SerializeField] private AudioSource _audioSource;
-        
+
+        private void RestartInteractablesRecursive(GameObject obj)
+        {
+            if (obj.TryGetComponent(out IInteractable interactable))
+            {
+                interactable.Restart();
+            }
+
+            foreach (Transform child in obj.transform)
+            {
+                RestartInteractablesRecursive(child.gameObject);
+            }
+        }
+
         private void EnableMoonEvent()
         {
             _moonLookTrigger.gameObject.SetActive(true);
@@ -100,7 +119,6 @@ namespace HTJ21
         {
             GameManager.GetMonoSystem<IScreenEffectMonoSystem>().TriggerBlink(_blinkDuration, 0.5f, startFromOpen: true, onFinish: () =>
             {
-                _originalScale = _moon.transform.localScale;
                 Vector3 targetScale = _moon.transform.localScale * _scaleFactor;
                 HTJ21GameManager.Player.LockMovement = false;
                 HTJ21GameManager.Player.LockMoving = true;
@@ -206,30 +224,62 @@ namespace HTJ21
 
         private void OpenPortals()
         {
-            _toAct1.gameObject.SetActive(true);
-            _fromHome.gameObject.SetActive(true);
+            _toAct1.Enable();
+            _atAct1.Enable();
         }
 
         private void ClosePortals()
         {
-            _toAct1.gameObject.SetActive(false);
-            _fromHome.gameObject.SetActive(false);
+            _toAct1.Disable();
+            _atAct1.Disable();
         }
 
         private void Setup()
         {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Player);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Car);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Inspector);
+
+            HTJ21GameManager.Car.RestartHitch();
+            HTJ21GameManager.Car.Restart();
+            HTJ21GameManager.Car.ExitCar(true);
+            HTJ21GameManager.Car.DisableMirrors();
+            HTJ21GameManager.CinematicCar.Enable();
+
+            HTJ21GameManager.Player.EnablePlayer();
+            HTJ21GameManager.Player.StopLookAt();
+            HTJ21GameManager.Player.LockMoving = false;
+            HTJ21GameManager.Player.LockMovement = false;
+
+            foreach (GameObject item in _items)
+            {
+                RestartInteractablesRecursive(item);
+            }
+
+            _doorKeyPad.Restart();
+            _safe.Restart();
+            _moonLookTrigger.Restart();
+            _safeDoor.Restart();
+            _bedroomDoor.Restart();
+            _safeDoor.Lock();
+            _bedroomDoor.Lock();
+
             _redMoonLight.gameObject.SetActive(false);
             _moon.material.SetColor("_BaseColor", Color.white);
+            _moon.transform.localScale = _originalScale;
+            _moon.gameObject.SetActive(true);
 
-            PlayerController player = FindFirstObjectByType<PlayerController>();
-            if (player) player.EnablePlayer();
-
-            GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
 
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
-            GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogue();
+            GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogueAll();
+            GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ForceStopDialogue();
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().RestoreDefaults();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
+            GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
             _moonLookTrigger.gameObject.SetActive(false);
@@ -237,7 +287,22 @@ namespace HTJ21
 
             _doorKeyPad.OnSolved.AddListener(OpenPortals);
 
+            _fromHomeMurder.Disable();
             ClosePortals();
+
+            HTJ21GameManager.Player.LockMovement = true;
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
+           
+
+            HTJ21GameManager.PickupManager.DropAll();
+            HTJ21GameManager.Player.TurnOffLight();
+
+            HTJ21GameManager.Inspector.EndInspect();
+
+            HTJ21GameManager.Player.ResetPlayer();
+            HTJ21GameManager.Player.ResetHead();
+            HTJ21GameManager.Player.GetCamera().transform.position = _cameraStart.position;
+            HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
         }
 
         private void IntroMonologue()
@@ -259,36 +324,24 @@ namespace HTJ21
             }));
         }
 
-        private void Awake()
-        {
-            AddEvents();
-        }
-
         public override void OnActInit()
         {
+            AddEvents();
+
+            _originalScale = _moon.transform.localScale;
+
+            _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
+            _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;
         }
 
         public override void OnActStart()
         {
             Setup();
-            HTJ21GameManager.Player.LockMovement = true;
-            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
-            HTJ21GameManager.Car.DisableMirrors();
-
-            _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
-            _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;
-
-            HTJ21GameManager.Player.GetCamera().transform.position = _cameraStart.position;
-            HTJ21GameManager.Player.GetCamera().transform.rotation = _cameraStart.rotation;
-
             IntroMonologue();
         }
 
         private void OnPortalEnter(Portal p1, Portal p2)
         {
-            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
-            p1.gameObject.SetActive(false);
-            p2.gameObject.SetActive(false);
             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
         }
 
@@ -299,12 +352,10 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
-            HTJ21GameManager.CinematicCar.TransferCurrentSpeedToCar();
-            HTJ21GameManager.CinematicCar.Disable();
-            HTJ21GameManager.Car.SuperDuperEnterCarForReal();
-            HTJ21GameManager.Car.EnableMirrors();
-
-            _bedroomDoor.SetDirectionOverride(0);
+            ClosePortals();
+            _safe.OnSolved.RemoveListener(EnableMoonEvent);
+            _doorKeyPad.OnSolved.RemoveListener(OpenPortals);
+            HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
             _moonLookTrigger.gameObject.SetActive(false);
             _moon.gameObject.SetActive(false);
         }

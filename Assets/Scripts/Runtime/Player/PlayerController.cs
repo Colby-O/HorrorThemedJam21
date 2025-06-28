@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.UI;
@@ -43,8 +45,17 @@ namespace HTJ21
         [SerializeField, ReadOnly] private bool _isCrouching;
 
         [Header("Seen Settings")]
-        [SerializeField, ReadOnly] private bool _isHidden = false;
-        [SerializeField, ReadOnly] private bool _needToCourch = false;
+        [SerializeField, ReadOnly] private List<CoverState> _hiddenStates;
+        [SerializeField, ReadOnly] private bool _justRespawned = false;
+        [SerializeField, ReadOnly] private float _timeSinceRespawned = 0f;
+        [SerializeField] private float _gracePeriod = 0.1f;
+
+        [SerializeField, ReadOnly] private Vector3 _cameraStartPos;
+        [SerializeField, ReadOnly] private Quaternion _cameraStartRot;
+        [SerializeField, ReadOnly] private Vector3 _playerStartPos;
+        [SerializeField, ReadOnly] private Quaternion _playerStartRot;
+        [SerializeField, ReadOnly] private Vector3 _headStartPos;
+        [SerializeField, ReadOnly] private Quaternion _headStartRot;
 
         private float gravity = -9.81f;
         
@@ -84,6 +95,9 @@ namespace HTJ21
             _controller.enabled = false;
             transform.position = pos;
             _controller.enabled = true;
+
+            _timeSinceRespawned = 0f;
+            _justRespawned = true;
         }
 
         public void EnterAt(Vector3 position)
@@ -127,6 +141,16 @@ namespace HTJ21
         {
             if (!_pickupManager.HasItem(PickupableItem.FlashLight) || _disableFlashlight) return;
             _light.SetActive(!_light.activeSelf);
+        }
+
+        public void TurnOffLight()
+        {
+            _light.SetActive(false);   
+        }
+
+        public void TurnOnLight()
+        {
+            _light.SetActive(true);
         }
 
         private void ProcessMovement()
@@ -207,21 +231,37 @@ namespace HTJ21
             return isIndoors && HTJ21GameManager.HasStarted;
         }
 
-        public void SetHiddenState(bool needToCrouch)
+        public void SetHiddenState(CoverState state)
         {
-            _needToCourch = needToCrouch;
-            _isHidden = true;
+            if (!_hiddenStates.Contains(state)) _hiddenStates.Add(state);
         }
 
-        public void ClearHiddenState()
+        public void RemoveHiddenState(CoverState state)
         {
-            _needToCourch = false;
-            _isHidden = false;
+            _hiddenStates.Remove(state);
         }
 
         public bool IsInCover()
         {
-            return _isHidden && (!_needToCourch || (_needToCourch && _isCrouching));
+            return _justRespawned || (_hiddenStates.Count > 0 && (_isCrouching || !_hiddenStates.Any(e => e.needToCrouch)));
+        }
+
+        public void ResetHead()
+        {
+            GetHead().transform.localPosition = _headStartPos;
+            GetHead().transform.localRotation = _headStartRot;
+        }
+
+        public void ResetCamera()
+        {
+            GetCamera().transform.localPosition = _cameraStartPos;
+            GetCamera().transform.localRotation = _cameraStartRot;
+        }
+
+        public void ResetPlayer() 
+        {
+            Teleport(_playerStartPos);
+            transform.rotation = _playerStartRot;
         }
 
         private void Awake()
@@ -231,9 +271,18 @@ namespace HTJ21
             if (!_pickupManager) _pickupManager = GetComponent<PickupManager>();
             if (!_as) _as = GetComponent<AudioSource>();
 
-            ClearHiddenState();
+            _hiddenStates = new List<CoverState>();
             _disableFlashlight = false;
             _light.SetActive(false);
+
+            _cameraStartPos = GetCamera().transform.localPosition;
+            _cameraStartRot = GetCamera().transform.localRotation;
+
+            _playerStartPos = transform.position;
+            _playerStartRot = transform.rotation;
+
+            _headStartPos = GetHead().transform.localPosition;
+            _headStartRot = GetHead().transform.localRotation;
         }
 
         private void Start()
@@ -247,6 +296,16 @@ namespace HTJ21
             {
                 if (_as && _as.isPlaying) _as.Stop();
                 return;
+            }
+
+            if (_justRespawned)
+            {
+                _timeSinceRespawned += Time.deltaTime;
+                if (_timeSinceRespawned > _gracePeriod)
+                {
+                    _justRespawned = false;
+                    _timeSinceRespawned = 0f;
+                }
             }
 
             CheckIfInDoors();

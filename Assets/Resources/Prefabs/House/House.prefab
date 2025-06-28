@@ -1685,6 +1685,7 @@ MonoBehaviour:
   _lockedSound: {fileID: 8300000, guid: 1aa1249ca0390564f916baa6c2c42083, type: 3}
   _isOpen: 0
   _inProgress: 0
+  _startRot: {x: 0, y: 0, z: 0, w: 0}
   _requiresKey: 0
   _key: 0
   _hasUsed: 0
@@ -4217,7 +4218,6 @@ Transform:
   - {fileID: 8014939243171185294}
   - {fileID: 2439489998695982420}
   - {fileID: 7409257381708797279}
-  - {fileID: 8017695477818024920}
   - {fileID: 1238569166863910736}
   - {fileID: 5383776882482558565}
   - {fileID: 1220016712964732934}
@@ -12419,40 +12419,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5256123, y: 0.0643363, z: 0.40450224}
   m_Center: {x: -0.015308052, y: 0.011059523, z: -0.012284771}
---- !u!1001 &726268856089679008
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1949276632522549765}
-    m_Modifications:
-    - target: {fileID: 1029185320271713868, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
-      propertyPath: m_Name
-      value: Text
-      objectReference: {fileID: 0}
-    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
---- !u!4 &8017695477818024920 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
-  m_PrefabInstance: {fileID: 726268856089679008}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &745372092707112151
 PrefabInstance:
   m_ObjectHideFlags: 0

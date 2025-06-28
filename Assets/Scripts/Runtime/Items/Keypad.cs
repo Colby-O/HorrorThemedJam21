@@ -90,6 +90,16 @@ namespace HTJ21
 
         public KeypadPattern GetCorrectPattern() => _correctPattern;
 
+        public void Restart()
+        {
+            _isSolved = false;
+            _currentPattern = new KeypadPattern();
+            DisplayCurrentPattern();
+
+            if (TryGetComponent(out InspectableItem item)) item.CanInteract = true;
+            foreach (KeypadButton button in _buttons) button.Enable();
+        }
+
         private KeypadPattern GenerateRandomPasscode()
         {
             List<int> numbers = Enumerable.Range(0, 9).ToList(); 
