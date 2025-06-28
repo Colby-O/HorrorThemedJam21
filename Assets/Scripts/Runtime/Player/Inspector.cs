@@ -69,6 +69,8 @@ namespace HTJ21
             _playerController.LockMovement = false;
         }
 
+        public bool IsInspectingObject(Transform transform) => _inspectingObject == transform;
+
         public void StartInspect(Transform obj, InspectType inspectType, bool rotateWithPlayer, Transform offset, Transform targetOverride = null, string text = "", float comeToOffsetOverride = 0f)
         {
             if (obj == null || _isInspecting || _isMovingBack) return;

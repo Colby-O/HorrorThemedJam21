@@ -27,8 +27,6 @@ namespace HTJ21
 
             } while (mask.rect.width / (_textWidth * clones) >= 1);
 
-            Debug.Log($"Clones: {clones} : {mask.rect.width / (_textWidth * clones)}");
-
             return clones;
         }
 
