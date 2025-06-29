@@ -49,6 +49,7 @@ MonoBehaviour:
   _camera: {fileID: 7084797255062915433}
   _renderInterval: 0.1
   _renderOffset: 0
+  _enablePerspective: 1
   _screen: {fileID: 4108330982221611396}
   _materialIndex: 1
   _texSize: {x: 512, y: 512}
