@@ -2,6 +2,7 @@ using NUnit.Framework;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using PlazmaGames.Core.Debugging;
+using PlazmaGames.DataPersistence;
 using PlazmaGames.Runtime.DataStructures;
 using System;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace HTJ21
         }
     }
 
-    public class DirectorMonoSystem : MonoBehaviour, IDirectorMonoSystem
+    public class DirectorMonoSystem : MonoBehaviour, IDirectorMonoSystem, IDataPersistence
     {
         [SerializeField] private Act _startAct;
 
@@ -87,6 +88,8 @@ namespace HTJ21
             if (_houseController) _houseController.OnActChange();
 
             _currentDirector.OnActStart();
+
+            GameManager.GetMonoSystem<IDataPersistenceMonoSystem>().SaveGame();
         }
 
         private void Start()
@@ -124,6 +127,27 @@ namespace HTJ21
         private void Update()
         {
             if (_currentDirector) _currentDirector.OnActUpdate();
+        }
+
+        public bool SaveData<TData>(ref TData data) where TData : GameData
+        {
+            HTJ21GameData realData = data as HTJ21GameData;
+            if (realData == null) return false;
+
+            Act currentAct = GetCurrentAct();
+            if (currentAct != Act.MainMenu) realData.act = currentAct;
+
+            return true;
+        }
+
+        public bool LoadData<TData>(TData data) where TData : GameData
+        {
+            HTJ21GameData realData = data as HTJ21GameData;
+            if (realData == null) return false;
+
+            _startAct = realData.act;
+
+            return true;
         }
     }
 }

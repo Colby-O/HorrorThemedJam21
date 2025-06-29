@@ -200,9 +200,9 @@ namespace HTJ21
             float yRot = transform.localEulerAngles.y;
             if (!_lookAt)
             {
-                xRot -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
+                xRot -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y;
                 xRot = Mathf.Clamp(MathExt.Angle360To180(xRot), _settings.YLookLimit.x, _settings.YLookLimit.y);
-                yRot += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
+                yRot += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x;
             }
             else
             {

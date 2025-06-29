@@ -8,6 +8,7 @@ namespace HTJ21
         [SerializeField] private Camera _camera;
         [SerializeField] private float _renderInterval;
         [SerializeField] private float _renderOffset;
+        [SerializeField] private bool _enablePerspective = false;
 
         [SerializeField] private MeshRenderer _screen;
         [SerializeField] private int _materialIndex;
@@ -17,6 +18,8 @@ namespace HTJ21
         [SerializeField, ReadOnly] private float _timeSinceLastRender;
 
         [SerializeField, ReadOnly] private RenderTexture _tex;
+
+        private Camera _playerCamera;
 
         public void Enable()
         {
@@ -33,6 +36,32 @@ namespace HTJ21
             if (_tex != null) _tex.Release();
             _tex = new RenderTexture(_texSize.x, _texSize.y, 0);
             _camera.targetTexture = _tex;
+        }
+
+        private bool IsVisible(Renderer renderer, Camera camera)
+        {
+            Plane[] frustum = GeometryUtility.CalculateFrustumPlanes(camera);
+            return GeometryUtility.TestPlanesAABB(frustum, renderer.bounds);
+        }
+
+        private void Render()
+        {
+            _screen.enabled = false;
+
+            Vector3 mirrorPosition = transform.position;
+            Vector3 playerPosition = _playerCamera.transform.position;
+
+            Vector3 offset = -transform.forward * 0.01f;
+
+            _camera.transform.position = mirrorPosition + offset;
+
+            Vector3 lookDirection = (playerPosition - mirrorPosition).normalized;
+
+            _camera.transform.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+
+            _camera.Render();
+
+            _screen.enabled = true;
         }
 
         private void Awake()
@@ -60,7 +89,12 @@ namespace HTJ21
             Enable();
         }
 
-        private void Update()
+        private void Start()
+        {
+            _playerCamera = HTJ21GameManager.Player.GetCamera();
+        }
+
+        private void LateUpdate()
         {
             if (!_isEnabled) return;
 
@@ -68,7 +102,8 @@ namespace HTJ21
 
             if (_timeSinceLastRender > _renderInterval && _camera != null)
             {
-                _camera.Render();
+                if (_enablePerspective) Render();
+                else _camera.Render();
                 _timeSinceLastRender = 0;
             }
         }

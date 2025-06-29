@@ -2,6 +2,7 @@ using PlazmaGames.Animation;
 using PlazmaGames.Attribute;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.DataPersistence;
 using PlazmaGames.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -329,6 +330,8 @@ namespace HTJ21
             AddEvents();
 
             _originalScale = _moon.transform.localScale;
+
+            _moonLookTrigger.gameObject.SetActive(false);
 
             _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
             _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;

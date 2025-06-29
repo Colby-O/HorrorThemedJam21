@@ -64,13 +64,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_Settings:
-    technique: 0
+    technique: 2
     maxDrawDistance: 1000
     decalLayers: 1
     dBufferSettings:
       surfaceData: 2
     screenSpaceSettings:
-      normalBlend: 0
+      normalBlend: 2
 --- !u!114 &-70723477897083109
 MonoBehaviour:
   m_ObjectHideFlags: 0

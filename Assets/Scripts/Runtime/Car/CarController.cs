@@ -248,9 +248,9 @@ namespace HTJ21
         private void ProcessLook()
         {
             Vector3 headRotation = _camera.localEulerAngles;
-            headRotation.x -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y * Time.deltaTime;
+            headRotation.x -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y;
             headRotation.x = Mathf.Clamp(Mathf.Repeat(headRotation.x + 180, 360) - 180, _settings.CarYLookLimit.x, _settings.CarYLookLimit.y);
-            headRotation.y += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x * Time.deltaTime;
+            headRotation.y += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x;
             headRotation.y = Mathf.Clamp(Mathf.Repeat(headRotation.y + 180, 360) - 180, _settings.CarXLookLimit.x, _settings.CarXLookLimit.y);
 
             _camera.localRotation = Quaternion.Euler(headRotation);

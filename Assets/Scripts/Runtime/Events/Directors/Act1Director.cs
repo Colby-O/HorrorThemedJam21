@@ -40,7 +40,10 @@ namespace HTJ21
         [SerializeField] private GameObject _murderHouseDoorBoards;
         [SerializeField] private float _initialDialogueDelay = 2.5f;
         [SerializeField] private float _treeFallDialogueDelay = 2.0f;
-        
+
+        [SerializeField] private Portal _toAct1;
+        [SerializeField] private Portal _atAct1;
+
         private float _startTime = 0;
         private float _treeFallTime = 0;
 
@@ -215,6 +218,9 @@ namespace HTJ21
 
             ClosePortals();
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
+
+            _toAct1.Disable();
+            _atAct1.Disable();
 
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
             GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogueAll();

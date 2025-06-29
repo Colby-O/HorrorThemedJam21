@@ -143,7 +143,7 @@ namespace HTJ21
             StartCoroutine(TypeDialogue(
                 dialogue.msg[HTJ21GameManager.Preferences.SelectedLanguage], 
                 (dialogue.waitDelayOverride <= 0) ? _waitDelayDialogue : dialogue.waitDelayOverride, 
-                (dialogue.typeSpeedOverride <= 0) ? _typeSpeed : dialogue.typeSpeedOverride,
+                ((dialogue.typeSpeedOverride <= 0) ? _typeSpeed : dialogue.typeSpeedOverride) * HTJ21GameManager.Preferences.DialogueSpeedMul,
                 _dialogue, 
                 true, 
                 Next)
@@ -211,7 +211,7 @@ namespace HTJ21
         {
             _location.transform.parent.gameObject.SetActive(true);
             _currentLocationCallback = onFinished;
-            StartCoroutine(TypeDialogue(location, _waitDelayLocation, _typeSpeed, _location, false, () => { if (onFinished != null) onFinished.Invoke(); HideLocation(); }));
+            StartCoroutine(TypeDialogue(location, _waitDelayLocation, _typeSpeed * HTJ21GameManager.Preferences.DialogueSpeedMul, _location, false, () => { if (onFinished != null) onFinished.Invoke(); HideLocation(); }));
         }
 
         public void HideLocation()
