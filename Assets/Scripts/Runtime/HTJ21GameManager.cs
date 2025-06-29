@@ -43,6 +43,11 @@ namespace HTJ21
 
         public static GameObject CurrentControllable => Player ? (((Player.IsInCar()) ? (Car ? Car.gameObject : null) : Player.gameObject)) : null;
 
+        public static void UseCustomCursor()
+        {
+            if (Instance) Cursor.SetCursor(Preferences._cursorTexture, Vector2.zero, CursorMode.Auto);
+        }
+
         public static Camera GetActiveCamera()
         {
             if (GameManager.HasMonoSystem<IUIMonoSystem>() && GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentView<MainMenuView>()) return CinematicCar.GetCamera();
@@ -98,6 +103,11 @@ namespace HTJ21
         private void OnSceneUnload(Scene scene)
         {
             RemoveAllEventListeners();
+        }
+
+        private void Awake()
+        {
+            UseCustomCursor();
         }
 
         private void Start()

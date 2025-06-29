@@ -44,6 +44,16 @@ namespace HTJ21
         [SerializeField] private Portal _toAct1;
         [SerializeField] private Portal _atAct1;
 
+        [Header("Music")]
+        [SerializeField] private AudioSource _oooSource;
+        [SerializeField] private AudioSource _whisperSource;
+        [SerializeField] private AudioSource _keybaordSource;
+        [SerializeField] private AudioSource _darkSource;
+        [SerializeField] private float _whisperVolume = 0.4f;
+        [SerializeField] private float _keybaodVolume = 0.4f;
+        [SerializeField] private float _darkVolume = 0.6f;
+
+
         private float _startTime = 0;
         private float _treeFallTime = 0;
 
@@ -81,6 +91,7 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.TreeReroute1>(Events.NewTreeFall((from, data) =>
             {
+                StartCoroutine(AudioHelper.FadeIn(_whisperSource, _whisperVolume, 5f));
                 _gpsMs.MoveTarget(_gpsTargetReroute2.position);
             }));
 
@@ -92,6 +103,9 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.ArriveAtNeighborhood>(Events.NewArriveAtNeighborhood((from, data) =>
             {
+                StartCoroutine(AudioHelper.FadeOut(_whisperSource, 5f));
+                StartCoroutine(AudioHelper.FadeIn(_keybaordSource, _keybaodVolume, 5f));
+                StartCoroutine(AudioHelper.FadeIn(_darkSource, _darkVolume, 5f));
                 _gpsMs.TurnOff();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
             }));
@@ -231,7 +245,18 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             _gpsMs.TurnOff();
 
+            StopAllMusic();
+            _oooSource.Play();
+
             _startTime = Time.time;
+        }
+
+        private void StopAllMusic()
+        {
+            _oooSource.Stop();
+            _whisperSource.Stop();
+            _darkSource.Stop();
+            _keybaordSource.Stop();
         }
 
         public override void OnActStart()
@@ -268,6 +293,7 @@ namespace HTJ21
         {
             ClosePortals();
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
+            StopAllMusic();
         }
 
         public void UpdateGps()

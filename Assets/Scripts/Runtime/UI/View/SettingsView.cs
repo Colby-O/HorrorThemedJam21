@@ -186,6 +186,11 @@ namespace HTJ21
             _overall.value = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume();
             _music.value = GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
             _sfx.value = GameManager.GetMonoSystem<IAudioMonoSystem>().GetSfXVolume();
+
+            if (!GameManager.GetMonoSystem<IDataPersistenceMonoSystem>().IsGameLoaded())
+            {
+                LoadData(new HTJ21GameData());
+            }
         }
 
         public override void Show()
