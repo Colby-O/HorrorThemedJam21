@@ -72,7 +72,7 @@ MonoBehaviour:
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
-  _text: <align=center><b>The Book Of Selene</b></align>
+  _text: <align=center><b>The Book Of Selene</b>\n"Only in silence will she speak"</align>
   _playMoreThanOnce: 0
   _onInspectDialogue: {fileID: 0}
   _hasLookedAtOnce: 0

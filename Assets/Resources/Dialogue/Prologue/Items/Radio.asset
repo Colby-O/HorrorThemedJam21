@@ -17,8 +17,8 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: "I should scroll through the stations to see what\u2019s going on. "
+        Value: Might as well check the other stations.
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0

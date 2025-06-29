@@ -19,16 +19,16 @@ MonoBehaviour:
       - Key: 0
         Value: The hell was that?
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Officer Graves
     msg:
       list:
       - Key: 0
-        Value: "Maybe I\u2019m just burned out. I need to take a shower and get freshen
-          up."
+        Value: "Maybe I\u2019m just burned out from last night. I need to take a
+          shower and get freshen up."
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0

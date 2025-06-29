@@ -51,7 +51,7 @@ namespace HTJ21
 
         public void Begin()
         {
-            StartAct(_startAct.Next());
+            StartAct(Act.Prologue);
         }
 
         public void NextAct()

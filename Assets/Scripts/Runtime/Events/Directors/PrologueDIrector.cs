@@ -194,6 +194,8 @@ namespace HTJ21
 
         private void MoonCutsceneLogic()
         {
+            if (HTJ21GameManager.Inspector.IsInspecting()) HTJ21GameManager.Inspector.EndInspect();
+
             _originalScale = _moon.transform.localScale;
             Vector3 targetScale = _moon.transform.localScale * _scaleFactor;
 
@@ -309,7 +311,7 @@ namespace HTJ21
         private void IntroMonologue()
         {
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
-                $"Officer's Graves House\nSnoqualmie, Washington\n{_clock.GetTime()}",
+                $"Officer's Graves House\nSnoqualmie, Washington\nJune 30th 2025\n{_clock.GetTime()}",
                 () =>
                 {
                     if (_introDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_introDialogue);

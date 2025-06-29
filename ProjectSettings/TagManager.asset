@@ -19,6 +19,7 @@ TagManager:
   - GpsMarker
   - SoccerBall
   - Hanging
+  - MusicSource
   layers:
   - Default
   - TransparentFX
