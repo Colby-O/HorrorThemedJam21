@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1897004894750128413
 Transform:
   m_ObjectHideFlags: 0
@@ -4326,7 +4326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4784667065081101747
 Transform:
   m_ObjectHideFlags: 0
@@ -10092,6 +10092,7 @@ Transform:
   m_Children:
   - {fileID: 4787312807349514915}
   - {fileID: 8480678008154666803}
+  - {fileID: 349860138749067259}
   m_Father: {fileID: 1949276632522549765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8958546317149720337
@@ -15373,12 +15374,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: _text
-      value: <b>Don't answer the call.\nYou can't stop the World Ender.</b>\n\nYou
-        Hide behind your veil.\nYou opened the gate.\nYou stood silent at the edge
-        of the storm.\nThe veil must break.\n\nThe old moon falters.\nThe false light
-        wanes.\nSelene has shown us what comes next.\n\nHe is the vessel.\nYou are
-        the anchor.\nThe blood will clense the waking sky.\n\nTo deny the ritual
-        is to doom us all.\nLet the veil fall.\n\n<b>---The Children of Selene</b>
+      value: <b>Don't answer the call.\n\nYou Hide behind your veil.\nYou opened
+        the gate.\nYou stood silent at the edge of the lake.\nThe veil must break.\n\nThe
+        old moon falters.\nThe false light wanes.\nSelene has shown us what comes
+        next.\n\nHe is the vessel.\nYou are the anchor.\nThe blood will clense the
+        waking sky.\n\nTo deny the ritual is to doom us all.\nLet the veil fall.\n<b>Don't
+        answer the call.</b>\n\n<b>---The Children of Selene</b>
       objectReference: {fileID: 0}
     - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: _comeToOffsetOverride
@@ -17153,18 +17154,19 @@ MonoBehaviour:
   _offset: {fileID: 0}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: -0.2
-  _text: "<style=\"Title\"><align=\"center\"><b>Moonbeams Times\\n01/07\\n\\n</b></align>
-    <align=\"center\"></style><b><u>Cult Ties in Family Tragedy</u></b></align>\\n\\n<align=\"left\"><style=\"Title\"><b>T</b></style>reagdy
-    strikes in the small town of Snoqualmie in Washington USA. During the late night
-    of June 30th 2025 authorities discovered the bodies of  a local couple, Rebecca
-    and Thmoas Smith. The Smith\u2019s are both in their early thirties and have
-    an 8-year old boy named Nathan. Police are calling this an organized ritual event
-    orchestrated by a local group of fanatics known as the Children of Selene.  The
-    Children of Selene believes an extinction event is set to occur on July 1st 2025.
-    The cult aims to cleanse the moon of sin to allow for their ascension to heaven.
-    Authorities are urging  residents of  Snoqualmie to avoid being out late as the
-    cult is known to frequent residential neighborhoods at night. Anyone with knowledge
-    of The Children of Selene are asked to contact Washington State Patrol.</align>"
+  _text: <style="Title"><align="center"><b>Moonbeams Times\n01/07\n\n</b></align>
+    <align="center"></style><b><u>Cult Ties in Family Tragedy</u></b></align>\n\n<align="left"><style="Title"><b>T</b></style>ragedy
+    has struck in the small town of Snoqualmie, Washington. On the night of June
+    30, 2025, authorities discovered the bodies of a local couple, Rebecca and Thomas
+    Smith. Both in their early thirties, the Smiths leave behind an 8 year old boy
+    named Nathan.\n\nPolice are investigating the incident as an act of organized
+    violence linked to a local cult known as The Children of Selene. The group believes
+    an extinction event will occur on July 1st, 2025. To ensure their ascension,
+    they seek to 'cleanse the moon of sin'. A cryptic doctrine that has drawn growing
+    concern from local authorities.\n\nResidents of Snoqualmie are urged to avoid
+    being outside at night, as the cult is known to roam residential neighborhoods.
+    Anyone with information about the Children of Selene is encouraged to contact
+    the Washington State Patrol.</align>
   _playMoreThanOnce: 0
   _onInspectDialogue: {fileID: 0}
   _hasLookedAtOnce: 0
@@ -17628,7 +17630,7 @@ MonoBehaviour:
   _comeToOffsetOverride: 0
   _text: 
   _playMoreThanOnce: 0
-  _onInspectDialogue: {fileID: 11400000, guid: 189dae463c661be47be05c8ae2a38c2b, type: 2}
+  _onInspectDialogue: {fileID: 0}
   _hasLookedAtOnce: 0
   _outlineMR: {fileID: 7531190643190284052}
   _hasOutline: 0
@@ -19480,9 +19482,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: _text
-      value: <b>Passwords</b>\n\n\t<b>Internet:</b> sisterintegrity\n\n\t<b>Phone:</b>
-        shareholderam\n\n\t<b>Stellar Moives:</b> kindshipgold\n\n\t<b>Safe:</b>
-        0***
+      value: <b>Passwords</b>\n\n\t<b>Internet:</b> vR8t$kP2q!Lz\n\n\t<b>Phone:</b>
+        F#19mXe@wuPb\n\n\t<b>Stellar Moives:</b> Zp7!dQa4*VcR\n\n\t<b>Locker:</b>
+        3425\n\n\t<b>Personal Safe:</b> 0$!%
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27437,13 +27439,13 @@ MonoBehaviour:
   _offset: {fileID: 4873970915451371423}
   _targetOverride: {fileID: 0}
   _comeToOffsetOverride: 0
-  _text: Lucian Graves,\n\nI regret to inform you I am permanently moving you to
-    the nightshift. With all this bullshit going on there are many open calls after
-    dark and not enough boots to cover me.\n\nThere is a backlog of indecent reports
-    you need to clear up too. Especially the stuff from the Smith case, which to
-    say the least you left extremely vague.\n\nAlso, the locker code has been changed
-    to 7319. Use it to access your gear at the station before your next shift.\n\n---Keller,\nWashington
-    State Patrol
+  _text: 'Lucian Graves,\n\nI regret to inform you that you are being permanently
+    moved to the night shift. With everything happening, there are many open calls
+    after dark, and I do not have enough personnel to manage them.\n\nAdditionally,
+    there is a backlog of indecent reports that you need to address, particularly
+    concerning the Smith case, which you left extremely vague.\n\nPlease note that
+    the locker code has been changed to 7319. Use this code to access your gear at
+    the station before your next shift.\n\nBest,\nKeller\n\nWashington State Patrol '
   _playMoreThanOnce: 0
   _onInspectDialogue: {fileID: 0}
   _hasLookedAtOnce: 0
@@ -27989,6 +27991,40 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 590234487442247554, guid: 0ef4ec2edf924cd48b37c099d3d177d3, type: 3}
   m_PrefabInstance: {fileID: 6965320699988047452}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7028528930315962499
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2997702988916392968}
+    m_Modifications:
+    - target: {fileID: 1029185320271713868, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+      propertyPath: m_Name
+      value: Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+--- !u!4 &349860138749067259 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7300522065453315960, guid: a9e0f84a84baeb87d857a4cf88ccfaf7, type: 3}
+  m_PrefabInstance: {fileID: 7028528930315962499}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7091621621105128606
 PrefabInstance:
@@ -30907,7 +30943,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3959425973732890860, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 946.88
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5918474388858450027, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _clickClip
@@ -31999,7 +32035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3959425973732890860, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 946.88
       objectReference: {fileID: 0}
     - target: {fileID: 5918474388858450027, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _clickClip

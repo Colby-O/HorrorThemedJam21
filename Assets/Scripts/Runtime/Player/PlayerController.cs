@@ -317,7 +317,11 @@ namespace HTJ21
             {
                 _as.clip = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsWalkClip : _outdoorsWalkClip;
                 _as.pitch = GameManager.GetMonoSystem<IDirectorMonoSystem>().IsCurrentActIndoors() ? _indoorsPitch : _outdoorsPitch;
-                if (!_as.isPlaying) _as.Play();
+                if (!_as.isPlaying)
+                {
+                    _as.time = UnityEngine.Random.Range(0, _as.clip.length);
+                    _as.Play();
+                }
                 if (_animator) _animator.SetAnimationState(PlayerAnimationState.Walking);
             }
             else

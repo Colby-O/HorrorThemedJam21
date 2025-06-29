@@ -17,8 +17,8 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: The door is locked... I need to find the pass code.
+        Value: The door is locked... I need to find the passcode.
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
