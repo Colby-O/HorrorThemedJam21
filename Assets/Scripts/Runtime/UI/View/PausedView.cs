@@ -1,6 +1,7 @@
 using PlazmaGames.Core;
 using PlazmaGames.Rendering.Blur;
 using PlazmaGames.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -12,6 +13,8 @@ namespace HTJ21
         [SerializeField] private EventButton _resume;
         [SerializeField] private EventButton _settings;
         [SerializeField] private EventButton _exit;
+
+        [SerializeField] List<GameObject> _icons;
 
         [Header("WebGL")]
         [SerializeField] private GameObject _blurredView;
@@ -45,6 +48,12 @@ namespace HTJ21
             _resume.onPointerDown.AddListener(Resume);
             _settings.onPointerDown.AddListener(Settings);
             _exit.onPointerDown.AddListener(Exit);
+
+            _resume.Icon = _icons[0];
+            _settings.Icon = _icons[1];
+            _exit.Icon = _icons[2];
+
+            foreach (GameObject icon in _icons) icon.SetActive(false);
         }
 
         public override void Show()

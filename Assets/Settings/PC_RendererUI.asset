@@ -24,9 +24,9 @@ MonoBehaviour:
   _scanLineVerticalSpeed: 0.1
   _scanLineHoriztionalSpeed: 0
   _scanLineStrength: 0
-  _noiseScale: 0
+  _noiseScale: 1
   _noiseSpeed: 0.1
-  _noiseFade: 0.3
+  _noiseFade: 0
   _chromaticOffset: 0
   _chromaticOffsetSpeed: 0
   _brightness: 0.5

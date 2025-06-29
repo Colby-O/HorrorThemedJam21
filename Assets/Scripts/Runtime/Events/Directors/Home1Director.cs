@@ -212,6 +212,14 @@ namespace HTJ21
             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
         }
 
+        private void TurnOffTriggers()
+        {
+            _fakeScareTrigger.gameObject.SetActive(false);
+            _realScareTrigger.gameObject.SetActive(false);
+            _musicChangeTrigger.gameObject.SetActive(false);
+            _jumpscare.SetActive(false);
+        }
+
         private void Setup()
         {
             GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
@@ -259,6 +267,9 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
+            HTJ21GameManager.HouseController.UnlockDoors();
+            HTJ21GameManager.HouseController.TurnOnLights();
+
             _fakeScareTrigger.gameObject.SetActive(true);
             _realScareTrigger.gameObject.SetActive(true);
             _musicChangeTrigger.gameObject.SetActive(true);
@@ -271,11 +282,7 @@ namespace HTJ21
 
         public override void OnActInit()
         {
-            _fakeScareTrigger.gameObject.SetActive(false);
-            _realScareTrigger.gameObject.SetActive(false);
-            _musicChangeTrigger.gameObject.SetActive(false);
-            _jumpscare.SetActive(false);
-
+            TurnOffTriggers();
             AddEvents();
         }
 
@@ -309,6 +316,9 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+            TurnOffTriggers();
+            HTJ21GameManager.HouseController.UnlockDoors();
+            HTJ21GameManager.HouseController.TurnOnLights();
             _showerController.Restart();
             _showerController.OnShowerFinish.RemoveListener(OnShowerFinished);
         }
