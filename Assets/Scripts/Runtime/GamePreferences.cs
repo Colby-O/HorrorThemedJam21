@@ -5,6 +5,7 @@ namespace HTJ21
     [CreateAssetMenu(fileName = "GamePreferences", menuName = "GamePreferences")]
     public class GamePreferences : ScriptableObject
     {
+        public Texture2D _cursorTexture;
         public Language SelectedLanguage;
         public float DialogueSpeedMul = 1f;
         public float ViewDistance = 50f;

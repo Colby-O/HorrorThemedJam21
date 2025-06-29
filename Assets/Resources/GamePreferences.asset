@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43eba0668ac389a4d9f707842f29e052, type: 3}
   m_Name: GamePreferences
   m_EditorClassIdentifier: 
+  _cursorTexture: {fileID: 2800000, guid: ea61877fe6f25f94d9583b1bec98b0e5, type: 3}
   SelectedLanguage: 0
   DialogueSpeedMul: 2
   ViewDistance: 50

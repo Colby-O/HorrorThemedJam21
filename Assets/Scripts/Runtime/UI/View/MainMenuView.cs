@@ -94,6 +94,7 @@ namespace HTJ21
             HTJ21GameManager.Player.LockMovement = true;
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
+            HTJ21GameManager.UseCustomCursor();
         }
     }
 }

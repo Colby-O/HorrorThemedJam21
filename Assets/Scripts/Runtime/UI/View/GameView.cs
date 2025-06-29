@@ -249,6 +249,7 @@ namespace HTJ21
             {
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
+                HTJ21GameManager.UseCustomCursor();
             }
             else
             {
