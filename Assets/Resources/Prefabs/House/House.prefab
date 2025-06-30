@@ -6105,6 +6105,46 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2910310481752421064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6772685619787422557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5102674636748504082}
+  m_Layer: 0
+  m_Name: Cultist
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5102674636748504082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6772685619787422557}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4870646289868483898}
+  - {fileID: 2948444667778589023}
+  - {fileID: 3456113794055535143}
+  - {fileID: 5496279523811865105}
+  - {fileID: 6259989435851528542}
+  - {fileID: 6102198644402047977}
+  - {fileID: 8073580220767606465}
+  - {fileID: 5628678573483618891}
+  - {fileID: 4967794842197451312}
+  m_Father: {fileID: 7948047744588432586}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6776890280836501405
 GameObject:
   m_ObjectHideFlags: 0
@@ -6755,6 +6795,7 @@ Transform:
   m_Children:
   - {fileID: 1204493572450038360}
   - {fileID: 5757627105758583000}
+  - {fileID: 5102674636748504082}
   m_Father: {fileID: 5036719595041781439}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7503551766088576504
@@ -8951,6 +8992,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9085051211216357704, guid: 5cb3bb6c33ab3b94584e672d9310296e, type: 3}
   m_PrefabInstance: {fileID: 81016449014064415}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &145803355206986764
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.543
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -28.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.98998934
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 3.5527137e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.14114253
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 16.228
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &4870646289868483898 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 145803355206986764}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &155692467508988136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9563,6 +9666,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4515091723650717187, guid: c2d51ac76a651fd4cb5cd4fb39521715, type: 3}
   m_PrefabInstance: {fileID: 362017693775821872}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &390927549656539910
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.061
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -26.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9985033
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 1.7763568e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.842171e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.05469203
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -6.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (3)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &4967794842197451312 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 390927549656539910}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &408296850480644805
 PrefabInstance:
@@ -11882,6 +12047,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4515091723650717187, guid: c2d51ac76a651fd4cb5cd4fb39521715, type: 3}
   m_PrefabInstance: {fileID: 997046481340337308}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &998471476833973031
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -30.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9921084
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -3.1974423e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.842171e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.12538297
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -14.406
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (5)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &5496279523811865105 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 998471476833973031}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &999314814720099715
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12067,6 +12294,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4515091723650717187, guid: c2d51ac76a651fd4cb5cd4fb39521715, type: 3}
   m_PrefabInstance: {fileID: 1088882154842095179}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1117148655616570237
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.464
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.617
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -26.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99071145
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -3.197442e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.8421706e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.1359812
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 15.631
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (4)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &5628678573483618891 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 1117148655616570237}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1123011502940036310
 PrefabInstance:
@@ -13376,6 +13665,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6801909085774904670, guid: a631258b61abfd04d9fefa35f3bbac3f, type: 3}
   m_PrefabInstance: {fileID: 1500324067482815291}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1527460011741481695
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.455
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.468
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -24.172
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9771644
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.022683276
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.15786532
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.14040619
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -18.354
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 16.353
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (8)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &6102198644402047977 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 1527460011741481695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1535200071269326999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13852,6 +14203,68 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0038846966, y: 0.0042004655, z: 0.01032724}
   m_Center: {x: 0.0020618227, y: 0.00000023850305, z: 0.0054642437}
+--- !u!1001 &1675918118429628520
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -26.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.996803
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -2.6645354e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.8421713e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.07989904
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 9.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (6)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &6259989435851528542 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 1675918118429628520}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1700966583245248373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18836,6 +19249,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4515091723650717187, guid: c2d51ac76a651fd4cb5cd4fb39521715, type: 3}
   m_PrefabInstance: {fileID: 3552397727298885728}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3573293977525966839
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -27.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.996803
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -2.6645354e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.8421713e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.07989904
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 9.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (7)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &8073580220767606465 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 3573293977525966839}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3596593957065923922
 PrefabInstance:
@@ -29788,6 +30263,68 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0086088, y: 0.0036818618, z: 0.0041501774}
   m_Center: {x: 0.004332389, y: 0.01078205, z: 0.002494736}
+--- !u!1001 &7599550946637848681
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.911
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.543
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.641
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99558985
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -2.8421713e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.0938134
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -10.766
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &2948444667778589023 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 7599550946637848681}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7609001181673719913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30473,6 +31010,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1189643331512939906, guid: a3fe81002ed04d14fbf15e17eede0ed2, type: 3}
   m_PrefabInstance: {fileID: 7915796304386192605}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7956568274253298449
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5102674636748504082}
+    m_Modifications:
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -31.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99071145
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -3.197442e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 2.8421706e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.1359812
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 15.631
+      objectReference: {fileID: 0}
+    - target: {fileID: 7355634239413827043, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+      propertyPath: m_Name
+      value: CultistStalker (2)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+--- !u!4 &3456113794055535143 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4728214045902192950, guid: 6324d37021017e44fb55b8754c35e989, type: 3}
+  m_PrefabInstance: {fileID: 7956568274253298449}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7981919913196754996
 PrefabInstance:

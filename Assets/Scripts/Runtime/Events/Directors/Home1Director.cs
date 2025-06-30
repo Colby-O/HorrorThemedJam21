@@ -54,7 +54,9 @@ namespace HTJ21
         [SerializeField] private Transform _startLoc;
         [SerializeField] private ItemPickup _bathroomSupplies;
         [SerializeField] private Door _bathroomDoor;
-        [SerializeField] private GameObject _tvScreen;
+        [SerializeField] private GameObject _tvObjects;
+        [SerializeField] private MeshRenderer _tvScreen;
+        [SerializeField] private TVCamera _tvCamera;
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -317,7 +319,8 @@ namespace HTJ21
             _musicChangeTrigger.gameObject.SetActive(false);
             _isFlickering = false;
 
-            _tvScreen.SetActive(true);
+            _tvObjects.SetActive(true);
+            _tvCamera.SetScreen(_tvScreen);
 
             StopAllMusic(true);
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, _musicVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
@@ -343,7 +346,7 @@ namespace HTJ21
         {
             TurnOffTriggers();
             AddEvents();
-            _tvScreen.SetActive(false);
+            _tvObjects.SetActive(false);
         }
 
         public override void OnActStart()
@@ -377,7 +380,8 @@ namespace HTJ21
         public override void OnActEnd()
         {
             StopAllMusic(false);
-            _tvScreen.SetActive(false);
+            _tvObjects.SetActive(false);
+            _tvCamera.SetScreen(null);
             _moon.gameObject.SetActive(false);
             TurnOffTriggers();
             HTJ21GameManager.HouseController.UnlockDoors();
