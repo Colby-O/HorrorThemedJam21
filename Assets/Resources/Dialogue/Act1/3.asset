@@ -17,17 +17,17 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: "Dispatch, I\u2019m on Cedar now. Just trying to track down house
-          forty-one. Street\u2019s quiet. I\u2019ll update once I arrive."
+        Value: <i>Dispatch, I'm currently on Cedar Street, still trying to locate
+          house forty-one. The street is quiet.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Dispatch
     msg:
       list:
       - Key: 0
-        Value: Copy, be careful.
+        Value: <i>10-4, be careful.</i>
       keyCollision: 0
     dialogueEvent: {fileID: 11400000, guid: 376f3423741e275478ef0e25170606b4, type: 2}
     waitDelayOverride: 0

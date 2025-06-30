@@ -588,6 +588,7 @@ MonoBehaviour:
     songName: 
     audioClip: {fileID: 0}
   _currentID: 0
+  _historyID: -1
   _currentTime: 0
 --- !u!82 &3882555946110190589
 AudioSource:
@@ -602,7 +603,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: b41dc2c61b19c164887e8ee2bc451396, type: 3}
   m_Resource: {fileID: 8300000, guid: b41dc2c61b19c164887e8ee2bc451396, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -845,6 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de8d0b7cf8623847a2b6155599d6015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clickClip: {fileID: 0}
   _outlineMR: {fileID: 4247539059859923418}
   _hasOutline: 0
 --- !u!23 &4247539059859923418 stripped
@@ -875,7 +877,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inspectType: 0
+  _rotateWithPlayer: 0
   _offset: {fileID: 461040431112961435}
+  _targetOverride: {fileID: 0}
+  _comeToOffsetOverride: 0
+  _text: 
+  _playMoreThanOnce: 0
+  _onInspectDialogue: {fileID: 0}
+  _hasLookedAtOnce: 0
   _outlineMR: {fileID: 7049070531387210752}
   _hasOutline: 0
 --- !u!65 &5115674452079378566

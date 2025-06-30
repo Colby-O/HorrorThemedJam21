@@ -17,44 +17,44 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: 'Any units in the Coal Creek area, please respond. '
+        Value: <i>Any units in the Coal Creek area, please respond.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Officer Graves
     msg:
       list:
       - Key: 0
-        Value: 10-4, im three minutes out.
+        Value: <i>10-4, I'm three minutes out.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Dispatch
     msg:
       list:
       - Key: 0
-        Value: We got a reported domestic dispute at 41 Cedar Street, are you available
-          to respond?
+        Value: <i>We received a report of a domestic dispute at 41 Cedar Street,
+          are you available to respond?</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Officer Graves
     msg:
       list:
       - Key: 0
-        Value: 10-4, I'll respone when on scene.
+        Value: 10-4, I'll respond when on scene.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 0
     typeSpeedOverride: 0
   - avatarName: Dispatch
     msg:
       list:
       - Key: 0
-        Value: I am uploading the coordinates to your GPS.
+        Value: <i>I am uploading the coordinates to your GPS.</i>
       keyCollision: 0
     dialogueEvent: {fileID: 11400000, guid: 67af567c0933271cfa4aee63c73a9665, type: 2}
     waitDelayOverride: 0

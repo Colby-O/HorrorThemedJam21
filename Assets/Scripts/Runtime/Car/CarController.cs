@@ -124,6 +124,10 @@ namespace HTJ21
 
         [SerializeField] private GameObject _playerModel;
 
+        [SerializeField] private AudioSource _as;
+        [SerializeField] private AudioClip _enterCarClip;
+        [SerializeField] private AudioClip _exitCarClip;
+
         [SerializeField, ReadOnly] private Vector3 _startPosition;
         [SerializeField, ReadOnly] private Quaternion _startRotation;
 
@@ -268,6 +272,7 @@ namespace HTJ21
             EnableMirrors();
             _camera.gameObject.SetActive(true);
             if (_playerModel) _playerModel.SetActive(true);
+            if (_as&& _enterCarClip) _as.PlayOneShot(_enterCarClip);
         }
         
         public void SuperDuperEnterCarForReal()
@@ -290,6 +295,7 @@ namespace HTJ21
             _hasExited = true;
             if (_playerModel) _playerModel.SetActive(false);
             HTJ21GameManager.CarTutorial.DisableAllTutorial();
+            if (!force &&_as && _exitCarClip) _as.PlayOneShot(_exitCarClip);
         }
 
         private void Update()

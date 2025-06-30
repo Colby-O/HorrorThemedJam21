@@ -41,6 +41,7 @@ namespace HTJ21
             }
             else
             {
+                HTJ21GameManager.HasStarted = true;
                 _cameraController.Disable();
                 GameManager.GetMonoSystem<IDirectorMonoSystem>().StartAct(GameManager.GetMonoSystem<IDirectorMonoSystem>().GetStartAct());
             }

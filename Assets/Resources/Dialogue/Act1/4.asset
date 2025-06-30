@@ -17,19 +17,9 @@ MonoBehaviour:
     msg:
       list:
       - Key: 0
-        Value: "<i>Dispatch, I\u2019ve reached house forty-one. I just heard a scream
-          from inside...</i>"
-      keyCollision: 0
-    dialogueEvent: {fileID: 0}
-    waitDelayOverride: 1
-    typeSpeedOverride: 0
-  - avatarName: Officer Graves
-    msg:
-      list:
-      - Key: 0
         Value: "<i>There\u2019s blood. A trail leading out from the front door.</i>"
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 1
     typeSpeedOverride: 0
   - avatarName: Dispatch
@@ -38,17 +28,16 @@ MonoBehaviour:
       - Key: 0
         Value: <i>...</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 1
     typeSpeedOverride: 0
   - avatarName: Dispatch
     msg:
       list:
       - Key: 0
-        Value: <i>Copy. Do not enter the residence. Backup is en route. Hold perimeter
-          until...</i>
+        Value: <i>Copy. Do not enter the residence. Backup is en route.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 1
     typeSpeedOverride: 0
   - avatarName: Offcier Graves
@@ -57,6 +46,6 @@ MonoBehaviour:
       - Key: 0
         Value: <i>No time. I'm making contact.</i>
       keyCollision: 0
-    dialogueEvent: {fileID: 0}
+    dialogueEvent: {fileID: 11400000, guid: fb02f86df21f92445a9cc9aaefe4f456, type: 2}
     waitDelayOverride: 1
     typeSpeedOverride: 0
