@@ -19,6 +19,7 @@ namespace HTJ21
         [SerializeField] private GameObject _offset;
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private Transform _head;
+        [SerializeField] private PlayerSettings _settings;
 
         [Header("Settings")]
         [SerializeField] private float _rotationSpeed = 1f;
@@ -135,8 +136,8 @@ namespace HTJ21
 
                 Vector2 deltaMouse = GameManager.GetMonoSystem<IInputMonoSystem>().RawLook;
 
-                _yaw += deltaMouse.x * _rotationSpeed * UnityEngine.Time.deltaTime;
-                _pitch -= deltaMouse.y * _rotationSpeed * UnityEngine.Time.deltaTime;
+                _yaw += deltaMouse.x * _rotationSpeed;
+                _pitch -= deltaMouse.y * _rotationSpeed;
 
                 Quaternion targetRotation = Quaternion.Euler(_pitch, _yaw, 0);
                 _inspectingTarget.rotation = targetRotation;
