@@ -49,6 +49,7 @@ namespace HTJ21
         [SerializeField] private AudioSource _whisperSource;
         [SerializeField] private AudioSource _keybaordSource;
         [SerializeField] private AudioSource _darkSource;
+        [SerializeField] private float _oooVolume = 1f;
         [SerializeField] private float _whisperVolume = 0.4f;
         [SerializeField] private float _keybaodVolume = 0.4f;
         [SerializeField] private float _darkVolume = 0.6f;
@@ -91,7 +92,7 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.TreeReroute1>(Events.NewTreeFall((from, data) =>
             {
-                StartCoroutine(AudioHelper.FadeIn(_whisperSource, _whisperVolume, 5f));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, 5f, (float t) => AudioHelper.FadeIn(_whisperSource, 0f, _whisperVolume, t));
                 _gpsMs.MoveTarget(_gpsTargetReroute2.position);
             }));
 
@@ -103,9 +104,10 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.ArriveAtNeighborhood>(Events.NewArriveAtNeighborhood((from, data) =>
             {
-                StartCoroutine(AudioHelper.FadeOut(_whisperSource, 5f));
-                StartCoroutine(AudioHelper.FadeIn(_keybaordSource, _keybaodVolume, 5f));
-                StartCoroutine(AudioHelper.FadeIn(_darkSource, _darkVolume, 5f));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, 5f, (float t) => AudioHelper.FadeOut(_whisperSource, _whisperVolume, _whisperVolume * 0.5f, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, 5f, (float t) => AudioHelper.FadeIn(_keybaordSource, 0f, _keybaodVolume, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, 5f, (float t) => AudioHelper.FadeIn(_darkSource, 0f, _darkVolume, t));
+
                 _gpsMs.TurnOff();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
             }));
@@ -245,18 +247,33 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             _gpsMs.TurnOff();
 
-            StopAllMusic();
-            _oooSource.Play();
+            StopAllMusic(true);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, 5f, (float t) => AudioHelper.FadeIn(_oooSource, 0f, _oooVolume, t));
 
             _startTime = Time.time;
         }
 
-        private void StopAllMusic()
+        private void StopAllMusic(bool force)
         {
-            _oooSource.Stop();
-            _whisperSource.Stop();
-            _darkSource.Stop();
-            _keybaordSource.Stop();
+            if (force)
+            {
+                _oooSource.Stop();
+                _whisperSource.Stop();
+                _darkSource.Stop();
+                _keybaordSource.Stop();
+            }
+            else
+            {
+                float os = _oooSource.volume;
+                float ws = _whisperSource.volume;
+                float ks = _keybaordSource.volume;
+                float ds = _darkSource.volume;
+
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, 5f, (float t) => AudioHelper.FadeOut(_oooSource, os, 0f, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, 5f, (float t) => AudioHelper.FadeOut(_whisperSource, ws, 0f, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, 5f, (float t) => AudioHelper.FadeOut(_keybaordSource, ks, 0f, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, 5f, (float t) => AudioHelper.FadeOut(_darkSource, ds, 0f, t));
+            }
         }
 
         public override void OnActStart()
@@ -293,7 +310,7 @@ namespace HTJ21
         {
             ClosePortals();
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
-            StopAllMusic();
+            StopAllMusic(false);
         }
 
         public void UpdateGps()

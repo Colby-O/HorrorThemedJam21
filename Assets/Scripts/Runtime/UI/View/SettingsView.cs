@@ -248,6 +248,10 @@ namespace HTJ21
                 _vsync.isOn = gameData.isVsyncOn;
                 _resolution.value = gameData.resolutionType;
 
+                _overall.value = gameData.overallVolume;
+                _music.value = gameData.musicVolume;
+                _sfx.value = gameData.soundVolume;
+
                 OnXInvertChanged(_invertX.isOn);
                 OnYInvertChanged(_invertY.isOn);
                 OnSensitivityChanged(_sensitivity.value);
@@ -256,6 +260,10 @@ namespace HTJ21
                 OnFullscreenChanged(_fullscreen.isOn);
                 OnVSyncChanged(_vsync.isOn);
                 ApplyVideoSettings();
+
+                OnOverallChanged(_overall.value);
+                OnMusicChanged(_music.value);
+                OnSfXChanged(_sfx.value);
 
                 return true;
             }

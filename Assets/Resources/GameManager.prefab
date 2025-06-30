@@ -150,7 +150,7 @@ MonoBehaviour:
   _filename: GameData
   _createNewGameIfNull: 0
   _useEncryption: 1
-  _currentProfileName: TheChildrenOfSelene
+  _currentProfileName: TheChildrenOfSelene6
 --- !u!1 &1522159168746762025
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,7 +896,8 @@ MonoBehaviour:
   _musicSource: {fileID: 195588065376856404}
   _ambientSource: {fileID: 4362962532019312449}
   _sfxMainSource: {fileID: 6612727545592042322}
-  _audioSources: []
+  _sfxSources: []
+  _musicSources: []
   _hasInitialized: 0
 --- !u!1 &7630338113596959618
 GameObject:

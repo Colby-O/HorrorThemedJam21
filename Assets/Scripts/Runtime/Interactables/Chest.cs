@@ -7,6 +7,11 @@ namespace HTJ21
         [SerializeField] private MeshRenderer[] _outlineMR;
         [SerializeField] private float _openAngle = -70;
         [SerializeField] private float _openSpeed = 2;
+
+        [SerializeField] private AudioSource _as;
+        [SerializeField] private AudioClip _openClip;
+        [SerializeField] private AudioClip _closeClip;
+
         
         private bool _hasOutline = false;
         private bool _open = false;
@@ -70,6 +75,10 @@ namespace HTJ21
         public bool Interact(Interactor interactor)
         {
             _open = !_open;
+
+            if (_open && _as && _openClip) _as.PlayOneShot(_openClip);
+            else if (!_open && _as && _closeClip) _as.PlayOneShot(_closeClip);
+
             return true;
         }
 

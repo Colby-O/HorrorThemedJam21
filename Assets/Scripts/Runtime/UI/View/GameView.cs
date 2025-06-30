@@ -58,13 +58,19 @@ namespace HTJ21
 
             _timeSinceWriteStart = 0f;
 
-            _as?.Play();
+            if (_as) _as.Play();
 
             target.text = string.Empty;
 
             for (int i = 0; i < msg.Length; i++)
             {
-                while (HTJ21GameManager.IsPaused) yield return null;
+                while (HTJ21GameManager.IsPaused)
+                {
+                    if (_as) _as.Stop();
+                    yield return null;
+                }
+
+                if (_as && !_as.isPlaying) _as.Play();
 
                 if (msg[i] == '<')
                 {
@@ -82,7 +88,7 @@ namespace HTJ21
                 yield return new WaitForSeconds(typeSpeed);
             }
 
-            _as?.Stop();
+            if (_as) _as.Stop();
 
             _showedMessage = true;
             yield return new WaitForSeconds(delay);
