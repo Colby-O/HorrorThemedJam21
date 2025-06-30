@@ -364,7 +364,9 @@ namespace HTJ21
                         if (minDst < viewDistSq) break;
                     }
                 }
-                component.go.SetActive(minDst < viewDistSq);
+
+                bool isActive = minDst < viewDistSq;
+                if (isActive != component.go.activeSelf) component.go.SetActive(isActive);
             }
 		}
 
