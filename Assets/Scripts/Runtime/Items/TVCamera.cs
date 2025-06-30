@@ -36,7 +36,11 @@ namespace HTJ21
         {
             _timer += Time.deltaTime;
 
-            if (_timer > _renderRate) Render();
+            if (_timer > _renderRate)
+            {
+                Render();
+                _timer = 0f;
+            }
         }
     }
 }
