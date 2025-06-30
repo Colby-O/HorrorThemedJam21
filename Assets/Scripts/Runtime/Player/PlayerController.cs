@@ -67,6 +67,9 @@ namespace HTJ21
 
         public float UncontrollableApproach = 0;
 
+        private float _smoothedXRot;
+        private float _smoothedYRot;
+
         public void LookAt(Transform t) => _lookAt = t;
 
         public void StopLookAt() => _lookAt = null;
@@ -186,9 +189,9 @@ namespace HTJ21
             _movementSpeed = Vector3.SmoothDamp(
                 _movementSpeed, 
                 new Vector3(
-                    rightSpeed * Time.deltaTime, 
+                    rightSpeed, // * Time.deltaTime, 
                     0,
-                    forwardSpeed * Time.deltaTime),
+                    forwardSpeed), // * Time.deltaTime),
                 ref _currentVel, 
                 _settings.MovementSmoothing
             );
@@ -196,25 +199,28 @@ namespace HTJ21
 
         private void ProcessLook()
         {
-            float xRot = _head.localEulerAngles.x;
-            float yRot = transform.localEulerAngles.y;
             if (!_lookAt)
             {
-                xRot -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y;
-                xRot = Mathf.Clamp(MathExt.Angle360To180(xRot), _settings.YLookLimit.x, _settings.YLookLimit.y);
-                yRot += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x;
+                _smoothedXRot -= (_settings.InvertLookY ? -1 : 1) * _settings.Sensitivity.y * _inputHandler.RawLook.y;
+                _smoothedXRot = Mathf.Clamp(_smoothedXRot, _settings.YLookLimit.x, _settings.YLookLimit.y);
+
+                _smoothedYRot += (_settings.InvertLookX ? -1 : 1) * _settings.Sensitivity.x * _inputHandler.RawLook.x;
             }
             else
             {
-                Vector3 dir = Vector3.Normalize(_lookAt.position - _head.position);
+                Vector3 dir = (_lookAt.position - _head.position).normalized;
                 float targetXRot = -MathExt.Angle360To180(Vector3.SignedAngle(dir.SetY(0), dir, Vector3.Cross(dir, Vector3.up)));
                 float targetYRot = MathExt.Angle360To180(Vector3.SignedAngle(Vector3.forward, dir.SetY(0), Vector3.up));
-                xRot = targetXRot;
-                yRot = targetYRot;
+
+                _smoothedXRot = Mathf.Lerp(_smoothedXRot, targetXRot, Time.deltaTime * _lookAtSpeed);
+                _smoothedYRot = Mathf.Lerp(_smoothedYRot, targetYRot, Time.deltaTime * _lookAtSpeed);
             }
-            
-            _head.localEulerAngles = _head.localEulerAngles.SetX(xRot);
-            transform.localEulerAngles = transform.localEulerAngles.SetY(yRot);
+
+            Quaternion headRotation = Quaternion.Euler(_smoothedXRot, 0f, 0f);
+            _head.localRotation = headRotation;
+
+            Quaternion playerRotation = Quaternion.Euler(0f, _smoothedYRot, 0f);
+            transform.localRotation = playerRotation;
         }
 
         private void ProcessGravity()
@@ -348,7 +354,7 @@ namespace HTJ21
                 _controller.center = _controller.center.SetY(_controller.height / 2);
             }
 
-            _controller.Move(transform.TransformDirection(_movementSpeed));
+            _controller.Move(transform.TransformDirection(_movementSpeed *  Time.deltaTime));
 
             if (!IsInCar() && _inputHandler.LightPressed()) ToggleLight();
         }
