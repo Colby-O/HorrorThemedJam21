@@ -46,6 +46,7 @@ namespace HTJ21
 
         private void Render()
         {
+            if (!_isEnabled || !IsVisible(_screen, _playerCamera)) return;
             _screen.enabled = false;
 
             Vector3 mirrorPosition = transform.position;
