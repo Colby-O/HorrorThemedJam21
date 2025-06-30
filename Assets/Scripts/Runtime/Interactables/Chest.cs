@@ -94,6 +94,7 @@ namespace HTJ21
         public void Restart()
         {
             _open = false;
+            if (!_pivot) _pivot = transform.parent;
             _pivot.localEulerAngles = _pivot.localEulerAngles.SetZ(0f);
         }
     }

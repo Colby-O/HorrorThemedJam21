@@ -32,6 +32,7 @@ namespace HTJ21
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
+        [SerializeField] private int _ignoreIndex = -1;
 
         private Vector3 _startPos;
         private Quaternion _startRot;
@@ -83,6 +84,7 @@ namespace HTJ21
             Material[] mats = _outlineMR.materials;
             for (int i = 0; i < mats.Length; i++)
             {
+                if (i == _ignoreIndex) continue;
                 mats[i].SetInt("Boolean_8BBF99CD", 0);
             }
             _outlineMR.materials = mats;
@@ -96,6 +98,7 @@ namespace HTJ21
             Material[] mats = _outlineMR.materials;
             for (int i = 0; i < mats.Length; i++)
             {
+                if (i == _ignoreIndex) continue;
                 mats[i].SetInt("Boolean_8BBF99CD", 1);
             }
             _outlineMR.materials = mats;

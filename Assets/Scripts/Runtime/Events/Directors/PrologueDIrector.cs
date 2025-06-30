@@ -56,6 +56,7 @@ namespace HTJ21
         [SerializeField] private Keypad _doorKeyPad;
         [SerializeField] private Door _bedroomDoor;
         [SerializeField] private Door _safeDoor;
+        [SerializeField] private GameObject _mainRoadway;
 
         [SerializeField] private AudioSource _audioSource;
 
@@ -227,6 +228,7 @@ namespace HTJ21
 
         private void OpenPortals()
         {
+            _mainRoadway.SetActive(true);
             _toAct1.Enable();
             _atAct1.Enable();
         }

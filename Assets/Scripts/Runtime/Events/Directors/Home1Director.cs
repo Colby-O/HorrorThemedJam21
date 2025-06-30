@@ -13,7 +13,6 @@ namespace HTJ21
         [SerializeField] private List<GameObject> _items;
 
         [Header("Fake Jumpscare")]
-        [SerializeField] private EventTrigger _fakeScareTrigger;
         [SerializeField] private float _lightOffDuration;
         [SerializeField] private AudioClip _tensionClip;
         
@@ -36,10 +35,26 @@ namespace HTJ21
         [Header("Shower")]
         [SerializeField] private Shower _showerController;
 
+        [Header("Moon")]
+        [SerializeField] private MeshRenderer _moon;
+        [SerializeField] private Vector3 _moonSize;
+
+        [Header("Music")]
+        [SerializeField] private AudioSource _musicSource;
+        [SerializeField] private float _musicVolume = 1f;
+        [SerializeField] private float _fadeTime = 5f;
+
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _startDialogue;
+        [SerializeField] private DialogueSO _endDialogue;
+
         [Header("Refereces")]
         [SerializeField] private EventTrigger _musicChangeTrigger;
         [SerializeField] private GameObject _jumpscare;
         [SerializeField] private Transform _startLoc;
+        [SerializeField] private ItemPickup _bathroomSupplies;
+        [SerializeField] private Door _bathroomDoor;
+        [SerializeField] private GameObject _tvScreen;
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -73,8 +88,6 @@ namespace HTJ21
         private void FakeScare()
         {
             HTJ21GameManager.HouseController.TurnOffAllLights();
-            HTJ21GameManager.HouseController.LockAllDoors();
-
             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                 this,
                 _lightOffDuration,
@@ -84,11 +97,14 @@ namespace HTJ21
                 },
                 () =>
                 {
-                    HTJ21GameManager.HouseController.UnlockDoors();
                     StartFlickering();
                     GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
                     GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_tensionClip, PlazmaGames.Audio.AudioType.Music, true, false);
                     _isClam = true;
+                    _musicChangeTrigger.gameObject.SetActive(true);
+                    _realScareTrigger.gameObject.SetActive(true);
+                    _showerController.Disable();
+                    //StopAllMusic(false);
                 }
             );
         }
@@ -148,28 +164,49 @@ namespace HTJ21
                         },
                         () =>
                         {
-                            HTJ21GameManager.Player.LookAt(_jumpscare.transform);
-                            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
-                            GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_jumpscareTrack, PlazmaGames.Audio.AudioType.Music, false, false);
-                            _jumpscare.gameObject.SetActive(true);
+                            Quaternion curRot = HTJ21GameManager.Player.transform.rotation;
+                            Vector3 targetDirection = _jumpscare.transform.position - HTJ21GameManager.Player.transform.position;
+                            Quaternion targetRot = Quaternion.LookRotation(targetDirection);
+
+                            HTJ21GameManager.Player.LockMovement = true;
+
                             GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
                                 this,
-                                _jumpscareTrack.length,
+                                0.1f,
                                 (float t) =>
                                 {
-                                    FlickerStep(t, ref isOn, ref step);
+                                    HTJ21GameManager.Player.transform.rotation = Quaternion.Lerp(curRot, targetRot, t);
                                 },
                                 () =>
                                 {
+                                    HTJ21GameManager.Player.LockMovement = false;
+                                    HTJ21GameManager.Player.LookAt(_jumpscare.transform);
                                     GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
-                                    HTJ21GameManager.Player.LockMoving = false;
-                                    HTJ21GameManager.Player.StopLookAt();
-                                    HTJ21GameManager.HouseController.TurnOnLights();
-                                    HTJ21GameManager.HouseController.UnlockDoors();
-                                    StopFlickering();
-                                    _showerController.Enable();
-                                    _jumpscare.gameObject.SetActive(false);
-                                    _musicChangeTrigger.gameObject.SetActive(false);
+                                    GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_jumpscareTrack, PlazmaGames.Audio.AudioType.Music, false, false);
+                                    _jumpscare.gameObject.SetActive(true);
+                                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                                        this,
+                                        _jumpscareTrack.length,
+                                        (float t) =>
+                                        {
+                                            FlickerStep(t, ref isOn, ref step);
+                                        },
+                                        () =>
+                                        {
+                                            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+                                            //GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, _musicVolume, t));
+                                            HTJ21GameManager.Player.LockMoving = false;
+                                            HTJ21GameManager.Player.StopLookAt();
+                                            HTJ21GameManager.HouseController.TurnOnLights();
+                                            HTJ21GameManager.HouseController.UnlockDoors();
+                                            StopFlickering();
+                                            _showerController.Enable();
+                                            _jumpscare.gameObject.SetActive(false);
+                                            _musicChangeTrigger.gameObject.SetActive(false);
+                                            _showerController.Enable();
+                                            if (_endDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_endDialogue);
+                                        }
+                                    );
                                 }
                             );
                         }
@@ -180,10 +217,12 @@ namespace HTJ21
 
         private void AddEvents()
         {
-            GameManager.AddEventListener<Events.Home1FakeScare>(Events.NewHome1FakeScare((from, data) =>
-            {
-                FakeScare();
-            }));
+            //GameManager.AddEventListener<Events.Home1FakeScare>(Events.NewHome1FakeScare((from, data) =>
+            //{
+            //    FakeScare();
+            //}));
+
+            _bathroomSupplies.OnPickupCallback.AddListener(FakeScare);
 
             GameManager.AddEventListener<Events.Home1RealScare>(Events.NewHome1RealScare((from, data) =>
             {
@@ -191,18 +230,12 @@ namespace HTJ21
             }));
             GameManager.AddEventListener<Events.Home1ToggleMusic>(Events.NewHome1ToggleMusic((from, data) =>
             {
-                if (_isClam)
-                {
-                    GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
-                    GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_buildUp1, PlazmaGames.Audio.AudioType.Music, false, false);
-                    _isClam = false;
-                }
-                else
-                {
-                    GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
-                    GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_tensionClip, PlazmaGames.Audio.AudioType.Music, false, false);
-                    _isClam = true;
-                }
+                GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+                GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_buildUp1, PlazmaGames.Audio.AudioType.Music, false, false);
+                _isClam = false;
+
+                _bathroomDoor.Close(false, true);
+                _bathroomDoor.Lock();
             }));
         }
 
@@ -214,7 +247,6 @@ namespace HTJ21
 
         private void TurnOffTriggers()
         {
-            _fakeScareTrigger.gameObject.SetActive(false);
             _realScareTrigger.gameObject.SetActive(false);
             _musicChangeTrigger.gameObject.SetActive(false);
             _jumpscare.SetActive(false);
@@ -247,12 +279,17 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
 
             _showerController.Restart();
+            _bathroomSupplies.Restart();
+
+            _bathroomDoor.Restart();
+            _bathroomDoor.Unlock();
 
             foreach (GameObject item in _items)
             {
                 RestartInteractablesRecursive(item);
             }
 
+            _showerController.Enable();
             _showerController.OnShowerFinish.AddListener(OnShowerFinished);
 
             if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
@@ -267,23 +304,46 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
+            if (_startDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_startDialogue);
+
             HTJ21GameManager.HouseController.UnlockDoors();
             HTJ21GameManager.HouseController.TurnOnLights();
 
-            _fakeScareTrigger.gameObject.SetActive(true);
-            _realScareTrigger.gameObject.SetActive(true);
-            _musicChangeTrigger.gameObject.SetActive(true);
+            _moon.gameObject.SetActive(true);
+            _moon.material.SetColor("_BaseColor", HTJ21GameManager.Preferences.MoonRedColor);
+            _moon.transform.localScale = _moonSize;
+
+            _realScareTrigger.gameObject.SetActive(false);
+            _musicChangeTrigger.gameObject.SetActive(false);
             _isFlickering = false;
 
-            _fakeScareTrigger.Restart();
+            _tvScreen.SetActive(true);
+
+            StopAllMusic(true);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, _musicVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
+
             _realScareTrigger.Restart();
             _musicChangeTrigger.Restart();
+        }
+
+        private void StopAllMusic(bool force)
+        {
+            if (force)
+            {
+                _musicSource.Stop();
+            }
+            else
+            {
+                float sv = _musicSource.volume;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+            }
         }
 
         public override void OnActInit()
         {
             TurnOffTriggers();
             AddEvents();
+            _tvScreen.SetActive(false);
         }
 
         public override void OnActStart()
@@ -316,6 +376,9 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+            StopAllMusic(false);
+            _tvScreen.SetActive(false);
+            _moon.gameObject.SetActive(false);
             TurnOffTriggers();
             HTJ21GameManager.HouseController.UnlockDoors();
             HTJ21GameManager.HouseController.TurnOnLights();

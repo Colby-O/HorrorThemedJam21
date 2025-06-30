@@ -7,7 +7,8 @@ namespace HTJ21
     public enum PickupableItem
     {
         FlashLight,
-        BathroomKey
+        BathroomKey,
+        BathroomSupplies
     }
 
     public class PickupManager : MonoBehaviour

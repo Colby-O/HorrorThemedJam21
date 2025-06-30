@@ -19,6 +19,12 @@ namespace HTJ21
         [SerializeField] private float _showerFadeoutDuration;
         [SerializeField, ReadOnly] private bool _isShowering = false;
 
+        [SerializeField] private bool _itemRequired = false;
+        [SerializeField] private PickupableItem _item;
+        [SerializeField] private DialogueSO _dialogueOnFailed;
+
+        [SerializeField] private Transform _showerStart;
+
         [Header("Audio")]
         [SerializeField] private AudioSource _as;
         [SerializeField] private AudioClip _showerClip;
@@ -91,6 +97,14 @@ namespace HTJ21
 
         private void SpookyShower(bool fadeToBlack = true)
         {
+            if (_itemRequired && !HTJ21GameManager.PickupManager.HasItem(_item))
+            {
+                if (_dialogueOnFailed) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogueOnFailed);
+                return;
+            }
+
+            HTJ21GameManager.Player.Teleport(_showerStart.position);
+
             if (_as) _as.Play();
 
             _isShowering = true;
@@ -139,6 +153,14 @@ namespace HTJ21
 
         public void StartShower(bool fadeToBlack = true)
         {
+            if (_itemRequired && !HTJ21GameManager.PickupManager.HasItem(_item))
+            {
+                if (_dialogueOnFailed) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogueOnFailed);
+                return;
+            }
+
+            HTJ21GameManager.Player.Teleport(_showerStart.position);
+
             if (_as) _as.Play();
 
             _isShowering = true;

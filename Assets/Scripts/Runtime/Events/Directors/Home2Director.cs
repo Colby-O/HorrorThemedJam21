@@ -75,6 +75,7 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.DropAll();
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomKey);
+            HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomSupplies);
 
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
             ClosePortals();

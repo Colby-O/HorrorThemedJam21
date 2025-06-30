@@ -43,7 +43,7 @@ namespace HTJ21
 
         public void Load(DialogueSO dialogueEvent)
         {
-            _dialogueEvents.Enqueue(dialogueEvent);
+            if (!_dialogueEvents.Contains(dialogueEvent) && _currentDialogueEvent != dialogueEvent) _dialogueEvents.Enqueue(dialogueEvent);
         }
 
         private void StartNextEvent()
