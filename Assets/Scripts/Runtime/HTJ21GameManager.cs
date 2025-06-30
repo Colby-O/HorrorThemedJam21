@@ -107,6 +107,7 @@ namespace HTJ21
 
         private void Awake()
         {
+            Application.runInBackground = true;
             UseCustomCursor();
         }
 
