@@ -27,6 +27,7 @@ namespace HTJ21
         [SerializeField] private Door _exitRoomDoor;
         [SerializeField] private Portal _toEpilogue;
         [SerializeField] private Portal _atEpilogue;
+        [SerializeField] private GameObject _terrian;
 
         [Header("Checkpoints")]
         [SerializeField] private List<Transform> _checkpoints;
@@ -105,6 +106,7 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.DropAll();
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomKey);
+            HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomSupplies);
 
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
             ClosePortals();
@@ -166,6 +168,7 @@ namespace HTJ21
                 _roadSection.SetActive(false);
                 _roomSection.SetActive(false);
                 _showcaseSection.SetActive(true);
+                _terrian.SetActive(true);
                 _exitRoomDoor.Close();
                 _exitRoomDoor.Lock();
                 OpenPortals();

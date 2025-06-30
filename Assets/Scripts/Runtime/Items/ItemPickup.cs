@@ -2,6 +2,7 @@ using PlazmaGames.Attribute;
 using PlazmaGames.Core;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HTJ21
 {
@@ -10,11 +11,13 @@ namespace HTJ21
         [SerializeField] private PickupableItem _type;
 
         [Header("Dialogue")]
-        [SerializeField] private DialogueSO _onInspectDialogue;
+        [SerializeField] private DialogueSO _onPickupDialogue;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
         [SerializeField, ReadOnly] private bool _hasOutline = false;
+
+        public UnityEvent OnPickupCallback = new UnityEvent();
 
         public void Restart()
         {
@@ -39,14 +42,22 @@ namespace HTJ21
 
         }
 
+        public string GetName()
+        {
+            if (_type == PickupableItem.FlashLight) return "FlashLight";
+            else if (_type == PickupableItem.BathroomKey) return "Bathroom Key";
+            else if (_type == PickupableItem.BathroomSupplies) return "Bathroom Supplies";
+            else return string.Empty;
+        }
+
         public string GetHint()
         {
-            return $"Click 'E' to Pickup {((_type == PickupableItem.FlashLight) ? "Flashlight" : "Bathroom Key")}";
+            return $"Click 'E' to Pickup {GetName()}";
         }
 
         public bool Interact(Interactor interactor)
         {
-            if (_onInspectDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onInspectDialogue);
+            if (_onPickupDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_onPickupDialogue);
 
             if (HTJ21GameManager.PickupManager)
             {
@@ -54,9 +65,9 @@ namespace HTJ21
                 if (_type == PickupableItem.FlashLight)
                 {
                     HTJ21GameManager.PlayerTutorial.ShowTutorial(0);
-                    //GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(HTJ21GameManager.Preferences.PickupFlashlightDialogue);
                 }
             }
+            OnPickupCallback?.Invoke();
             gameObject.SetActive(false);
             return true;
         }
