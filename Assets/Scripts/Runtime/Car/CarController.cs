@@ -470,5 +470,16 @@ namespace HTJ21
                 return false;
             }
         }
+
+        public void Teleport(Vector3 position, Quaternion rot)
+        {
+            transform.position = position;
+            transform.rotation = rot;
+        }
+
+        public void TurnOffLights()
+        {
+            transform.Find("Lights").gameObject.SetActive(false);
+        }
     }
 }
