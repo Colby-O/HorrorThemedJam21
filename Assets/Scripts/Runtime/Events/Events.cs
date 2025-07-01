@@ -44,6 +44,13 @@ namespace HTJ21
         public record Home1ToggleMusic();
         public static EventResponse NewHome1ToggleMusic(UnityAction<Component, Home1ToggleMusic> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Home1ToggleMusic));
 
+        // Act 2
+        public record Act2EnterBathroom();
+        public static EventResponse NewAct2EnterBathroom(UnityAction<Component, Act2EnterBathroom> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Act2EnterBathroom));
+        public record Act2EnterShower();
+        public static EventResponse NewAct2EnterShower(UnityAction<Component, Act2EnterShower> func) => new EventResponse((comp, data) => func.Invoke(comp, data as Act2EnterShower));
+
+
         // Epilogue Part 1
         public record VoidNextCheck();
         public static EventResponse NewVoidNextCheck(UnityAction<Component, VoidNextCheck> func) => new EventResponse((comp, data) => func.Invoke(comp, data as VoidNextCheck));

@@ -15564,7 +15564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7065869451119557884, guid: acd971df08fbbff41a8e3b2082edb756, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 52.724
+      value: 52.708
       objectReference: {fileID: 0}
     - target: {fileID: 7065869451119557884, guid: acd971df08fbbff41a8e3b2082edb756, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21614,7 +21614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597254366693377229, guid: 50a88cd68c614194daac4cccf2f24b6a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 52.68696
+      value: 52.643
       objectReference: {fileID: 0}
     - target: {fileID: 7597254366693377229, guid: 50a88cd68c614194daac4cccf2f24b6a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24675,11 +24675,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 50.381958
+      value: 50.3392
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 31.862488
+      value: 31.8018
       objectReference: {fileID: 0}
     - target: {fileID: 961612214528364346, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_LocalRotation.w
@@ -24712,6 +24712,13 @@ PrefabInstance:
     - target: {fileID: 1622681253897530214, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: m_Name
       value: Note
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
+      propertyPath: _text
+      value: "Thomas,\\n\\nYou forgot the passcode again, didn't you?\\n\\nDon\u2019t
+        worry, just remember the passcode is tied to each room in the following order.\\n\\n<b><align=center>Our
+        Bedroom -> Nathan's Bedroom\\n-> The Kitchen -> The Living Room.</align></b>\\n\\nYou\u2019ll
+        figure it out.\\n\\nLove Rebecca.  "
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

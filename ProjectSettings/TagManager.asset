@@ -20,6 +20,7 @@ TagManager:
   - SoccerBall
   - Hanging
   - MusicSource
+  - MoonFlash
   layers:
   - Default
   - TransparentFX
