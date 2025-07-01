@@ -101,6 +101,28 @@ namespace HTJ21
 
             _timeSinceRespawned = 0f;
             _justRespawned = true;
+
+            UpdateHiddenList();
+        }
+
+        void UpdateHiddenList()
+        {
+            _hiddenStates.Clear();
+
+            Collider[] hits = Physics.OverlapCapsule(
+                transform.position + _controller.center + Vector3.up * (_controller.height / 2 - _controller.radius),
+                transform.position + _controller.center - Vector3.up * (_controller.height / 2 - _controller.radius),
+                _controller.radius,
+                LayerMask.NameToLayer("Cover")
+            );
+
+            foreach (Collider hit in hits)
+            {
+                if (hit.TryGetComponent<Cover>(out Cover cover))
+                {
+                    SetHiddenState(cover.GetState());
+                }
+            }
         }
 
         public void EnterAt(Vector3 position)
@@ -249,7 +271,7 @@ namespace HTJ21
 
         public bool IsInCover()
         {
-            return _justRespawned || (_hiddenStates.Count > 0 && (_isCrouching || !_hiddenStates.Any(e => e.needToCrouch)));
+            return _justRespawned || (_hiddenStates.Count > 0 && (_isCrouching || _hiddenStates.Any(e => !e.needToCrouch)));
         }
 
         public void ResetHead()

@@ -21,14 +21,31 @@ namespace HTJ21
         [Header("Shower")]
         [SerializeField] private Shower _showerController;
 
+        [Header("End Sequence")]
+        [SerializeField] private float _tantedDuration;
+        [SerializeField] private int _tantedFlashes;
+        [SerializeField] private float _cleanseDuration;
+        [SerializeField] private int _cleanseFlashes;
+        [SerializeField] private GameObject _spookyBathroom;
+
         [Header("Music")]
+        [SerializeField] private AudioSource _endSource;
+        [SerializeField] private float _endVolume = 0.75f;
+        [SerializeField] private float _endFadeTime = 2f;
         [SerializeField] private AudioSource _musicSource;
         [SerializeField] private float _fadeTime;
+        [SerializeField] private AudioClip _spookyClip;
+
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _dialogueStart;
+        [SerializeField] private DialogueSO _diagloueEnd;
 
         [Header("References")]
         [SerializeField] private GameObject _tvObjects;
         [SerializeField] private MeshRenderer _tvScreen;
         [SerializeField] private TVCamera _tvCamera;
+        [SerializeField] private EventTrigger _enterBathroom;
+        [SerializeField] private EventTrigger _enterShower;
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -54,11 +71,15 @@ namespace HTJ21
             if (force)
             {
                 _musicSource.Stop();
+                _endSource.Stop();
             }
             else
             {
-                float sv = _musicSource.volume;
-                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                //float sv = _musicSource.volume;
+                //float ev = _endSource.volume;
+                //GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                _musicSource.Stop();
+                _endSource.Stop();
             }
         }
 
@@ -90,7 +111,7 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomSupplies);
 
             StopAllMusic(true);
-            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, 1f, t));
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, 1f * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume(), t));
 
             _showerController.Restart();
             _safe.Restart();
@@ -109,9 +130,17 @@ namespace HTJ21
             _tvCamera.SetScreen(_tvScreen);
 
             _showerController.OnShowerFinish.AddListener(OnShowerFinished);
+            _showerController.Disable();
+
+            _spookyBathroom.SetActive(false);
 
             if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
+
+            _enterBathroom.Restart();
+            _enterShower.Restart();
+            _enterShower.gameObject.SetActive(false);
+            _enterBathroom.gameObject.SetActive(false);
 
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
@@ -121,15 +150,80 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
+
+            if (_dialogueStart) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogueStart);
+        }
+
+        private void OnBathroomEntered()
+        {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _endFadeTime, (float t) => AudioHelper.FadeIn(_endSource, 0f, _endVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume(), t));
+            _bathroomDoor.Close(false, true);
+            _bathroomDoor.Lock();
+            _spookyBathroom.gameObject.SetActive(true);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                this,
+                _tantedDuration,
+                (float t) =>
+                {
+                    float val = Mathf.PingPong(t * _tantedFlashes, 1f);
+                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, (t < 0.5f) ? 0 : 1, null);
+                    else GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
+                },
+                () =>
+                {
+                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
+                }
+                
+            );
+        }
+
+        private void OnShowerEntered()
+        {
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(
+                this,
+                _cleanseDuration,
+                (float t) =>
+                {
+                    float val = Mathf.PingPong(t * _cleanseFlashes, 1f);
+                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, (t < 0.5f) ? 2 : 3, null);
+                    else GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
+                },
+                () =>
+                {
+                    float sv = _musicSource.volume;
+                    float ev = _endSource.volume;
+                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _endFadeTime, (float t) => AudioHelper.FadeOut(_endSource, ev, 0f, t));
+                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
+                    _showerController.Enable();
+                    if (_diagloueEnd) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_diagloueEnd);
+                }
+            );
         }
 
         private void AddEvents()
         {
+            GameManager.AddEventListener<Events.Act2EnterBathroom> (Events.NewAct2EnterBathroom((from, data) =>
+            {
+                OnBathroomEntered();
+            }));
 
+            GameManager.AddEventListener<Events.Act2EnterShower>(Events.NewAct2EnterShower((from, data) =>
+            {
+                OnShowerEntered();
+            }));
+
+            _bathroomDoor.OnOpen.AddListener(() =>
+            {
+                _enterShower.gameObject.SetActive(true);
+                _enterBathroom.gameObject.SetActive(true);
+            });
         }
 
         public override void OnActEnd()
         {
+            _enterShower.gameObject.SetActive(false);
+            _enterBathroom.gameObject.SetActive(false);
             StopAllMusic(false);
             _showerController.Restart();
             _tvObjects.SetActive(false);
@@ -140,6 +234,7 @@ namespace HTJ21
         public override void OnActInit()
         {
             AddEvents();
+            _tvObjects.SetActive(false);
         }
 
         public override void OnActStart()

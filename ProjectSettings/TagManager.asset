@@ -20,6 +20,7 @@ TagManager:
   - SoccerBall
   - Hanging
   - MusicSource
+  - MoonFlash
   layers:
   - Default
   - TransparentFX
@@ -39,7 +40,7 @@ TagManager:
   - InvisibleToMiror
   - OnlyInMirror
   - TV
-  - 
+  - Cover
   - 
   - 
   - 

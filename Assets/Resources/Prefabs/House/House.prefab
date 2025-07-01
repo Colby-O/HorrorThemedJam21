@@ -11260,6 +11260,7 @@ MonoBehaviour:
   _timeDisplay: {fileID: 6094485713546715725}
   _nightDayDisplay: {fileID: 5561398691234714919}
   _item: {fileID: 0}
+  _startHour: 15
   _lastMinute: 0
 --- !u!114 &3977945373786910685
 MonoBehaviour:
@@ -29349,6 +29350,7 @@ MonoBehaviour:
   _timeDisplay: {fileID: 9188038304708359872}
   _nightDayDisplay: {fileID: 4564666813855359508}
   _item: {fileID: 0}
+  _startHour: 15
   _lastMinute: 0
 --- !u!114 &7529342147761647299
 MonoBehaviour:
@@ -33951,7 +33953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[4].songName
-      value: His blood will cleanse
+      value: The Gates Will Open
       objectReference: {fileID: 0}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[0].audioClip
@@ -33964,11 +33966,11 @@ PrefabInstance:
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[2].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 7174dce281f2f384cbada8c82687844c, type: 3}
+      objectReference: {fileID: 8300000, guid: ead83683f54008f4d824fbbbdfd1a5c2, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[3].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 7174dce281f2f384cbada8c82687844c, type: 3}
+      objectReference: {fileID: 8300000, guid: 9b3ef992c6a4e0b4697d8160659aa89f, type: 3}
     - target: {fileID: 7512554988088199408, guid: 3810a62bc84994b42bca1c5d17801b8d, type: 3}
       propertyPath: _stationInput.Array.data[4].audioClip
       value: 

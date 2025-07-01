@@ -13,6 +13,8 @@ namespace HTJ21
         public void SetStaticLevel(float scale);
         public void SetChromicOffset(float level);
         public void SetScreenBend(float bend);
+        public void ShowMoon(float duration, int textId, UnityAction onFinish = null);
+        public void HideMoon();
         public void RestoreDefaults();
         void FadeToBlack(float time, System.Action then);
         public void TriggerBlink(float duration, float numBlinks, UnityAction onFinish = null, bool startFromOpen = true);

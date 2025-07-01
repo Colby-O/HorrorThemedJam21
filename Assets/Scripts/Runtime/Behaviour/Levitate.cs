@@ -13,6 +13,7 @@ namespace HTJ21
         [SerializeField] private bool _stopAtBase = false;
         [SerializeField] private bool _stopAtPeak = false;
 
+        public bool IsLevitating() => _levitating;
         public void StartLevitate() => _levitating = true;
         public void StopLevitate() => _levitating = false;
 

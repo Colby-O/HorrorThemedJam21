@@ -177,7 +177,7 @@ namespace HTJ21
                                 0.1f,
                                 (float t) =>
                                 {
-                                    HTJ21GameManager.Player.transform.rotation = Quaternion.Lerp(curRot, targetRot, t);
+                                    HTJ21GameManager.Player.transform.rotation = QuaternionExtension.Lerp(curRot, targetRot, t, true);
                                 },
                                 () =>
                                 {
@@ -219,11 +219,6 @@ namespace HTJ21
 
         private void AddEvents()
         {
-            //GameManager.AddEventListener<Events.Home1FakeScare>(Events.NewHome1FakeScare((from, data) =>
-            //{
-            //    FakeScare();
-            //}));
-
             _bathroomSupplies.OnPickupCallback.AddListener(FakeScare);
 
             GameManager.AddEventListener<Events.Home1RealScare>(Events.NewHome1RealScare((from, data) =>

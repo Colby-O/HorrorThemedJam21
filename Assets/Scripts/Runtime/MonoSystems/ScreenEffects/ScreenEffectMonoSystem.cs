@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using PlazmaGames.Attribute;
 using PlazmaGames.Core.Debugging;
 using PlazmaGames.Rendering.CRT;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -26,6 +29,15 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private UnityEngine.UI.Image _fadeToBlackImage;
 
+        [SerializeField, ReadOnly] private GameObject _moonScreen;
+        [SerializeField, ReadOnly] private TMP_Text[] _moonTexts;
+
+        // Moon scare properties 
+        private bool _moon = false;
+        private float _moonDuration;
+        private float _moonStartTime;
+        private UnityAction _onMoonFinished;
+
         // Blink parameters
         private bool _startFromOpen = true;
         private bool _blink = false;
@@ -34,6 +46,28 @@ namespace HTJ21
         private int _numBlinks;
         private UnityAction _blinkCallback;
 
+        public void ShowMoon(float duration, int textId, UnityAction onFinish = null)
+        {
+            _moonScreen.SetActive(true);
+            for (int i = 0; i < _moonTexts.Length; i++) 
+            {
+                if (i == textId) _moonTexts[i].gameObject.SetActive(true);
+                else _moonTexts[i].gameObject.SetActive(false);
+            }
+
+            _moon = true;
+            _moonDuration = duration;
+            _onMoonFinished = onFinish;
+            _moonStartTime = Time.time;
+        }
+
+        public void HideMoon()
+        {
+            _moonScreen.SetActive(false);
+            _moon = false;
+            _moonDuration = 0f;
+            _onMoonFinished = null;
+        }
 
         public void FadeToBlack(float time, System.Action then)
         {
@@ -108,6 +142,7 @@ namespace HTJ21
             SetChromicOffset(_defaultChromicOffset);
             SetScreenBend(_defaultScreenBend);
             ToggleRendererFeature("Blur", false);
+            if (_moonScreen) _moonScreen.SetActive(false);
             if (_fadeToBlackImage)
             {
                 _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(0);
@@ -130,6 +165,10 @@ namespace HTJ21
         {
             GameObject i = GameObject.FindWithTag("FadeToBlackScreen");
             _fadeToBlackImage = i.transform.GetComponent<UnityEngine.UI.Image>();
+
+            _moonScreen = GameObject.FindWithTag("MoonFlash");
+            _moonTexts = _moonScreen.GetComponentsInChildren<TMP_Text>();
+
             RestoreDefaults();
         }
 
@@ -160,6 +199,17 @@ namespace HTJ21
                     _blinkCallback?.Invoke();
                     _blinkCallback = null;
                     //SetScreenBend(_defaultScreenBend);
+                }
+            }
+            else if (_moon)
+            {
+                float t = (Time.time - _moonStartTime) / _moonDuration;
+                if (t >= 1)
+                {
+                    _moon = false;
+                    _onMoonFinished?.Invoke();
+                    _onMoonFinished = null;
+                    _moonScreen.SetActive(false);
                 }
             }
         }

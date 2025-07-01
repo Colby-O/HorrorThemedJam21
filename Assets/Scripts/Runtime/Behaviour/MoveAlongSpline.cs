@@ -20,6 +20,16 @@ namespace HTJ21
 
             return Quaternion.Slerp(from, to, t);
         }
+
+        public static Quaternion Lerp(Quaternion from, Quaternion to, float t, bool useShortestPath = true)
+        {
+            if (useShortestPath && Quaternion.Dot(from, to) < 0.0f)
+            {
+                to = new Quaternion(-to.x, -to.y, -to.z, -to.w);
+            }
+
+            return Quaternion.Lerp(from, to, t);
+        }
     }
 
     public class MoveAlongSpline : MonoBehaviour
