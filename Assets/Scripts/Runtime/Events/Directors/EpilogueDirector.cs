@@ -92,7 +92,16 @@ namespace HTJ21
         [SerializeField] private float _cultistsRunawaySpeed = 0.6f;
         private bool _playerMovingToCenter = false;
         [SerializeField] private float _playerApproachSpeed = 0.5f;
+        
+        private bool _saveChild = false;
+        [SerializeField] private float _saveChildFadeToBlackTime = 3.5f;
+        
+        private Dictionary<string, DialogueSO> _dialogues = new();
 
+        private void LoadDialogue(string name)
+        {
+            _dialogues.Add(name, Resources.Load<DialogueSO>($"Dialogue/Epilogue/{name}"));
+        }
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -109,6 +118,8 @@ namespace HTJ21
         
         public override void OnActInit()
         {
+            LoadDialogue("SaveChild");
+            
             _moonLevitate = _moon.GetComponent<Levitate>();
             _weather = GameManager.GetMonoSystem<IWeatherMonoSystem>();
             _moonMaterial = _moon.GetComponent<MeshRenderer>().material;
@@ -121,6 +132,13 @@ namespace HTJ21
             {
                 _startCinema = true;
                 HTJ21GameManager.Player.LockMovement = true;
+            }));
+            GameManager.AddEventListener<Events.GotoFinalCarScene>(Events.NewGotoFinalCarScene((from, data) =>
+            {
+                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(_saveChildFadeToBlackTime, () =>
+                {
+                    
+                });
             }));
             GameManager.AddEventListener<Events.RevealCult>(Events.NewRevealCult((from, data) =>
             {
@@ -236,12 +254,20 @@ namespace HTJ21
         {
             if (_playerMovingToCenter)
             {
-                if (Vector3.Distance(HTJ21GameManager.Player.transform.position, _ritualCenter.position) < 1.0f)
+                float dist = 1.0f;
+                if (_saveChild) dist = 3.0f;
+                if (Vector3.Distance(HTJ21GameManager.Player.transform.position, _ritualCenter.position) < dist)
                 {
                     _playerMovingToCenter = false;
                     HTJ21GameManager.Player.LookAt(_moon);
                     HTJ21GameManager.Player.UncontrollableApproach = 0;
                     HTJ21GameManager.Player.LockMovement = true;
+
+                    Debug.Log("AAAAAAAAAAAAAAAA");
+                    if (_saveChild)
+                    {
+                        GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["SaveChild"]);
+                    }
                 }
             }
             CultistsRunAway();
@@ -519,7 +545,11 @@ namespace HTJ21
 
         public void SaveChild()
         {
-            StartKillChild();
+            _saveChild = true;
+            _playerMovingToCenter = true;
+            HTJ21GameManager.Player.LookAt(_ritualCenter);
+            HTJ21GameManager.Player.UncontrollableApproach = _playerApproachSpeed;
+            HTJ21GameManager.Player.LockMovement = false;
         }
 
         public void SacrificeChild()
