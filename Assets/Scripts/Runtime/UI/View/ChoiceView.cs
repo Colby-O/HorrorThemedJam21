@@ -1,5 +1,6 @@
 using PlazmaGames.UI;
 using System.Collections.Generic;
+using PlazmaGames.Core;
 using TMPro;
 using UnityEngine;
 
@@ -15,12 +16,25 @@ namespace HTJ21
 
         private void Save()
         {
-
+            EpilogueDirector ed = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector() as EpilogueDirector;
+            if (ed)
+            {
+                ed.SaveChild();
+            }
+            
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            HTJ21GameManager.IsPaused = false;
         }
 
         private void Sacrifice()
         {
-
+            EpilogueDirector ed = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector() as EpilogueDirector;
+            if (ed)
+            {
+                ed.SacrificeChild();
+            }
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            HTJ21GameManager.IsPaused = false;
         }
 
         public override void Init()
