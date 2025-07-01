@@ -20,6 +20,16 @@ namespace HTJ21
         [SerializeField] private Door _exitDoor;
         [SerializeField] private SafePad _keypad;
 
+        [Header("Moon")]
+        [SerializeField] private MeshRenderer _moon;
+        [SerializeField] private Vector3 _moonSize;
+
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _startDialogue;
+
+        [Header("References")]
+        [SerializeField] private GameObject _act3Reference;
+
         private void RestartInteractablesRecursive(GameObject obj)
         {
             if (obj.TryGetComponent(out IInteractable interactable))
@@ -80,6 +90,10 @@ namespace HTJ21
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.AddListener(OnPortalEnter);
             ClosePortals();
 
+            _moon.gameObject.SetActive(true);
+            _moon.material.SetColor("_BaseColor", HTJ21GameManager.Preferences.MoonRedColor);
+            _moon.transform.localScale = _moonSize;
+
             _exitDoor.Restart();
             _exitDoor.OnOpen.AddListener(OpenPortals);
 
@@ -107,11 +121,16 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
+
+            if (_startDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_startDialogue);
         }
 
         private void AddEvents()
         {
-
+            _keypad.OnSolved.AddListener(() =>
+            {
+                _act3Reference.gameObject.SetActive(true);
+            });
         }
 
         public override void OnActInit()
@@ -134,6 +153,7 @@ namespace HTJ21
         public override void OnActEnd()
         {
             ClosePortals();
+            _moon.gameObject.SetActive(false);
             _showerController.Restart();
             _exitDoor.OnOpen.RemoveListener(OpenPortals);
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
