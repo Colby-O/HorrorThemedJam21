@@ -11861,7 +11861,7 @@ MonoBehaviour:
     night shift. There will be no relief or rest for you. The child does not sleep
     yet, why should you?\n\nPlease remember, there is no case backlog. Only one case
     matters right now. The Smith case. Have you forgotten?\n\nAdditionally, the locker
-    code has been changed to 6397. Use it when you are ready to remember.\n\nShe
+    code has been changed to 4327. Use it when you are ready to remember.\n\nShe
     has spoken.\n\nBest regards,\nKeller\nWashington State Patrol
   _playMoreThanOnce: 0
   _onInspectDialogue: {fileID: 0}
@@ -19085,7 +19085,7 @@ PrefabInstance:
     - target: {fileID: 2668409396888218851, guid: 7ecaf086c8eeab841b5ba002275c1b94, type: 3}
       propertyPath: _text
       value: <b>Passwords</b>\n\n\t<b>Internet:</b> im_sorry\n\n\t<b>Phone:</b> it_was_the_only_way\n\n\t<b>Stellar
-        Moives:</b> I_had_no_choice\n\n\t<b>Locker:</b>  6397\n\n\t<b>Personal Safe:</b>
+        Moives:</b> I_had_no_choice\n\n\t<b>Locker:</b>  4327\n\n\t<b>Personal Safe:</b>
         6666
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -24962,7 +24962,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

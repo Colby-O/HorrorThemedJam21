@@ -53,5 +53,11 @@ namespace HTJ21
         public static EventResponse NewRoomSectionFinished(UnityAction<Component, RoomSectionFinished> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RoomSectionFinished));
         public record RoomSectionFinished();
         public static EventResponse NewRoomSectionStart(UnityAction<Component, RoomSectionStart> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RoomSectionStart));
+        
+        public record RevealCult();
+        public static EventResponse NewRevealCult(UnityAction<Component, RevealCult> func) => new EventResponse((comp, data) => func.Invoke(comp, data as RevealCult));
+        
+        public record AtBloodTrail();
+        public static EventResponse NewAtBloodTrail(UnityAction<Component, AtBloodTrail> func) => new EventResponse((comp, data) => func.Invoke(comp, data as AtBloodTrail));
     }
 }

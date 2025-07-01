@@ -21,6 +21,15 @@ namespace HTJ21
         [Header("Shower")]
         [SerializeField] private Shower _showerController;
 
+        [Header("Music")]
+        [SerializeField] private AudioSource _musicSource;
+        [SerializeField] private float _fadeTime;
+
+        [Header("References")]
+        [SerializeField] private GameObject _tvObjects;
+        [SerializeField] private MeshRenderer _tvScreen;
+        [SerializeField] private TVCamera _tvCamera;
+
         private void RestartInteractablesRecursive(GameObject obj)
         {
             if (obj.TryGetComponent(out IInteractable interactable))
@@ -38,6 +47,19 @@ namespace HTJ21
         {
             _showerController.RestoreToDefaults();
             GameManager.GetMonoSystem<IDirectorMonoSystem>().NextAct();
+        }
+
+        private void StopAllMusic(bool force)
+        {
+            if (force)
+            {
+                _musicSource.Stop();
+            }
+            else
+            {
+                float sv = _musicSource.volume;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+            }
         }
 
         private void Setup()
@@ -67,6 +89,8 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomSupplies);
 
+            StopAllMusic(true);
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, 1f, t));
 
             _showerController.Restart();
             _safe.Restart();
@@ -80,6 +104,9 @@ namespace HTJ21
             {
                 RestartInteractablesRecursive(item);
             }
+
+            _tvObjects.SetActive(true);
+            _tvCamera.SetScreen(_tvScreen);
 
             _showerController.OnShowerFinish.AddListener(OnShowerFinished);
 
@@ -103,7 +130,10 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+            StopAllMusic(false);
             _showerController.Restart();
+            _tvObjects.SetActive(false);
+            _tvCamera.SetScreen(null);
             _showerController.OnShowerFinish.RemoveListener(OnShowerFinished);
         }
 

@@ -52,7 +52,7 @@ MonoBehaviour:
   _enablePerspective: 1
   _screen: {fileID: 4108330982221611396}
   _materialIndex: 1
-  _texSize: {x: 512, y: 512}
+  _texSize: {x: 128, y: 128}
   _isEnabled: 0
   _timeSinceLastRender: 0
   _tex: {fileID: 0}
