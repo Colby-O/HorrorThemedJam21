@@ -17,6 +17,7 @@ namespace HTJ21
         public void HideMoon();
         public void RestoreDefaults();
         void FadeToBlack(float time, System.Action then);
+        public void UnfadeToBlack(float time, System.Action then);
         public void TriggerBlink(float duration, float numBlinks, UnityAction onFinish = null, bool startFromOpen = true);
     }
 }

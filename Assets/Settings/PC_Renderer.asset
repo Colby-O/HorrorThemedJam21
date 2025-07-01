@@ -26,7 +26,7 @@ MonoBehaviour:
   _scanLineStrength: 0
   _noiseScale: 0.278
   _noiseSpeed: 0.199
-  _noiseFade: 0
+  _noiseFade: 1
   _chromaticOffset: 0
   _chromaticOffsetSpeed: 0.21
   _brightness: 0.5
