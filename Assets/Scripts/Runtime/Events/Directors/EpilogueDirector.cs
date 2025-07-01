@@ -468,7 +468,10 @@ namespace HTJ21
                 _currentSpline = -1;
                 _splineStartTime = 0;
 
-                if (splineFrom == 0) StartKillChild();
+                if (splineFrom == 0)
+                {
+                    GameManager.GetMonoSystem<IUIMonoSystem>().Show<ChoiceView>();
+                }
                 if (splineFrom == 1) KillChild();
                 if (splineFrom == 2) StartMoon();
             }
@@ -512,6 +515,16 @@ namespace HTJ21
 
         public override void OnActEnd()
         {
+        }
+
+        public void SaveChild()
+        {
+            StartKillChild();
+        }
+
+        public void SacrificeChild()
+        {
+            StartKillChild();
         }
     }
 }
