@@ -94,7 +94,8 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.TreeReroute1>(Events.NewTreeFall((from, data) =>
             {
-                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_whisperSource, 0f, _whisperVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
+                float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_whisperSource, 0f, _whisperVolume * volScale, t));
                 _gpsMs.MoveTarget(_gpsTargetReroute2.position);
             }));
 
@@ -106,9 +107,10 @@ namespace HTJ21
 
             GameManager.AddEventListener<Events.ArriveAtNeighborhood>(Events.NewArriveAtNeighborhood((from, data) =>
             {
+                float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeOut(_whisperSource, _whisperVolume, _whisperVolume * 0.5f, t));
-                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_keybaordSource, 0f, _keybaodVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
-                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_darkSource, 0f, _darkVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_keybaordSource, 0f, _keybaodVolume * volScale, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_darkSource, 0f, _darkVolume * volScale, t));
 
                 _gpsMs.TurnOff();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
@@ -251,7 +253,8 @@ namespace HTJ21
             _gpsMs.TurnOff();
 
             StopAllMusic(true);
-            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_oooSource, 0f, _oooVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_oooSource, 0f, _oooVolume * volScale, t));
 
             _startTime = Time.time;
         }

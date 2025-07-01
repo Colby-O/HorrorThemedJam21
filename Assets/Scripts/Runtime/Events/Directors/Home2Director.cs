@@ -20,6 +20,11 @@ namespace HTJ21
         [SerializeField] private Door _exitDoor;
         [SerializeField] private SafePad _keypad;
 
+        [Header("Music")]
+        [SerializeField] private float _fadeTime = 5f;
+        [SerializeField] private AudioSource _mainSource;
+        [SerializeField] private float _mainSourceVolume;
+
         [Header("Moon")]
         [SerializeField] private MeshRenderer _moon;
         [SerializeField] private Vector3 _moonSize;
@@ -29,6 +34,19 @@ namespace HTJ21
 
         [Header("References")]
         [SerializeField] private GameObject _act3Reference;
+
+        private void StopAllMusic(bool force)
+        {
+            if (force)
+            {
+                _mainSource.Stop();
+            }
+            else
+            {
+                float sv = _mainSource.volume;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_mainSource, sv, 0f, t));
+            }
+        }
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -122,6 +140,10 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
+            StopAllMusic(true);
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume(); 
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_mainSource, 0f, _mainSourceVolume * volScale, t));
+
             if (_startDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_startDialogue);
         }
 
@@ -153,6 +175,7 @@ namespace HTJ21
         public override void OnActEnd()
         {
             ClosePortals();
+            StopAllMusic(false);
             _moon.gameObject.SetActive(false);
             _showerController.Restart();
             _exitDoor.OnOpen.RemoveListener(OpenPortals);
