@@ -823,8 +823,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7586591, y: 0.0891763, z: 1.0947491}
-  m_Center: {x: -0.48490593, y: 0.09649515, z: 0.013990581}
+  m_Size: {x: 1, y: 0.11570987, z: 1}
+  m_Center: {x: -0.45, y: 0, z: 0}
 --- !u!82 &8346234892921039231
 AudioSource:
   m_ObjectHideFlags: 0

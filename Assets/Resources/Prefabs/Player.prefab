@@ -401,7 +401,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 59639
+    m_Bits: 321783
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -587,10 +587,10 @@ MonoBehaviour:
   _center: {fileID: 8754406593852094798}
   _renderer: {fileID: 2226427127054192961}
   _as: {fileID: 5311100903753150073}
-  _indoorsWalkClip: {fileID: 8300000, guid: 16ce3d80d89d2a04e818e305c2d28979, type: 3}
-  _indoorsPitch: 1.25
+  _indoorsWalkClip: {fileID: 8300000, guid: 30b32ce59de4a474c8d4713040ca0841, type: 3}
+  _indoorsPitch: 0.8
   _outdoorsPitch: 1
-  _outdoorsWalkClip: {fileID: 0}
+  _outdoorsWalkClip: {fileID: 8300000, guid: a6a610f3d8fdcf046980728a9417ce16, type: 3}
   _animator: {fileID: 5529044743190876499}
   _movementSpeed: {x: 0, y: 0, z: 0}
   _currentVel: {x: 0, y: 0, z: 0}
@@ -674,7 +674,8 @@ MonoBehaviour:
   _offset: {fileID: 7557379325610196590}
   _playerController: {fileID: 395365650849582277}
   _head: {fileID: 8557482328879248548}
-  _rotationSpeed: 70
+  _settings: {fileID: 11400000, guid: a609064a2cd2f4b47b73644f717d1c47, type: 2}
+  _rotationSpeed: 1
   _moveRate: 7
   _headMoveRate: 10000000
   _pickup: {fileID: 8300000, guid: bb170d06664087c42acad7bbd82bc1bb, type: 3}
@@ -735,7 +736,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0

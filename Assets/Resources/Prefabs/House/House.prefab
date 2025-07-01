@@ -1053,37 +1053,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1320420339764663138
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 507626382115240946}
-  m_Layer: 0
-  m_Name: Epilogue
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &507626382115240946
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1320420339764663138}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5036719595041781439}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1439822347874331566
 GameObject:
   m_ObjectHideFlags: 0
@@ -3424,7 +3393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4784667065081101747
 Transform:
   m_ObjectHideFlags: 0
@@ -7117,7 +7086,6 @@ Transform:
   - {fileID: 4784667065081101747}
   - {fileID: 7948047744588432586}
   - {fileID: 1897004894750128413}
-  - {fileID: 507626382115240946}
   m_Father: {fileID: 6682712031944892600}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7454177582131575156
@@ -7135,7 +7103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7948047744588432586
 Transform:
   m_ObjectHideFlags: 0
@@ -9037,8 +9005,6 @@ MonoBehaviour:
       Value: 0200000003000000
     - Key: {fileID: 2076571449723005}
       Value: 05000000
-    - Key: {fileID: 1320420339764663138}
-      Value: 0600000007000000
     keyCollision: 0
   _lights: []
   _doors: []
@@ -13420,6 +13386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 2
   _onPickupDialogue: {fileID: 0}
+  _pickupClip: {fileID: 8300000, guid: bb170d06664087c42acad7bbd82bc1bb, type: 3}
   _outlineMR: {fileID: 7296642284947146352}
   _hasOutline: 0
   OnPickupCallback:
@@ -29928,7 +29895,7 @@ MonoBehaviour:
   _timeDisplay: {fileID: 9188038304708359872}
   _nightDayDisplay: {fileID: 4564666813855359508}
   _item: {fileID: 0}
-  _startHour: 15
+  _startHour: 19
   _lastMinute: 0
 --- !u!114 &7529342147761647299
 MonoBehaviour:

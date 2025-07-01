@@ -300,6 +300,7 @@ namespace HTJ21
 
         private void Update()
         {
+            Debug.Log(_rig.inertiaTensor);
             if (!InCar() || HTJ21GameManager.IsPaused) return;
             ProcessLook();
             if (_inputHandler.InteractPressed()) ExitCar();
