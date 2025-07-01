@@ -5,14 +5,20 @@ using UnityEngine;
 
 namespace HTJ21
 {
+    [System.Serializable]
+    public struct CatWaypoint
+    {
+        public Transform transform;
+        public float maxJumpForce;
+    }
+
     public class CatController : MonoBehaviour
     {
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private Animator _anim;
 
-        [SerializeField] private List<Transform> _waypoints;
+        [SerializeField] private List<CatWaypoint> _waypoints;
         [SerializeField] private float _moveSpeed = 3f;
-        [SerializeField] private float _jumpForce = 7f;
         [SerializeField] private float _obstacleCheckDistance = 1f;
         [SerializeField] private float _surfaceCheckHeight = 2f;
         [SerializeField] private float _jumpThreshold = 1.5f;
@@ -22,6 +28,8 @@ namespace HTJ21
         [SerializeField] private float _maxWaitTime = 3f;
         [SerializeField] private float _stuckThreshold = 0.1f;
         [SerializeField] private float _stuckTimeLimit = 2f;
+        [SerializeField] private float _targetEplision = 0.1f;
+
 
         [SerializeField, ReadOnly] private int _currentWaypointIndex = 0;
         [SerializeField, ReadOnly] private bool _isJumping = false;
@@ -30,21 +38,37 @@ namespace HTJ21
 
         [SerializeField, ReadOnly] private Vector3 _lastPosition;
         [SerializeField, ReadOnly] private float _stuckTimer = 0f;
+        [SerializeField, ReadOnly] private float _waitTimer = 0f;
+        [SerializeField, ReadOnly] private float _waitTime = 0f;
 
-        void Start()
+        private void Awake()
         {
             if (!_rb) _rb = GetComponent<Rigidbody>();
-            StartCoroutine(WaitBeforeMoving());
+            _currentWaypointIndex = 0;
+            StartWaitBeforeMoving();
         }
 
-        void FixedUpdate()
+        private void Update()
+        {
+            if (_isWaiting)
+            {
+                _waitTimer += Time.deltaTime;
+                if (_waitTimer > _waitTime)
+                {
+                    _waitTimer = 0f;
+                    _isWaiting = false;
+                }
+            }
+        }
+
+        private void FixedUpdate()
         {
             _anim.SetBool("IsWalking", !_isWaiting && !_isJumping);
             _anim.SetBool("Jump", !_isWaiting && _isJumping);
 
             if (_waypoints.Count == 0 || _isJumping || _isWaiting) return;
 
-            Transform target = _waypoints[_currentWaypointIndex];
+            Transform target = _waypoints[_currentWaypointIndex].transform;
             Vector3 direction = (target.position - transform.position);
             Vector3 horizontalDirection = new Vector3(direction.x, 0, direction.z).normalized;
             float distanceToTarget = Vector3.Distance(transform.position, target.position);
@@ -93,10 +117,10 @@ namespace HTJ21
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
             }
 
-            if (direction.magnitude < 1f && !needsToJump)
+            if ((new Vector3(direction.x, 0f, direction.z)).magnitude < _targetEplision && !needsToJump)
             {
-                _currentWaypointIndex = Random.Range(0, _waypoints.Count);
-                StartCoroutine(WaitBeforeMoving());
+                _currentWaypointIndex = (_currentWaypointIndex + 1) % _waypoints.Count;
+                StartWaitBeforeMoving();
             }
 
             if ((transform.position - _lastPosition).magnitude < _stuckThreshold)
@@ -104,9 +128,9 @@ namespace HTJ21
                 _stuckTimer += Time.fixedDeltaTime;
                 if (_stuckTimer > _stuckTimeLimit)
                 {
-                    _currentWaypointIndex = Random.Range(0, _waypoints.Count);
+                    _currentWaypointIndex = (_currentWaypointIndex + 1) % _waypoints.Count;
                     _stuckTimer = 0f;
-                    StartCoroutine(WaitBeforeMoving());
+                    StartWaitBeforeMoving();
                     return;
                 }
             }
@@ -149,12 +173,11 @@ namespace HTJ21
             return avoidance;
         }
 
-        private IEnumerator WaitBeforeMoving()
+        private void StartWaitBeforeMoving()
         {
             _isWaiting = true;
-            float waitTime = Random.Range(_minWaitTime, _maxWaitTime);
-            yield return new WaitForSeconds(waitTime);
-            _isWaiting = false;
+            _waitTimer = 0f;
+            _waitTime = Random.Range(_minWaitTime, _maxWaitTime);
         }
 
         private void JumpTowards(Vector3 target)
@@ -171,7 +194,7 @@ namespace HTJ21
                 transform.rotation = Quaternion.Slerp(transform.rotation, jumpRot, 1f);
             }
 
-            _rb.AddForce(jumpDir.normalized * _jumpForce, ForceMode.VelocityChange);
+            _rb.AddForce(jumpDir.normalized * _waypoints[_currentWaypointIndex].maxJumpForce, ForceMode.VelocityChange);
             Invoke(nameof(EndJump), 1.0f);
         }
 
