@@ -18,7 +18,7 @@ namespace HTJ21
 
         [SerializeField] private TMP_Text _continueText;
 
-        [SerializeField] List<GameObject> _icons;
+        [SerializeField] private List<GameObject> _icons;
 
         [SerializeField] private MainMenuCameraController _cameraController;
 

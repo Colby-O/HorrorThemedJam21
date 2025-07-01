@@ -1,6 +1,7 @@
 using PlazmaGames.Attribute;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -19,6 +20,8 @@ namespace HTJ21
         private bool _isHovering = false;
 
         public GameObject Icon { get; set; }
+
+        public TMP_Text Text { get; set; }
 
         public bool IsDisabled { 
             get 
@@ -84,6 +87,7 @@ namespace HTJ21
             bc.normalColor = Color.white.SetA(1f);
             colors = bc;
             if (Icon) Icon.SetActive(true);
+            if (Text) Text.color = colors.normalColor;
         }
 
         public override void OnPointerExit(PointerEventData eventData)
@@ -94,6 +98,7 @@ namespace HTJ21
             bc.normalColor = Color.white.SetA(0f);
             colors = bc;
             if (Icon) Icon.SetActive(false);
+            if (Text) Text.color = colors.disabledColor;
         }
 
         protected override void OnDisable()
