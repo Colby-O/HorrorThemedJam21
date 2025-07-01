@@ -12,6 +12,7 @@ namespace HTJ21
         [SerializeField] private TMP_Text _nightDayDisplay;
 
         [SerializeField] private InspectableItem _item;
+        [SerializeField] private int _startHour = 15;
 
         [SerializeField, ReadOnly] private DateTime _date;
         [SerializeField, ReadOnly] private int _lastMinute = -1;
@@ -26,7 +27,7 @@ namespace HTJ21
 
         private void Awake()
         {
-            _date = new DateTime(2025, 07, 1, 15, 0, 0);
+            _date = new DateTime(2025, 07, 1, _startHour, 0, 0);
             _lastMinute = -1;
             _camera.enabled = false;
         }

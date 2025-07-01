@@ -69,9 +69,10 @@ namespace HTJ21
             }
             else
             {
-                float sv = _musicSource.volume;
-                float ev = _endSource.volume;
-                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                //float sv = _musicSource.volume;
+                //float ev = _endSource.volume;
+                //GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                _musicSource.Stop();
                 _endSource.Stop();
             }
         }
@@ -152,7 +153,7 @@ namespace HTJ21
                 (float t) =>
                 {
                     float val = Mathf.PingPong(t * _tantedFlashes, 1f);
-                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, 0, null);
+                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, (t < 0.5f) ? 0 : 1, null);
                     else GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
                 },
                 () =>
@@ -171,13 +172,15 @@ namespace HTJ21
                 (float t) =>
                 {
                     float val = Mathf.PingPong(t * _cleanseFlashes, 1f);
-                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, 1, null);
+                    if (val > 0.5f) GameManager.GetMonoSystem<IScreenEffectMonoSystem>().ShowMoon(0.1f, (t < 0.5f) ? 2 : 3, null);
                     else GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
                 },
                 () =>
                 {
+                    float sv = _musicSource.volume;
                     float ev = _endSource.volume;
                     GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _endFadeTime, (float t) => AudioHelper.FadeOut(_endSource, ev, 0f, t));
+                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
                     _showerController.Enable();
                 }
