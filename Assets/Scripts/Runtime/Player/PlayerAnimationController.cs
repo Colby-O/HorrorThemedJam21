@@ -43,6 +43,7 @@ namespace HTJ21
         [SerializeField] private Transform _wheelCenter;
         [SerializeField] private float _seatHeight = -1f;
         [SerializeField] private float _offsetInSeat = -0.2f;
+        [SerializeField] private float _feetOffset = 0;
 
         private Vector3 _leftFootStartPos, _rightFootStartPos;
         private Vector3 _leftHandStartPos, _rightHandStartPos;
@@ -67,6 +68,8 @@ namespace HTJ21
         private void SetFootPosition(Transform footTransform, Vector3 localTargetPos)
         {
             if (!footTransform) return;
+
+            if (_feetOffset != 0) localTargetPos = localTargetPos.SetZ(_feetOffset);
 
             Vector3 worldTarget = footTransform.parent.TransformPoint(localTargetPos);
 
@@ -141,25 +144,28 @@ namespace HTJ21
                 Crouch();
                 ReturnToIdle();
             }
-            else if (_state == PlayerAnimationState.Driving && _leftGrip && _rightGrip)
+            else if (_state == PlayerAnimationState.Driving)
             {
-                GripWheel(_lHand, _leftGrip, _wheelCenter);
-                GripWheel(_rHand, _rightGrip, _wheelCenter);
+                if (_leftGrip && _rightGrip)
+                {
+                    GripWheel(_lHand, _leftGrip, _wheelCenter);
+                    GripWheel(_rHand, _rightGrip, _wheelCenter);
 
-                Vector3 palmDirR = (_wheelCenter.position - _rHand.position).normalized; 
-                Vector3 forwardR = transform.forward; 
-                Vector3 upR = Vector3.Cross(palmDirR, forwardR); 
+                    Vector3 palmDirR = (_wheelCenter.position - _rHand.position).normalized;
+                    Vector3 forwardR = transform.forward;
+                    Vector3 upR = Vector3.Cross(palmDirR, forwardR);
 
-                Quaternion rightHandRot = Quaternion.LookRotation(forwardR, upR);
+                    Quaternion rightHandRot = Quaternion.LookRotation(forwardR, upR);
 
-                Vector3 palmDirL = (_wheelCenter.position - _lHand.position).normalized;
-                Vector3 forwardL = transform.forward; 
-                Vector3 upL = Vector3.Cross(palmDirL, forwardL); 
+                    Vector3 palmDirL = (_wheelCenter.position - _lHand.position).normalized;
+                    Vector3 forwardL = transform.forward;
+                    Vector3 upL = Vector3.Cross(palmDirL, forwardL);
 
-                Quaternion leftHandRot = Quaternion.LookRotation(forwardL, upL);
+                    Quaternion leftHandRot = Quaternion.LookRotation(forwardL, upL);
 
-                _lHand.rotation = leftHandRot;
-                _rHand.rotation = leftHandRot;
+                    _lHand.rotation = leftHandRot;
+                    _rHand.rotation = leftHandRot;
+                }
 
                 transform.localPosition = new Vector3(transform.localPosition.x, _seatHeight, _offsetInSeat);
 
