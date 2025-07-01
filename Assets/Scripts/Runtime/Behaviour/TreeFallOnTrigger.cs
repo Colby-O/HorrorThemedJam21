@@ -18,5 +18,9 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().SpawnLightingAt(transform.parent.position);
         }
 
+        public void Restart()
+        {
+            _triggered = false;
+        }
     }
 }

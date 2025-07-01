@@ -70,5 +70,7 @@ namespace HTJ21
         public static EventResponse NewCultCutscene(UnityAction<Component, CultCutscene> func) => new EventResponse((comp, data) => func.Invoke(comp, data as CultCutscene));
         public record GotoFinalCarScene();
         public static EventResponse NewGotoFinalCarScene(UnityAction<Component, GotoFinalCarScene> func) => new EventResponse((comp, data) => func.Invoke(comp, data as GotoFinalCarScene));
+        public record End();
+        public static EventResponse NewEnd(UnityAction<Component,End> func) => new EventResponse((comp, data) => func.Invoke(comp, data as End));
     }
 }
