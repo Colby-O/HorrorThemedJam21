@@ -111,7 +111,8 @@ namespace HTJ21
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.BathroomSupplies);
 
             StopAllMusic(true);
-            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, 1f * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume(), t));
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, 1f * volScale, t));
 
             _showerController.Restart();
             _safe.Restart();
@@ -156,7 +157,8 @@ namespace HTJ21
 
         private void OnBathroomEntered()
         {
-            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _endFadeTime, (float t) => AudioHelper.FadeIn(_endSource, 0f, _endVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume(), t));
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _endFadeTime, (float t) => AudioHelper.FadeIn(_endSource, 0f, _endVolume * volScale, t));
             _bathroomDoor.Close(false, true);
             _bathroomDoor.Lock();
             _spookyBathroom.gameObject.SetActive(true);
@@ -192,8 +194,8 @@ namespace HTJ21
                 {
                     float sv = _musicSource.volume;
                     float ev = _endSource.volume;
-                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _endFadeTime, (float t) => AudioHelper.FadeOut(_endSource, ev, 0f, t));
-                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
+                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _endFadeTime, (float t) => AudioHelper.FadeOut(_endSource, ev, 0f, t));
+                    GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
                     _showerController.Enable();
                     if (_diagloueEnd) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_diagloueEnd);

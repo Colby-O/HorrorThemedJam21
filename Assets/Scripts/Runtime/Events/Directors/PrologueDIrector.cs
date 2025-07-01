@@ -339,6 +339,8 @@ namespace HTJ21
 
             _cameraEndPos = HTJ21GameManager.Player.GetCamera().transform.position;
             _cameraEndRot = HTJ21GameManager.Player.GetCamera().transform.rotation;
+
+            _redMoonLight.gameObject.SetActive(false);
         }
 
         public override void OnActStart()
@@ -365,6 +367,7 @@ namespace HTJ21
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
             _moonLookTrigger.gameObject.SetActive(false);
             _moon.gameObject.SetActive(false);
+            _redMoonLight.gameObject.SetActive(false);
         }
     }
 }

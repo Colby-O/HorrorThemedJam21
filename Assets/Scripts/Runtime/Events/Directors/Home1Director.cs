@@ -318,7 +318,8 @@ namespace HTJ21
             _tvCamera.SetScreen(_tvScreen);
 
             StopAllMusic(true);
-            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, _musicVolume * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume(), t));
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_musicSource, 0f, _musicVolume * volScale, t));
 
             _realScareTrigger.Restart();
             _musicChangeTrigger.Restart();
