@@ -1154,7 +1154,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 27127
+    m_Bits: 322039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -1291,7 +1291,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 27127
+    m_Bits: 322039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 406ded53ad55f824cad1793e630456bd, type: 2}
   m_TargetDisplay: 0
@@ -4484,13 +4484,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7974228536228867792}
     m_Modifications:
+    - target: {fileID: 428021456134355803, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
+      propertyPath: m_TagString
+      value: GenerateNear
+      objectReference: {fileID: 0}
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_Name
       value: AtAct1
       objectReference: {fileID: 0}
     - target: {fileID: 2006196362458298157, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_TagString
-      value: GenerateNear
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 3454982221396344254, guid: 6319bc265ad82f04080e4de40a7d59ff, type: 3}
       propertyPath: m_LocalScale.x
@@ -4939,6 +4943,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 99214ca5e6982954e94fe30d8ab58477, type: 2}
+    - target: {fileID: 7237118379971719059, guid: 64381363f2b6ed841a2c39a3fe8d17d9, type: 3}
+      propertyPath: _pickupClip
+      value: 
+      objectReference: {fileID: 8300000, guid: bb170d06664087c42acad7bbd82bc1bb, type: 3}
     - target: {fileID: 7322782460621494733, guid: 64381363f2b6ed841a2c39a3fe8d17d9, type: 3}
       propertyPath: m_Name
       value: Flashlight

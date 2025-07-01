@@ -1,4 +1,5 @@
 using PlazmaGames.Attribute;
+using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,9 @@ namespace HTJ21
 
         [Header("Dialogue")]
         [SerializeField] private DialogueSO _onPickupDialogue;
+
+        [Header("Audio")]
+        [SerializeField] private AudioClip _pickupClip;
 
         [Header("Outline")]
         [SerializeField] private MeshRenderer _outlineMR;
@@ -67,6 +71,7 @@ namespace HTJ21
                     HTJ21GameManager.PlayerTutorial.ShowTutorial(0);
                 }
             }
+            if (_pickupClip) GameManager.GetMonoSystem<IAudioMonoSystem>().PlayAudio(_pickupClip, PlazmaGames.Audio.AudioType.Sfx, false, true);
             OnPickupCallback?.Invoke();
             gameObject.SetActive(false);
             return true;
