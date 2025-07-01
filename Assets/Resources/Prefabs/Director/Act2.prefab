@@ -45,7 +45,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 386c1f86c8328cb47b57a5a05e1332c6, type: 3}
   m_Resource: {fileID: 8300000, guid: 386c1f86c8328cb47b57a5a05e1332c6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -549,17 +549,21 @@ MonoBehaviour:
   _safe: {fileID: 0}
   _bathroomKey: {fileID: 0}
   _showerController: {fileID: 0}
-  _tantedDuration: 3
-  _tantedFlashes: 50
-  _cleanseDuration: 3
-  _cleanseFlashes: 50
+  _tantedDuration: 4
+  _tantedFlashes: 66
+  _cleanseDuration: 4
+  _cleanseFlashes: 66
   _spookyBathroom: {fileID: 0}
   _endSource: {fileID: 4818703261002097724}
-  _endVolume: 0.75
+  _endVolume: 1
   _endFadeTime: 2
   _musicSource: {fileID: 8048236559928512950}
   _fadeTime: 5
   _spookyClip: {fileID: 8300000, guid: 386c1f86c8328cb47b57a5a05e1332c6, type: 3}
+  _dialogueStart: {fileID: 11400000, guid: 75986f5e59795be4f987618251bd1f10, type: 2}
+  _diagloueEnd: {fileID: 11400000, guid: 082e3f77c8c1bd6408e427af5834dce8, type: 2}
   _tvObjects: {fileID: 0}
   _tvScreen: {fileID: 0}
   _tvCamera: {fileID: 0}
+  _enterBathroom: {fileID: 688466538025135777}
+  _enterShower: {fileID: 8398374412984019077}

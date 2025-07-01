@@ -36,10 +36,16 @@ namespace HTJ21
         [SerializeField] private float _fadeTime;
         [SerializeField] private AudioClip _spookyClip;
 
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _dialogueStart;
+        [SerializeField] private DialogueSO _diagloueEnd;
+
         [Header("References")]
         [SerializeField] private GameObject _tvObjects;
         [SerializeField] private MeshRenderer _tvScreen;
         [SerializeField] private TVCamera _tvCamera;
+        [SerializeField] private EventTrigger _enterBathroom;
+        [SerializeField] private EventTrigger _enterShower;
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -131,6 +137,11 @@ namespace HTJ21
             if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<GameView>()) GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
             HTJ21GameManager.IsPaused = false;
 
+            _enterBathroom.Restart();
+            _enterShower.Restart();
+            _enterShower.gameObject.SetActive(false);
+            _enterBathroom.gameObject.SetActive(false);
+
             GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().SkipLocation();
             GameManager.GetMonoSystem<IDialogueMonoSystem>().ResetDialogueAll();
@@ -139,6 +150,8 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
+
+            if (_dialogueStart) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogueStart);
         }
 
         private void OnBathroomEntered()
@@ -183,6 +196,7 @@ namespace HTJ21
                     GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_musicSource, sv, 0f, t));
                     GameManager.GetMonoSystem<IScreenEffectMonoSystem>().HideMoon();
                     _showerController.Enable();
+                    if (_diagloueEnd) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_diagloueEnd);
                 }
             );
         }
@@ -198,10 +212,18 @@ namespace HTJ21
             {
                 OnShowerEntered();
             }));
+
+            _bathroomDoor.OnOpen.AddListener(() =>
+            {
+                _enterShower.gameObject.SetActive(true);
+                _enterBathroom.gameObject.SetActive(true);
+            });
         }
 
         public override void OnActEnd()
         {
+            _enterShower.gameObject.SetActive(false);
+            _enterBathroom.gameObject.SetActive(false);
             StopAllMusic(false);
             _showerController.Restart();
             _tvObjects.SetActive(false);
@@ -212,6 +234,7 @@ namespace HTJ21
         public override void OnActInit()
         {
             AddEvents();
+            _tvObjects.SetActive(false);
         }
 
         public override void OnActStart()
