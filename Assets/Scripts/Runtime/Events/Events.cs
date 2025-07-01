@@ -59,5 +59,7 @@ namespace HTJ21
         
         public record AtBloodTrail();
         public static EventResponse NewAtBloodTrail(UnityAction<Component, AtBloodTrail> func) => new EventResponse((comp, data) => func.Invoke(comp, data as AtBloodTrail));
+        public record CultCutscene();
+        public static EventResponse NewCultCutscene(UnityAction<Component, CultCutscene> func) => new EventResponse((comp, data) => func.Invoke(comp, data as CultCutscene));
     }
 }

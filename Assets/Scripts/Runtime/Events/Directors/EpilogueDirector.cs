@@ -2,19 +2,26 @@ using System.Collections.Generic;
 using PlazmaGames.Animation;
 using PlazmaGames.Audio;
 using PlazmaGames.Core;
+using PlazmaGames.Core.Utils;
 using PlazmaGames.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
+using Time = UnityEngine.Time;
 
 namespace HTJ21
 {
     public class EpilogueDirector : Director
     {
+        private static readonly int MatBaseColorId = Shader.PropertyToID("_BaseColor");
+        
         [SerializeField] private List<GameObject> _items;
 
         [SerializeField] private Transform _playerStartLocation;
         [SerializeField] private Transform _carStartLocation;
+
+        [SerializeField] private Transform[] _cultists;
+        [SerializeField] private Transform[] _torches;
         
         [SerializeField] private MeshRenderer _cultCover;
         [SerializeField] private Transform _ritualCenter;
@@ -26,6 +33,7 @@ namespace HTJ21
         [SerializeField] private Transform _nathanHead;
         [SerializeField] private Transform _nathanRealHead;
         [SerializeField] private Vector3 _headChopForce = Vector3.right;
+        [SerializeField] private float _headWaitTime = 5;
         
         [SerializeField] private float _revealCultFadeTime = 2.0f;
 
@@ -45,7 +53,46 @@ namespace HTJ21
 
         private float _axerWalkStartTime = 0;
         private Vector3 _axeSwingerStartPos;
-        private Vector3 _nathanHeadStartPosition;
+        private float _headWaitStartTime = 0;
+        private bool _movingMoon = false;
+        private float _moveMoveStartTime = 0;
+        [SerializeField] private Transform _childBody;
+        [SerializeField] private Transform _childBodyPivot;
+        [SerializeField] private Transform _moon;
+        [SerializeField] private float _moonSizeScale = 1.8f;
+        [SerializeField] private float _moonApproachSpeed = 5;
+        [SerializeField] private float _moonLerpExp = 3;
+        [SerializeField] private Transform _moonTarget;
+        [SerializeField] private float _thunderLifespan = 1;
+        [SerializeField] private float _thunderInterval = 1.5f;
+        private Vector3 _moonStartPosition;
+        private Vector3 _moonStartScale;
+        private Material _moonMaterial;
+        private IWeatherMonoSystem _weather;
+        private bool _thundering = false;
+        private float _lastThunder = 0;
+
+        private bool _movingChild = false;
+
+        private bool _startCinema = false;
+
+        [SerializeField] private float _moonFadeBackTime = 5;
+
+        private float _moonFadeBackStartTime = 0;
+        private float _moveChopperBackStartTime = 0;
+        [SerializeField] private float _childRiseSpeed = 0.5f;
+        [SerializeField] private float _childRotateSpeed = 30;
+        private float _moveMoonBackStartTime = 0;
+        private bool _stageMoon = false;
+        private Levitate _moonLevitate;
+        private float _cultistsRunawayStartTime = 0;
+
+        [SerializeField] private Transform _cultRunawayDir;
+        [SerializeField] private float _cultistsRunawayTime = 4;
+        [SerializeField] private float _cultistsRunawaySpeed = 0.6f;
+        private bool _playerMovingToCenter = false;
+        [SerializeField] private float _playerApproachSpeed = 0.5f;
+
 
         private void RestartInteractablesRecursive(GameObject obj)
         {
@@ -62,11 +109,19 @@ namespace HTJ21
         
         public override void OnActInit()
         {
-            _nathanHeadStartPosition = _nathanRealHead.localPosition;
+            _moonLevitate = _moon.GetComponent<Levitate>();
+            _weather = GameManager.GetMonoSystem<IWeatherMonoSystem>();
+            _moonMaterial = _moon.GetComponent<MeshRenderer>().material;
             _axeSwinger.OnHalfFinish.AddListener(ChopOffHead);
+            _axeSwinger.OnFinish.AddListener(MoveCultChopperBack);
             _axeSwingerStartPos = _axeSwingerTemp.position;
             _startRitualCenter = _ritualCenter.position;
             _cineCamera.gameObject.SetActive(false);
+            GameManager.AddEventListener<Events.CultCutscene>(Events.NewCultCutscene((from, data) =>
+            {
+                _startCinema = true;
+                HTJ21GameManager.Player.LockMovement = true;
+            }));
             GameManager.AddEventListener<Events.RevealCult>(Events.NewRevealCult((from, data) =>
             {
                 _revealCultStartTime = Time.time;
@@ -77,16 +132,26 @@ namespace HTJ21
             }));
         }
 
+        private void MoveCultChopperBack()
+        {
+            _moveChopperBackStartTime = Time.time;
+            _axeSwinger.gameObject.SetActive(false);
+            _axeSwingerTemp.gameObject.SetActive(true);
+        }
+
         private void ChopOffHead()
         {
             _nathanHead.gameObject.SetActive(true);
             _nathanHead.GetComponent<Rigidbody>().AddForce(_headChopForce, ForceMode.Impulse);
-            _nathanRealHead.localPosition = _nathanRealHead.localPosition.AddY(-10);
+            _nathanRealHead.localScale = Vector3.zero;
+
+            _headWaitStartTime = Time.time;
         }
 
         public override void OnActStart()
         {
-            _nathanRealHead.localPosition = _nathanHeadStartPosition;
+            _moon.transform.localScale *= _moonSizeScale;
+            _moonMaterial.SetColor(MatBaseColorId, HTJ21GameManager.Preferences.MoonRedColor);
             _nathanHead.gameObject.SetActive(false);
             _cultCover.gameObject.SetActive(true);
             _cultCover.material.color = _cultCover.material.color.SetA(1);
@@ -148,7 +213,7 @@ namespace HTJ21
             BezierKnot k = _cineSplines[0][0];
             k.Position = _cineCamera.position;
             k.Rotation = _cineCamera.rotation;
-            _cineSplines[0][0] = k;
+            _cineSplines[0].SetKnot(0, k);
             _currentSpline = 0;
             _splineStartTime = Time.time;
         }
@@ -162,15 +227,50 @@ namespace HTJ21
             {
                 _revealCultStartTime = 0;
                 t = 1;
-                StartCinema();
             }
 
-            Debug.Log(t);
             _cultCover.material.color = _cultCover.material.color.SetA(1.0f - t);
         }
 
         public override void OnActUpdate()
         {
+            if (_playerMovingToCenter)
+            {
+                if (Vector3.Distance(HTJ21GameManager.Player.transform.position, _ritualCenter.position) < 1.0f)
+                {
+                    _playerMovingToCenter = false;
+                    HTJ21GameManager.Player.LookAt(_moon);
+                    HTJ21GameManager.Player.UncontrollableApproach = 0;
+                    HTJ21GameManager.Player.LockMovement = true;
+                }
+            }
+            CultistsRunAway();
+            if (_stageMoon && !_moonLevitate.IsLevitating())
+            {
+                _stageMoon = false;
+                StartMoveMoonBack();
+            }
+            MoveMoonBack();
+            MoveChild();
+            FadeMoon();
+            MoveChopperBack();
+            if (_startCinema)
+            {
+                _startCinema = false;
+                StartCinema();
+            }
+            if (_headWaitStartTime > 0 && Time.time - _headWaitStartTime >= _headWaitTime)
+            {
+                _headWaitStartTime = 0;
+                _currentSpline = 2;
+                BezierKnot k = _cineSplines[_currentSpline][0];
+                k.Position = _cineCamera.position;
+                k.Rotation = _cineCamera.rotation;
+                _cineSplines[_currentSpline][0] = k;
+                _splineStartTime = Time.time;
+            }
+
+            MoveMoon();
             FadeoutCultCover();
             CenterToChild();
             if (!_turnedOffCarLights && _atBloodTrail && !HTJ21GameManager.Player.IsInCar())
@@ -181,6 +281,133 @@ namespace HTJ21
 
             MoveSpline();
             AxerWalk();
+        }
+
+        private void CultistsRunAway()
+        {
+            if (_cultistsRunawayStartTime == 0) return;
+            
+            float t = (Time.time - _cultistsRunawayStartTime) / _cultistsRunawayTime;
+
+            if (t >= 1)
+            {
+                _cultistsRunawayStartTime = 0;
+                foreach (Transform c in _cultists)
+                {
+                    c.gameObject.SetActive(false);
+                }
+            }
+
+            foreach (Transform c in _cultists)
+            {
+                c.position += _cultRunawayDir.forward * (_cultistsRunawaySpeed * Time.deltaTime);
+                c.localEulerAngles = c.localEulerAngles.SetY(_cultRunawayDir.localEulerAngles.y);
+            }
+        }
+
+        private void MoveMoonBack()
+        {
+            if (_moveMoonBackStartTime == 0) return;
+            float t = (Time.time - _moveMoonBackStartTime) / _moonApproachSpeed;
+
+            if (t >= 1)
+            {
+                t = 1;
+                _moveMoonBackStartTime = 0;
+                _cultistsRunawayStartTime = Time.time;
+                _playerMovingToCenter = true;
+                HTJ21GameManager.Player.LookAt(_ritualCenter);
+                HTJ21GameManager.Player.UncontrollableApproach = _playerApproachSpeed;
+                HTJ21GameManager.Player.LockMovement = false;
+            }
+            
+            float expT = Mathf.Pow(t, _moonLerpExp);
+            _moon.transform.position = Vector3.Lerp(_moonTarget.position, _moonStartPosition, expT);
+            _moon.transform.localScale = Vector3.Lerp(_moonTarget.localScale, _moonStartScale, expT);
+        }
+
+        private void MoveChild()
+        {
+            if (!_movingChild) return;
+            _childBodyPivot.position = _childBodyPivot.position.AddY(Time.deltaTime * _childRiseSpeed);
+            _childBodyPivot.localEulerAngles = _childBodyPivot.localEulerAngles.AddY(Time.deltaTime * _childRotateSpeed);
+            if (Vector3.Distance(_childBodyPivot.position, _moon.position) < 0.25f)
+            {
+                _childBodyPivot.gameObject.SetActive(false);
+                _thundering = false;
+                _movingChild = false;
+
+                _moon.GetComponent<Levitate>().StopLevitatingAtNextBase();
+                _stageMoon = true;
+            }
+        }
+
+        private void StartMoveMoonBack()
+        {
+            _moon.Find("Light").gameObject.SetActive(false);
+            _moveMoonBackStartTime = Time.time;
+            foreach (Transform torch in _torches)
+            {
+                torch.Find("Light").gameObject.SetActive(true);
+                torch.Find("Particle System").gameObject.SetActive(true);
+                MeshRenderer mr = torch.Find("Model").GetComponent<MeshRenderer>();
+                mr.materials.ForEach(m => m.SetInt("Boolean_8BBF99CD", 0));
+            }
+        }
+
+        private void MoveChopperBack()
+        {
+            if (_moveChopperBackStartTime == 0) return;
+            float t = (Time.time - _moveChopperBackStartTime) / 1;
+            _axeSwingerTemp.transform.position = Vector3.Lerp(_axeSwingerEndPos.position, _axeSwingerStartPos, t);
+            
+            if (t >= 1)
+            {
+                t = 1;
+                _moveChopperBackStartTime = 0;
+            }
+        }
+
+        private void FadeMoon()
+        {
+            if (_moonFadeBackStartTime == 0) return;
+            float t = (Time.time - _moonFadeBackStartTime) / _moonFadeBackTime;
+            if (t >= 1)
+            {
+                t = 1;
+                _moonFadeBackStartTime = 0;
+                _movingChild = true;
+            }
+            _moonMaterial.SetColor(MatBaseColorId, Color.Lerp(HTJ21GameManager.Preferences.MoonRedColor, Color.white, t));
+        }
+
+        private void MoveMoon()
+        {
+            if (_thundering && Time.time - _lastThunder >= _thunderInterval)
+            {
+                _lastThunder = Time.time;
+                _weather.SpawnLightingAt(_ritualCenter.position);
+            }
+            
+            if (_movingMoon)
+            {
+                float t = (Time.time - _moveMoveStartTime) / _moonApproachSpeed;
+                float expT = 1 + Mathf.Pow(t - 1, _moonLerpExp);
+                _moon.transform.position = Vector3.Lerp(_moonStartPosition, _moonTarget.position, expT);
+                _moon.transform.localScale = Vector3.Lerp(_moonStartScale, _moonTarget.localScale, expT);
+
+                if (t >= 1)
+                {
+                    _movingMoon = false;
+                    _moon.GetComponent<Levitate>().StartLevitateFromPosition();
+                    _childBody.GetComponent<Levitate>().StopLevitatingAtNextBase();
+                    _thundering = true;
+                    ParticleSystem.MainModule m = _weather.GetThunderHitter().main;
+                    m.startLifetime = new ParticleSystem.MinMaxCurve(_thunderLifespan);
+
+                    _moonFadeBackStartTime = Time.time;
+                }
+            }
         }
 
         private void AxerWalk()
@@ -243,6 +470,25 @@ namespace HTJ21
 
                 if (splineFrom == 0) StartKillChild();
                 if (splineFrom == 1) KillChild();
+                if (splineFrom == 2) StartMoon();
+            }
+        }
+
+        private void StartMoon()
+        {
+            _childBody.GetComponent<Levitate>().StartLevitateFromPosition();
+            _moon.Find("Light").gameObject.SetActive(true);
+            _movingMoon = true;
+            _moonStartPosition = _moon.position;
+            _moonStartScale = _moon.localScale;
+            _moveMoveStartTime = Time.time;
+
+            foreach (Transform torch in _torches)
+            {
+                torch.Find("Light").gameObject.SetActive(false);
+                torch.Find("Particle System").gameObject.SetActive(false);
+                MeshRenderer mr = torch.Find("Model").GetComponent<MeshRenderer>();
+                mr.materials.ForEach(m => m.SetInt("Boolean_8BBF99CD", 1));
             }
         }
 
