@@ -94,7 +94,11 @@ namespace HTJ21
 
         private void Update()
         {
-            if (Keyboard.current.escapeKey.wasPressedThisFrame)
+            if (Keyboard.current.escapeKey.wasPressedThisFrame && !HTJ21GameManager.IsPaused && HTJ21GameManager.Inspector && HTJ21GameManager.Inspector.IsInspecting())
+            {
+                HTJ21GameManager.Inspector.EndInspect();
+            }
+            else if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame)
             {
                 if (
                     !GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<PausedView>() && 
@@ -108,7 +112,7 @@ namespace HTJ21
                 ) GameManager.GetMonoSystem<IUIMonoSystem>().GetView<PausedView>().Resume();
             }
 
-            if (Keyboard.current.backquoteKey.wasPressedThisFrame) 
+            if (Keyboard.current.backquoteKey.wasPressedThisFrame && Keyboard.current.shiftKey.wasPressedThisFrame) 
             {
                 if (!GameManager.GetMonoSystem<IUIMonoSystem>().GetCurrentViewIs<DeveloperConsoleView>())
                 {

@@ -24,6 +24,10 @@ namespace HTJ21
 
         public void GoToPlayer()
         {
+            GameManager.GetMonoSystem<IUIMonoSystem>().Show<GameView>();
+            GameManager.GetMonoSystem<IVisibilityMonoSystem>().Load(Act.Prologue);
+            GameManager.GetMonoSystem<IAudioMonoSystem>().StopAudio(PlazmaGames.Audio.AudioType.Music);
+
             Vector3 startPos = transform.position;
             Quaternion startRot = transform.rotation;
 

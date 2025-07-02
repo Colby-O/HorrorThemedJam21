@@ -114,6 +114,8 @@ namespace HTJ21
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_keybaordSource, 0f, _keybaodVolume * volScale, t));
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_darkSource, 0f, _darkVolume * volScale, t));
 
+                HTJ21GameManager.CarTutorial.ShowTutorial(1);
+
                 _gpsMs.TurnOff();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
             }));

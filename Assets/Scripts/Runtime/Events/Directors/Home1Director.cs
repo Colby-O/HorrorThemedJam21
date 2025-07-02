@@ -272,6 +272,11 @@ namespace HTJ21
 
             HTJ21GameManager.Inspector.EndInspect();
 
+            if (!HTJ21GameManager.PickupManager.HasItem(PickupableItem.FlashLight))
+            {
+                HTJ21GameManager.PlayerTutorial.ShowTutorial(0);
+            }
+
             HTJ21GameManager.PickupManager.DropAll();
             HTJ21GameManager.PickupManager.Pickup(PickupableItem.FlashLight);
 
