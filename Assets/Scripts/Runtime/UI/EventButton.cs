@@ -39,11 +39,13 @@ namespace HTJ21
                 {
                     cb.highlightedColor = Color.white.SetA(1) * colors.disabledColor;
                     cb.normalColor = Color.white.SetA(1) * colors.disabledColor;
+                    if (Text) Text.color = cb.normalColor;
                 }
                 else
                 {
                     cb.highlightedColor = Color.white.SetA(1);
                     cb.normalColor = Color.white.SetA(0);
+                    if (Text) Text.color = cb.disabledColor;
                 }
 
                 colors = cb;

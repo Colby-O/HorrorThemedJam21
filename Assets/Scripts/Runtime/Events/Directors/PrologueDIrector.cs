@@ -313,7 +313,7 @@ namespace HTJ21
         private void IntroMonologue()
         {
             GameManager.GetMonoSystem<IUIMonoSystem>().GetView<GameView>().ShowLocation(
-                $"Officer's Graves House\nSnoqualmie, Washington\nJune 30th 2025\n{_clock.GetTime()}",
+                $"Officer Graves House\nSnoqualmie, Washington\nJune 30th 2025\n{_clock.GetTime()}",
                 () =>
                 {
                     if (_introDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_introDialogue);

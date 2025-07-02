@@ -4,6 +4,7 @@ using PlazmaGames.Audio;
 using PlazmaGames.Core;
 using PlazmaGames.Core.Utils;
 using PlazmaGames.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Splines;
@@ -21,6 +22,8 @@ namespace HTJ21
         [SerializeField] private Transform _carStartLocation;
 
         [SerializeField] private Transform[] _cultists;
+        [SerializeField] private Vector3[] _cultistsStartPos;
+        [SerializeField] private Quaternion[] _cultistsStartRot;
         [SerializeField] private Transform[] _torches;
         
         [SerializeField] private MeshRenderer _cultCover;
@@ -39,7 +42,11 @@ namespace HTJ21
 
         [SerializeField] private List<float> _splineSpeeds = new();
         [SerializeField] private Transform _cineCamera;
+        [SerializeField] private Camera _cineCameraCam;
         [SerializeField] private SplineContainer _cineSplines;
+
+        private Vector3 _childBodyStartPosition;
+        private Quaternion _childBodyStartRotation;
         
         private float _revealCultStartTime = 0;
 
@@ -96,7 +103,40 @@ namespace HTJ21
         private bool _saveChild = false;
         [SerializeField] private float _saveChildFadeToBlackTime = 3.5f;
         
+        [SerializeField] private Transform _endCar;
+        [SerializeField] private Transform _endCarHeadPosition;
+        [SerializeField] private float _endCarMoveDuration = 10.0f;
+        [SerializeField] private SplineContainer _endCarSpline;
+        [SerializeField] private float _endCarRightOffset = 1.5f;
+        [SerializeField] private Light _sunLight;
+        private float _moveEndCarStartTime = 0;
+        
         private Dictionary<string, DialogueSO> _dialogues = new();
+        [SerializeField] private Transform _moon2;
+        [SerializeField] private float _moonAttackTime = 22;
+        [SerializeField] private float _childLookTime = 8;
+        [SerializeField] private float _childLookDuration = 5;
+        private float _childLookStartTime = 0;
+        private float _doChildLookStartTime = 0;
+        [SerializeField] private float _headTurnRatioSpeed = 3;
+        [SerializeField] private float _moonMoveUpTime = 1.25f;
+        [SerializeField] private Transform _moon2Target;
+        private Vector3 _moon2StartPos;
+        private bool _moonGrowing = false;
+        private float _moonGrowingStartTime = 0;
+        [SerializeField] private float _moonScaleSpeed = 0.2f;
+        [SerializeField] private float _fullStartTime = 5;
+        [SerializeField] private float _maxStatic = 1;
+        [SerializeField] private Color _skyColor = new Color(0.6f,0.6f, 1.0f);
+        [SerializeField] private Color _redSkyColor = new Color(0.7f, 0.4f, 0.4f);
+        [SerializeField] private float _finalFadeToBlackTime = 4;
+        [SerializeField] private Transform[] _tress;
+        private Vector3 _nhStartPos;
+        private Vector3 _realMoonStartScale;
+        private Quaternion _nhStartRot;
+        private bool _loop = false;
+        [SerializeField] private Transform _loopPosition;
+        private Vector3 _moon2StartScale;
 
         private void LoadDialogue(string name)
         {
@@ -118,8 +158,22 @@ namespace HTJ21
         
         public override void OnActInit()
         {
+            _cultistsStartRot = new Quaternion[_cultists.Length];
+            _cultistsStartPos = new Vector3[_cultists.Length];
+            for (int i = 0; i < _cultists.Length; i++) _cultistsStartRot[i] = _cultists[i].rotation;
+            for (int i = 0; i < _cultists.Length; i++) _cultistsStartPos[i] = _cultists[i].position;
+            _childBodyStartPosition = _childBodyPivot.position;
+            _childBodyStartRotation = _childBodyPivot.rotation;
+            _nhStartPos = _nathanHead.position;
+            _nhStartRot = _nathanHead.rotation;
+            _cineCameraCam = _cineCamera.GetComponent<Camera>();
+            _moon2StartPos = _moon2.position;
+            _moon2StartScale = _moon2.localScale;
+            _realMoonStartScale = _moon.localScale;
             LoadDialogue("SaveChild");
+            LoadDialogue("End");
             
+            _moon2.GetComponent<MeshRenderer>().material.SetColor(MatBaseColorId, HTJ21GameManager.Preferences.MoonRedColor);
             _moonLevitate = _moon.GetComponent<Levitate>();
             _weather = GameManager.GetMonoSystem<IWeatherMonoSystem>();
             _moonMaterial = _moon.GetComponent<MeshRenderer>().material;
@@ -133,16 +187,40 @@ namespace HTJ21
                 _startCinema = true;
                 HTJ21GameManager.Player.LockMovement = true;
             }));
+            GameManager.AddEventListener<Events.End>(Events.NewEnd((from, data) =>
+            {
+                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(_finalFadeToBlackTime, () =>
+                {
+                    Screen.fullScreen = false;
+                    Application.Quit();
+                });
+            }));
             GameManager.AddEventListener<Events.GotoFinalCarScene>(Events.NewGotoFinalCarScene((from, data) =>
             {
                 GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(_saveChildFadeToBlackTime, () =>
                 {
-                    
+                    _endCar.gameObject.SetActive(true);
+                    _cineCamera.parent = _endCarHeadPosition;
+                    _cineCamera.localPosition = Vector3.zero;
+                    _cineCamera.localRotation = Quaternion.identity;
+
+                    _moveEndCarStartTime = Time.time;
+                    _sunLight.gameObject.SetActive(true);
+                    _moon.gameObject.SetActive(false);
+                    _moon2.gameObject.SetActive(true);
+
+                    _cineCamera.GetComponent<Camera>().backgroundColor = _skyColor;
+
+                    _childLookStartTime = Time.time;
+                    GameManager.GetMonoSystem<IScreenEffectMonoSystem>().UnfadeToBlack(_saveChildFadeToBlackTime, () =>
+                    {
+                        
+                    });
                 });
             }));
             GameManager.AddEventListener<Events.RevealCult>(Events.NewRevealCult((from, data) =>
             {
-                _revealCultStartTime = Time.time;
+                if (!_loop) _revealCultStartTime = Time.time;
             }));
             GameManager.AddEventListener<Events.AtBloodTrail>(Events.NewAtBloodTrail((from, data) =>
             {
@@ -168,6 +246,27 @@ namespace HTJ21
 
         public override void OnActStart()
         {
+            _saveChild = false;
+            _moon.gameObject.SetActive(true);
+            _moon2.position = _moon2StartPos;
+            _moon2.localScale = _moon2StartScale;
+            _cineCameraCam.backgroundColor = Color.black;
+            _sunLight.gameObject.SetActive(false);
+            for (int i = 0; i < _cultists.Length; i++) _cultists[i].rotation = _cultistsStartRot[i];
+            for (int i = 0; i < _cultists.Length; i++) _cultists[i].position = _cultistsStartPos[i];
+            for (int i = 0; i < _cultists.Length; i++) _cultists[i].gameObject.SetActive(true);
+            _childBodyPivot.gameObject.SetActive(true);
+            _childBodyPivot.position = _childBodyStartPosition;
+            _childBodyPivot.rotation = _childBodyStartRotation;
+            _moon.localScale = _realMoonStartScale;
+            _nathanHead.gameObject.SetActive(false);
+            _nathanHead.position = _nhStartPos;
+            _nathanHead.rotation = _nhStartRot;
+            _nathanHead.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            _nathanRealHead.localScale = Vector3.one;
+            _tress.ForEach(t => t.localEulerAngles = t.localEulerAngles.SetZ(0));
+            transform.parent.GetComponentsInChildren<EventTrigger>().ForEach(e => e.Restart());
+            transform.parent.GetComponentsInChildren<TreeFallOnTrigger>().ForEach(e => e.Restart());
             _moon.transform.localScale *= _moonSizeScale;
             _moonMaterial.SetColor(MatBaseColorId, HTJ21GameManager.Preferences.MoonRedColor);
             _nathanHead.gameObject.SetActive(false);
@@ -220,6 +319,15 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableRain();
             GameManager.GetMonoSystem<IWeatherMonoSystem>().EnableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
+            
+            HTJ21GameManager.Player.GetCamera().gameObject.SetActive(true);
+
+            if (_loop)
+            {
+                _revealCultStartTime = Time.time;
+                HTJ21GameManager.Player.Teleport(_loopPosition.position);
+                HTJ21GameManager.Player.transform.localEulerAngles = HTJ21GameManager.Player.transform.localEulerAngles.SetY(_loopPosition.localEulerAngles.y);
+            }
         }
 
         private void StartCinema()
@@ -252,6 +360,9 @@ namespace HTJ21
 
         public override void OnActUpdate()
         {
+            MoonGrow();
+            MoonMoveUp();
+            MoveEndCar();
             if (_playerMovingToCenter)
             {
                 float dist = 1.0f;
@@ -263,10 +374,13 @@ namespace HTJ21
                     HTJ21GameManager.Player.UncontrollableApproach = 0;
                     HTJ21GameManager.Player.LockMovement = true;
 
-                    Debug.Log("AAAAAAAAAAAAAAAA");
                     if (_saveChild)
                     {
                         GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["SaveChild"]);
+                    }
+                    else
+                    {
+                        GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["End"]);
                     }
                 }
             }
@@ -276,6 +390,8 @@ namespace HTJ21
                 _stageMoon = false;
                 StartMoveMoonBack();
             }
+            DoChildLook();
+            ChildLook();
             MoveMoonBack();
             MoveChild();
             FadeMoon();
@@ -309,6 +425,107 @@ namespace HTJ21
             AxerWalk();
         }
 
+        private void MoonGrow()
+        {
+            if (!_moonGrowing) return;
+
+            _moon2.localScale += Vector3.one * (Time.deltaTime * _moonScaleSpeed);
+            float t = (Time.time - _moonGrowingStartTime) / _fullStartTime;
+            if (t >= 1)
+            {
+                t = 1;
+                _moonGrowing = false;
+                GameManager.GetMonoSystem<IScreenEffectMonoSystem>().FadeToBlack(_finalFadeToBlackTime, () =>
+                {
+                    _loop = true;
+                    GameManager.GetMonoSystem<IDirectorMonoSystem>().StartAct(Act.Epilogue);
+                });
+                
+            }
+            
+            GameManager.GetMonoSystem<IScreenEffectMonoSystem>().SetStaticLevel(t * _maxStatic);
+            _cineCameraCam.backgroundColor = Color.Lerp(_skyColor, _redSkyColor, t);
+
+        }
+
+        private void MoonMoveUp()
+        {
+            if (_moveEndCarStartTime == 0) return;
+            float t = (Time.time - _moveEndCarStartTime) / _endCarMoveDuration;
+            if (t >= 1.0f)
+            {
+                t = 1.0f;
+                _moonGrowing = true;
+                _moonGrowingStartTime = Time.time;
+            }
+
+            _moon2.position = Vector3.Lerp(_moon2StartPos, _moon2Target.position, t);
+        }
+
+        private void DoChildLook()
+        {
+            if (_doChildLookStartTime == 0) return;
+            
+            float t = (Time.time - _doChildLookStartTime) / _childLookDuration;
+            if (t >= 1.0f)
+            {
+                t = 1.0f;
+                _doChildLookStartTime = 0;
+            }
+
+            if (t < _headTurnRatioSpeed)
+            {
+                float lt = t / _headTurnRatioSpeed;
+                _cineCamera.localEulerAngles = _cineCamera.localEulerAngles.SetY(Mathf.Lerp(0, 65, lt));
+            }
+
+            if (t + _headTurnRatioSpeed >= 1.0f)
+            {
+                float lt = (t - (1.0f - _headTurnRatioSpeed)) / _headTurnRatioSpeed;
+                _cineCamera.localEulerAngles = _cineCamera.localEulerAngles.SetY(Mathf.Lerp(65, 0, lt));
+            }
+
+
+            if (t >= 1.0f)
+            {
+                
+            }
+        }
+        
+        private void ChildLook()
+        {
+            if (_childLookStartTime == 0) return;
+            
+            float t = (Time.time - _childLookStartTime) / _childLookTime;
+            if (t >= 1.0f)
+            {
+                t = 1.0f;
+                _childLookStartTime = 0;
+                _doChildLookStartTime = Time.time;
+            }
+        }
+
+
+        private void MoveEndCar()
+        {
+            if (_moveEndCarStartTime == 0) return;
+            float t = (Time.time - _moveEndCarStartTime) / _endCarMoveDuration;
+            if (t >= 1.0f) t = 1.0f;
+
+            Unity.Mathematics.float3 position, tangent, up;
+            if (_endCarSpline.Evaluate(0, t, out position, out tangent, out up))
+            {
+                Vector3 right = Vector3.Cross(tangent, up).normalized;
+                _endCar.position = (Vector3)position + right * _endCarRightOffset;
+                _endCar.rotation = Quaternion.LookRotation(Vector3.Normalize(tangent), Vector3.Normalize(up));
+            }
+
+            if (t >= 1.0f)
+            {
+                _moveEndCarStartTime = 0;
+            }
+        }
+
         private void CultistsRunAway()
         {
             if (_cultistsRunawayStartTime == 0) return;
@@ -327,7 +544,7 @@ namespace HTJ21
             foreach (Transform c in _cultists)
             {
                 c.position += _cultRunawayDir.forward * (_cultistsRunawaySpeed * Time.deltaTime);
-                c.localEulerAngles = c.localEulerAngles.SetY(_cultRunawayDir.localEulerAngles.y);
+                c.localEulerAngles = c.localEulerAngles.SetY(_cultRunawayDir.localEulerAngles.y + 180);
             }
         }
 

@@ -45,6 +45,11 @@ namespace HTJ21
         private float _blinkDuration;
         private int _numBlinks;
         private UnityAction _blinkCallback;
+        
+        private bool _unfadeToBlack = false;
+        private Action _unfadeToBlackCallback;
+        private float _unfadeToBlackLength = 0;
+        private float _unfadeToBlackStartTime = 0;
 
         public void ShowMoon(float duration, int textId, UnityAction onFinish = null)
         {
@@ -75,6 +80,14 @@ namespace HTJ21
             _fadeToBlackCallback = then;
             _fadeToBlackLength = time;
             _fadeToBlackStartTime = Time.time;
+        }
+        
+        public void UnfadeToBlack(float time, System.Action then)
+        {
+            _unfadeToBlack = true;
+            _unfadeToBlackCallback = then;
+            _unfadeToBlackLength = time;
+            _unfadeToBlackStartTime = Time.time;
         }
 
         public void TriggerBlink(float duration, float numBlinks, UnityAction onFinish = null, bool startFromOpen = true)
@@ -185,6 +198,18 @@ namespace HTJ21
                     _fadeToBlack = false;
                     _fadeToBlackCallback();
                     _fadeToBlackCallback = null;
+                }
+            }
+            else if (_unfadeToBlack)
+            {
+                float t = (Time.time - _unfadeToBlackStartTime) / _unfadeToBlackLength;
+                if (t >= 1) t = 1;
+                _fadeToBlackImage.color = _fadeToBlackImage.color.SetA(Mathf.Clamp01(1.0f - t));
+                if (t >= 1)
+                {
+                    _unfadeToBlack = false;
+                    _unfadeToBlackCallback();
+                    _unfadeToBlackCallback = null;
                 }
             }
             else if (_blink)

@@ -5,6 +5,7 @@ using PlazmaGames.Core;
 using PlazmaGames.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace HTJ21
 {
@@ -21,6 +22,22 @@ namespace HTJ21
 
         [SerializeField] private GameObject _moonBeam;
 
+        [SerializeField] private Transform _void;
+        [SerializeField] private float _voidStartHeight = 45.79f;
+        [SerializeField] private float _voidShowcaseHeight;
+
+        [Header("Dialogue")]
+        [SerializeField] private DialogueSO _startDialogue;
+
+        [Header("Music")]
+        [SerializeField] private float _fadeTime = 5f;
+        [SerializeField] private AudioSource _mainSource;
+        [SerializeField] private float _mainSourceVolume;
+        [SerializeField] private AudioSource _chantSource;
+        [SerializeField] private Transform _heightTarget;
+        [SerializeField] private Transform _heightStart;
+        private bool _stopChant = false;
+
         [Header("References")]
         [SerializeField] List<ShowInRange> _stages;
         [SerializeField] private Door _enterRoomDoor;
@@ -33,6 +50,22 @@ namespace HTJ21
         [SerializeField] private List<Transform> _checkpoints;
 
         [SerializeField, ReadOnly] private int _currentCheckpoint;
+
+        private void StopAllMusic(bool force)
+        {
+            if (force)
+            {
+                _mainSource.Stop();
+                _chantSource.Stop();
+            }
+            else
+            {
+                float sv = _mainSource.volume;
+                float cv = _chantSource.volume;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_mainSource, sv, 0f, t));
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(HTJ21GameManager.Instance, _fadeTime, (float t) => AudioHelper.FadeOut(_chantSource, cv, 0f, t));
+            }
+        }
 
         public void ResetPlayer()
         {
@@ -136,10 +169,24 @@ namespace HTJ21
             GameManager.GetMonoSystem<IWeatherMonoSystem>().DisableThunder();
             GameManager.GetMonoSystem<IGPSMonoSystem>().TurnOff();
 
+            Vector3 voidPos = _void.transform.localPosition;
+            voidPos.y = _voidStartHeight;
+            _void.transform.localPosition = voidPos;
+
+            StopAllMusic(true);
+            float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+            GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_mainSource, 0f, _mainSourceVolume * volScale, t));
+
+            _chantSource.volume = 0f;
+            _chantSource.Play();
+            _stopChant = false;
+
             _moonBeam.SetActive(true);
             _roadSection.SetActive(true);
             _roomSection.SetActive(false);
             _showcaseSection.SetActive(false);
+
+            if (_startDialogue) GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_startDialogue);
         }
 
         private void AddEvents()
@@ -161,10 +208,18 @@ namespace HTJ21
                 _enterRoomDoor.Close();
                 _enterRoomDoor.Lock();
                 NextCheckpoint();
+
+                _stopChant = true;
+                float cv = _chantSource.volume;
+                GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeOut(_chantSource, cv, 0f, t));
             }));
 
             GameManager.AddEventListener<Events.RoomSectionFinished>(Events.NewRoomSectionFinished((from, data) =>
             {
+                Vector3 voidPos = _void.transform.localPosition;
+                voidPos.y = _voidShowcaseHeight;
+                _void.transform.localPosition = voidPos;
+
                 _roadSection.SetActive(false);
                 _roomSection.SetActive(false);
                 _showcaseSection.SetActive(true);
@@ -173,12 +228,15 @@ namespace HTJ21
                 _exitRoomDoor.Lock();
                 OpenPortals();
                 NextCheckpoint();
+
+                StopAllMusic(false);
             }));
         }
 
         public override void OnActEnd()
         {
             ClosePortals();
+            StopAllMusic(true);
             HTJ21GameManager.Player.GetComponent<PortalObject>().OnPortalEnter.RemoveListener(OnPortalEnter);
         }
 
@@ -195,7 +253,17 @@ namespace HTJ21
 
         public override void OnActUpdate()
         {
+            if (HTJ21GameManager.Player && HTJ21GameManager.Player.transform.position.y <= _void.position.y) 
+            { 
+                ResetPlayer();
+            }
 
+            if (!_stopChant && _chantSource.isPlaying)
+            {
+                float t = Mathf.Clamp01((HTJ21GameManager.Player.transform.position.y - _heightStart.position.y) / (_heightTarget.position.y - _heightStart.position.y));
+                float volScale = GameManager.GetMonoSystem<IAudioMonoSystem>().GetOverallVolume() * GameManager.GetMonoSystem<IAudioMonoSystem>().GetMusicVolume();
+                _chantSource.volume = Mathf.Lerp(0f, 1f, t) * volScale;
+            }
         }
     }
 }

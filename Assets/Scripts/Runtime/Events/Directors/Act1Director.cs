@@ -16,6 +16,8 @@ namespace HTJ21
 
         private List<Vector3> _boardPos;
         private List<Quaternion> _boardRot;
+        
+        [SerializeField] private Transform _moon;
 
         [Header("Tree Fall Event")]
         [SerializeField] private WalkAndDie _meanCultist;
@@ -112,6 +114,8 @@ namespace HTJ21
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_keybaordSource, 0f, _keybaodVolume * volScale, t));
                 GameManager.GetMonoSystem<IAnimationMonoSystem>().RequestAnimation(this, _fadeTime, (float t) => AudioHelper.FadeIn(_darkSource, 0f, _darkVolume * volScale, t));
 
+                HTJ21GameManager.CarTutorial.ShowTutorial(1);
+
                 _gpsMs.TurnOff();
                 GameManager.GetMonoSystem<IDialogueMonoSystem>().Load(_dialogues["3"]);
             }));
@@ -165,6 +169,8 @@ namespace HTJ21
 
         private void Setup()
         {
+            _moon.GetComponent<MeshRenderer>().material.SetColor(Shader.PropertyToID("_BaseColor"), Color.white);
+            
             GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(this);
             GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Player);
             GameManager.GetMonoSystem<IAnimationMonoSystem>().StopAllAnimations(HTJ21GameManager.Car);

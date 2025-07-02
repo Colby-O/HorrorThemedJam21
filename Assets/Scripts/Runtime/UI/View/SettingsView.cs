@@ -46,6 +46,9 @@ namespace HTJ21
         [SerializeField] private Toggle _invertY;
         [SerializeField] private Slider _dialogueSpeed;
         [SerializeField] private TMP_Dropdown _language;
+        [SerializeField] private EventButton _car;
+        [SerializeField] private TMP_Text _carText;
+        [SerializeField] private GameObject _carIcon;
 
         [Header("Audio Controls")]
         [SerializeField] private Slider _overall;
@@ -158,9 +161,29 @@ namespace HTJ21
             GameManager.GetMonoSystem<IUIMonoSystem>().ShowLast();
         }
 
+        private void CarFix()
+        {
+            if (HTJ21GameManager.CurrentControllable && GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector() && (GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() == Act.Act1 || GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() == Act.Epilogue))
+            {
+                Vector3 newPos = GameManager.GetMonoSystem<IGPSMonoSystem>().GetClosestNodePositionToPoint(RoadwayHelper.GetRoadways(RoadwayCreator.Instance.GetContainer()), HTJ21GameManager.CurrentControllable.transform.position);
+                newPos.y += 5f;
+                HTJ21GameManager.CurrentControllable.transform.position = newPos;
+                HTJ21GameManager.CurrentControllable.transform.rotation = Quaternion.identity;
+                if (TryGetComponent(out Rigidbody rb))
+                {
+                    rb.linearVelocity = Vector3.zero;
+                }
+            }
+        }
+
         public override void Init()
         {
             _back.onPointerDown.AddListener(Back);
+
+            _car.onPointerDown.AddListener(CarFix);
+            _car.Icon = _carIcon;
+            _carIcon.SetActive(false);
+            _car.Text = _carText;
 
             _openGameplayMenu.onPointerDown.AddListener(OpenGameplay);
             _openAudioMenu.onPointerDown.AddListener(OpenAudio);
@@ -197,6 +220,9 @@ namespace HTJ21
         {
             base.Show();
             OpenGameplay();
+
+            _car.IsDisabled = GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentDirector() == null || (GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() != Act.Act1 && GameManager.GetMonoSystem<IDirectorMonoSystem>().GetCurrentAct() != Act.Epilogue);
+
             GameManager.GetMonoSystem<IDataPersistenceMonoSystem>().LoadGame();
         }
 
